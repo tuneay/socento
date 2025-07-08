@@ -26,26 +26,27 @@
         </div>
     </div>
 
-    <div id="blinkModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="blinkModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="blinkModalLabel"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+  <div id="blinkModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="blinkModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="blinkModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="blinkContent">
+                    {# Blink içeriği buraya yüklenecek #}
                 </div>
-                <div class="modal-body">
-                    <div id="blinkContent">
-                        </div>
-                    <div class="blink-navigation">
-                        <button class="btn btn-secondary" id="prevBlink">Önceki</button>
-                        <button class="btn btn-secondary" id="nextBlink">Sonraki</button>
-                    </div>
+                <div class="blink-navigation">
+                    <button class="btn btn-secondary" id="prevBlink"><i class="fa-solid fa-backward"></i></button>
+                    <button class="btn btn-secondary" id="nextBlink"><i class="fa-solid fa-forward"></i></button>
                 </div>
             </div>
         </div>
     </div>
+</div>
     <div class="main-content-flex-wrapper" data-initial-feed="{{ initial_feed or 'posts' }}">
         
         {% if current_user.is_authenticated %}
@@ -137,24 +138,25 @@
 
 {% block extra_js %}
 <script>
-    // Python'dan gelen blinks dict'ini JS objesine dönüştürür
-    var blinksData = {{ blinks | tojson }};
+    // Python'dan gelen blinks dict'ini JS objesine dönüştürür ve global yapar
+    window.blinksData = {{ blinks | tojson }};
 
+    // jQuery'nin yüklendiğinden emin olmak için kodunuzu buraya taşıyın
     $(document).ready(function() {
-        let currentBlinksData = blinksData; // Tüm kullanıcıların Blinkler'ini saklayacak obje
+        let currentBlinksData = window.blinksData; // Global blinksData'yı kullanın
         let currentBlinkUser = null;
         let currentBlinkIndex = 0;
 
         // Blinkler'i görüntüle düğmesine tıklama
         $('.view-blinks-btn').on('click', function(e) {
-            e.preventDefault();
+            e.preventDefault(); // Bu satırın çalıştığından emin olun
             const userId = $(this).data('user-id');
             currentBlinkUser = userId;
-            currentBlinkIndex = 0; // Her zaman ilk Blink'ten başla
+            currentBlinkIndex = 0;
 
-            if (currentBlinksData[userId]) { // blinksData'nın undefined olmadığını kontrol etmeye gerek yok
+            if (currentBlinksData && currentBlinksData[userId]) { // currentBlinksData'nın null/undefined olmadığından emin olun
                 displayBlink(userId, currentBlinkIndex);
-                $('#blinkModal').modal('show'); // Modalı göster
+                $('#blinkModal').modal('show');
             } else {
                 alert('Bu kullanıcının aktif Blinkler\'i yok.');
             }
@@ -165,12 +167,12 @@
             if (!blinks || blinks.length === 0) return;
 
             const blink = blinks[index];
-            $('#blinkModalLabel').text(blink.username + ' Blinkleri'); // Kullanıcı adını başlığa ekle
+            $('#blinkModalLabel').text(blink.username + ' Blinkleri');
             let contentHtml = '';
 
             if (blink.image_url) {
                 contentHtml += `<img src="${blink.image_url}" class="img-fluid" alt="Blink">`;
-            } else if (blink.video_url) { // Video için else if kullanın
+            } else if (blink.video_url) {
                 contentHtml += `<video controls autoplay class="img-fluid"><source src="${blink.video_url}" type="video/mp4"></video>`;
             }
             if (blink.text_content) {
@@ -178,7 +180,6 @@
             }
             $('#blinkContent').html(contentHtml);
 
-            // Navigasyon butonlarını güncelle
             $('#prevBlink').prop('disabled', index === 0);
             $('#nextBlink').prop('disabled', index === blinks.length - 1);
         }

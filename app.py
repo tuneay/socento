@@ -728,7 +728,7 @@ def home():
                             top_users=top_users, 
                             top_hashtags=top_hashtags,
                             trending_topics=trending_topics,
-                            blinks=blinks) # Değişkeni buraya geçiyoruz
+                            blinks=blinks)
 
 # --- Infinity Network Rotaları ---
 

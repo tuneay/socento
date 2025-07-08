@@ -3889,15 +3889,6 @@ body.clips-active .feed-page-container {
     font-size: 0.9em;
 }
 
-.blink-avatar {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #007bff; /* Blink olduğunu belirtmek için çerçeve */
-    padding: 2px;
-    transition: transform 0.2s ease-in-out;
-}
 
 .blink-avatar:hover {
     transform: scale(1.05);
@@ -3950,7 +3941,7 @@ body.clips-active .feed-page-container {
     min-height: 300px; /* Minimum yükseklik */
     max-height: 600px;
     overflow: hidden;
-    background-color: #333;
+    background-color: #1F2937;
     border-radius: 5px;
 }
 
@@ -3977,18 +3968,16 @@ body.clips-active .feed-page-container {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    transform: translateY(-50%);
+    transform: translateY(-40%);
     padding: 0 10px;
     z-index: 10;
 }
 
 .blink-navigation button {
-    background: rgba(100, 100, 100, 0.5);
-    border: none;
     color: white;
     font-size: 1.5em;
     padding: 5px 10px;
-    border-radius: 50%;
+    border-radius: 15px;
     cursor: pointer;
 }
 
@@ -4046,9 +4035,12 @@ body.clips-active .feed-page-container {
     border-radius: 50%;
     object-fit: cover;
     border: 3px solid var(--gradient-primary); /* Instagram hikayesi gibi renkli çerçeve */
-    padding: 2px; /* Çerçeve ve resim arasında boşluk */
+    padding: 3px; /* Çerçeve ve resim arasında boşluk */
     transition: border-color 0.2s ease, transform 0.2s ease;
     box-shadow: 0 2px 8px var(--shadow-light);
+}
+.view-blinks-btn img {
+    background: var(--gradient-primary);
 }
 
 .blink-avatar:hover {
@@ -4128,7 +4120,7 @@ body.clips-active .feed-page-container {
     min-height: 400px; /* Minimum yükseklik */
     max-height: 80vh; /* Ekran yüksekliğinin %80'ini geçmesin */
     overflow: hidden;
-    background-color: #333; /* Yüklenirken veya boşken arkaplan */
+    background-color: #1F2937; /* Yüklenirken veya boşken arkaplan */
 }
 
 #blinkContent {
@@ -4177,12 +4169,16 @@ body.clips-active .feed-page-container {
 }
 
 .blink-navigation button {
-    background: rgba(100, 100, 100, 0.5);
+    margin: 10px;
+    margin-top: 10px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-weight: bold;
+    background: var(--gradient-primary);
     border: none;
     color: #fff;
     font-size: 1.8em;
     padding: var(--spacing-sm) var(--spacing-md);
-    border-radius: 50%;
+    border-radius: 15px;
     cursor: pointer;
     pointer-events: auto; /* Kendi tıklamalarına izin ver */
     transition: background-color 0.2s ease, transform 0.2s ease;
@@ -4193,4 +4189,20 @@ body.clips-active .feed-page-container {
 .blink-navigation button:hover {
     background: rgba(100, 100, 100, 0.8);
     transform: scale(1.05);
+}
+/* DEĞİŞİKLİK: Blink Modalının kapalıyken boşluk kaplamamasını sağlar */
+#blinkModal:not(.show) {
+    display: none !important; /* Modal aktif değilken (show sınıfına sahip değilken) tamamen gizle */
+    visibility: hidden !important; /* Görünürlüğü de gizle */
+    width: 0 !important; /* Genişliği sıfırla */
+    height: 0 !important; /* Yüksekliği sıfırla */
+    overflow: hidden !important; /* Taşmayı gizle */
+    margin: 0 !important; /* Kenar boşluklarını sıfırla */
+    padding: 0 !important; /* İç boşlukları sıfırla */
+}
+
+/* DEĞİŞİKLİK: Modal backdrop (arka plan karartması) da kapalıyken yer kaplamasın */
+.modal-backdrop.fade:not(.show) {
+    display: none !important;
+    opacity: 0 !important;
 }
