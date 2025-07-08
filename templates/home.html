@@ -57,6 +57,7 @@
 
     <div class="main-content-flex-wrapper" data-initial-feed="{{ initial_feed or 'posts' }}">
         
+        {# MASAÜSTÜ SOL SİDEBAR - MOBİLDE GİZLİ #}
         {% if current_user.is_authenticated %}
         <div class="left-sidebar">
             <div class="sidebar-card theme-toggle-card">
@@ -108,6 +109,54 @@
         </div>
         {% endif %}
 
+        {# MOBİL İÇİN TREND BÖLÜMLERİ - Sadece mobil görünümde gösterilir #}
+        {% if current_user.is_authenticated %}
+        <div class="mobile-trending-sections-wrapper">
+            <div class="mobile-section-card">
+                <h3 class="mobile-section-title gradient-text"><i class="fas fa-fire"></i> Trendler</h3>
+                <div class="mobile-trending-carousel">
+                    {% if top_users %}
+                        <div class="mobile-trending-group">
+                            <h4 class="group-title">Kullanıcılar</h4>
+                            {% for user_item in top_users %}
+                                <a href="{{ url_for('profile', username=user_item.username) }}" class="trending-item">
+                                    <img src="{{ url_for('static', filename='uploads/profile_pics/' + user_item.profile_image) }}" alt="{{ user_item.username }}" class="trending-avatar">
+                                    <span class="trending-text">@{{ user_item.username }}</span>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    
+                    {% if top_hashtags %}
+                        <div class="mobile-trending-group">
+                            <h4 class="group-title">Hashtagler</h4>
+                            {% for hashtag, count in top_hashtags %}
+                                <a href="{{ url_for('search_hashtag', hashtag=hashtag) }}" class="trending-item">
+                                    <i class="fas fa-hashtag"></i>
+                                    <span class="trending-text">#{{ hashtag }}</span>
+                                    <span class="trending-count">({{ count }})</span>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% if trending_topics %}
+                        <div class="mobile-trending-group">
+                            <h4 class="group-title">Echoes Konuları</h4>
+                            {% for topic, score in trending_topics %}
+                                <a href="{{ url_for('echoes_topic', topic=topic) }}" class="trending-item">
+                                    <i class="fa-solid fa-microphone-lines"></i>
+                                    <span class="trending-text">-{{ topic }}</span>
+                                    <span class="trending-count">({{ score | int }})</span>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
         <div class="page-container feed-page-container">
             <div class="feed-view-selector">
                 <button class="feed-selector-btn" data-feed="posts"><i class="fas fa-newspaper"></i> Gönderiler</button>
@@ -118,11 +167,26 @@
                 {% endif %}
                 <div class="active-line"></div>
             </div>
+            {# HIZLI GÖNDERİ OLUŞTURMA ALANI #}
+            {% if current_user.is_authenticated %}
+            <div class="quick-post-card card-custom">
+                <div class="post-header">
+                    <a href="{{ url_for('profile', username=current_user.username) }}">
+                        <img src="{{ url_for('static', filename='uploads/profile_pics/' + current_user.profile_image) }}" alt="{{ current_user.username }}" class="post-author-img">
+                    </a>
+                    <div class="post-author-info">
+                        <input type="text" class="form-input quick-post-input" placeholder="Ne düşünüyorsun, {{ current_user.username }}?">
+                    </div>
+                    <button class="btn-primary-custom btn-small quick-post-btn"><i class="fas fa-feather"></i> Post</button>
+                </div>
+            </div>
+            {% endif %}
             <div id="feed-container">
                 <div class="feed-loader"><i class="fas fa-spinner fa-spin"></i></div>
             </div>
         </div>
 
+        {# MASAÜSTÜ SAĞ SİDEBAR - MOBİLDE GİZLİ #}
         {% if current_user.is_authenticated %} 
         <div class="right-sidebar">
             {% if current_user.role == 'premium' and current_user.planType %}
@@ -141,6 +205,26 @@
             </div>
         </div>
         {% endif %}
+
+        {# MOBİL İÇİN BİLGİ KARTLARI - Sadece mobil görünümde gösterilir #}
+        {% if current_user.is_authenticated %}
+        <div class="mobile-info-sections-wrapper">
+            {% if current_user.role == 'premium' and current_user.planType %}
+            <div class="mobile-info-card mobile-premium-card">
+                <h3 class="card-title gradient-text"><i class="fas fa-gem"></i> Premium Üyelik</h3>
+                <p class="card-text">{{ PREMIUM_PLANS[current_user.planType]['name'] }} Planı</p>
+                <p class="card-text-muted">Bitiş: {{ current_user.planExpiry.strftime('%d.%m.%Y') if current_user.planExpiry else 'Süresiz' }}</p>
+            </div>
+            {% endif %}
+            <div class="mobile-info-card mobile-envy-card">
+                <h3 class="card-title gradient-text"><i class="fas fa-robot"></i> Envy AI Asistanı</h3>
+                <p class="card-text">Sorularını Envy'e sor, sohbet et!</p>
+                <a href="https://envy.socento.com/" target="_blank" class="btn-primary-custom btn-small full-width-btn">
+                    <i class="fas fa-comments"></i> Envy ile Sohbet Et
+                </a>
+            </div>
+        </div>
+        {% endif %}
     </div>
 {% endblock %}
 
@@ -148,5 +232,22 @@
 <script>
     // Python'dan gelen blinks dict'ini JS objesine dönüştürür ve global yapar
     window.blinksData = {{ blinks | tojson }};
+
+    // Quick Post Input tıklanınca gönderi oluşturma sayfasına yönlendir
+    document.addEventListener('DOMContentLoaded', function() {
+        const quickPostInput = document.querySelector('.quick-post-input');
+        const quickPostBtn = document.querySelector('.quick-post-btn');
+
+        if (quickPostInput) {
+            quickPostInput.addEventListener('focus', function() {
+                window.location.href = "{{ url_for('new_post') }}";
+            });
+        }
+        if (quickPostBtn) {
+            quickPostBtn.addEventListener('click', function() {
+                window.location.href = "{{ url_for('new_post') }}";
+            });
+        }
+    });
 </script>
 {% endblock %}

@@ -279,7 +279,7 @@ body.light-theme nav {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    /*   gap: var(--spacing-xxs);*/
+    /* gap: var(--spacing-xxs);*/
     cursor: pointer;
     font-weight: 600;
 }
@@ -1748,6 +1748,7 @@ a:hover {
 .badge-item:hover {
     transform: translateY(-2px);
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    opacity: 0.98;
 }
 
 .badge-item i {
@@ -2085,43 +2086,8 @@ a:hover {
     .profile-social-links,
     .profile-actions-bar {
         padding-left: 0;
-        /* Soldaki iç dolguyu kaldır */
-        padding-right: 0;
-        /* Sağdaki iç dolguyu kaldır */
-        border-top: 1px solid var(--border-color-light);
-        /* Üst kenarlıkları geri getir */
-        border-bottom: 1px solid var(--border-color-light);
-        /* Alt kenarlıkları geri getir */
-        justify-content: flex-start;
-        /* İçerikleri sola hizala */
-    }
-
-    .profile-expertise-areas .expertise-tags {
-        justify-content: flex-start;
-        /* Etiketleri sola hizala */
-    }
-
-    .profile-details-info-group {
-        flex-direction: row;
-        /* Yatay sırala */
-    }
-
-    .profile-content-tabs {
-        flex-wrap: nowrap;
-        /* Sekmeleri sarmalamayı engelle */
-    }
-
-    .profile-tab-item {
-        border-left: none !important;
-        /* Medya sorgusundaki override'ı kaldır */
-        border-bottom: 3px solid transparent !important;
-        /* Alt kenarlığı geri getir */
-        width: auto !important;
-        /* Navbar boşluğunu koru */
-        gap: var(--spacing-xl);
-        /* Sidebarlar arası boşluk */
-        justify-content: center;
-        align-items: flex-start;
+        /* Soldaki iç dolgu
+gn-items: flex-start;
     }
 
     .left-sidebar {
@@ -2315,7 +2281,80 @@ a:hover {
         border-bottom: 3px solid transparent !important;
         /* Alt kenarlığı geri getir */
         width: auto !important;
-        /* Genişliği oto yap */
+        /* Navbar boşluğunu koru */
+        gap: var(--spacing-xl);
+        /* Sidebarlar arası boşluk */
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    .left-sidebar {
+        display: flex !important;
+        /* Sol sidebar'ı göster */
+        width: 280px;
+        /* Genişliği koru */
+        position: sticky;
+        /* Yapışkan konum */
+        top: 80px;
+    }
+
+    .right-sidebar {
+        display: flex !important;
+        /* Sağ sidebar'ı göster */
+        width: 300px;
+        /* Genişliği koru */
+        position: sticky;
+        /* Yapışkan konum */
+        top: 80px;
+    }
+
+    .feed-page-container {
+        padding: 0 !important;
+        /* Masaüstünde yan boşluklar ana wrapper'dan gelecek */
+        max-width: 650px !important;
+        /* Genişliği koru */
+    }
+
+    /* Profil Sayfası için Masaüstü Ayarları */
+    .profile-main-content-area {
+        flex-wrap: nowrap;
+        /* Saran profil alanı için sarmalamayı engelle */
+    }
+
+    .profile-info-block {
+        text-align: left;
+        /* Profil bilgi bloğunu sola hizala */
+    }
+
+    .profile-username {
+        justify-content: flex-start;
+        /* Profil kullanıcı adını sola hizala */
+    }
+
+    .profile-expertise-areas,
+    .profile-details-info-group,
+    .profile-social-links,
+    .profile-actions-bar {
+        padding-left: 0;
+        /* Soldaki iç dolguyu kaldır */
+        padding-right: 0;
+        /* Sağdaki iç dolguyu kaldır */
+        border-top: 1px solid var(--border-color-light);
+        /* Üst kenarlıkları geri getir */
+        border-bottom: 1px solid var(--border-color-light);
+        /* Alt kenarlıkları geri getir */
+        justify-content: flex-start;
+        /* İçerikleri sola hizala */
+    }
+
+    .profile-expertise-areas .expertise-tags {
+        justify-content: flex-start;
+        /* Etiketleri sola hizala */
+    }
+
+    .profile-details-info-group {
+        flex-direction: row;
+        /* Yatay sırala */
     }
 
     .profile-tab-item:nth-last-child(-n + 2) {
@@ -2342,6 +2381,16 @@ a:hover {
     .comments-section {
         margin-bottom: 0;
         /* Kartlar arasına mobil boşluğu kaldır */
+    }
+
+    .mobile-trending-sections-wrapper,
+    .mobile-info-sections-wrapper {
+        display: none !important; /* Masaüstünde gizle */
+    }
+
+    .quick-post-card {
+        margin-top: 0; /* Masaüstünde üst boşluk olmasın */
+        margin-bottom: var(--spacing-lg);
     }
 }
 
@@ -2681,6 +2730,23 @@ a:hover {
         /* Mobil için daha küçük kaydırılabilir alan */
         padding-right: 0;
         /* İç kaydırma çubuğu için boşluk olmasın */
+    }
+
+    .mobile-trending-sections-wrapper,
+    .mobile-info-sections-wrapper {
+        display: block; /* Mobil görünümde göster */
+        width: 100%;
+        max-width: 650px; /* Feed ile aynı genişlik */
+        margin: var(--spacing-lg) auto; /* Ortala ve boşluk bırak */
+        padding: 0 var(--spacing-sm); /* Yan boşluklar */
+    }
+
+    .quick-post-card {
+        margin-top: 0; /* Mobil'de üst boşluk olmasın */
+        margin-left: 0;
+        margin-right: 0;
+        border-radius: var(--border-radius-sm);
+        margin-bottom: var(--spacing-lg);
     }
 }
 
@@ -3176,236 +3242,6 @@ a:hover {
     }
 }
 
-/* --- MOBİL HIZLI ERİŞİM BUTONLARI (INSTAGRAM STORY TARZI) --- */
-.mobile-story-actions-container {
-    display: none;
-    /* Varsayılan olarak masaüstünde gizli */
-    width: 100%;
-    padding: var(--spacing-md) var(--spacing-sm);
-    /* İç boşluklar */
-    background-color: var(--secondary-bg);
-    /* Arka plan rengi */
-    border-bottom: 1px solid var(--border-color-light);
-    /* Alt kenarlık */
-    box-shadow: 0 2px 8px var(--shadow-medium);
-    /* Hafif gölge */
-    /* Eski: position: sticky; */
-    /* KALDIRILDI */
-    /* Eski: top: 60px; */
-    /* KALDIRILDI */
-    z-index: 900;
-    /* Navbar'dan az, içerikten fazla */
-    overflow-x: auto;
-    /* Yatay kaydırma gerekirse */
-    white-space: nowrap;
-    /* Öğelerin tek satırda kalmasını sağla */
-    -webkit-overflow-scrolling: touch;
-    /* iOS'ta akıcı kaydırma */
-    scrollbar-width: none;
-    /* Firefox'ta scrollbar'ı gizle */
-    -ms-overflow-style: none;
-    /* IE/Edge'de scrollbar'ı gizle */
-
-    /* YENİ EKLEMELER - ORTALAMA İÇİN */
-    display: flex;
-    /* Varsayılan olarak flex, medya sorgusu ile değişecek */
-    justify-content: center;
-    /* İçerikleri yatayda ortala */
-    align-items: center;
-    /* Dikeyde ortala */
-    gap: var(--spacing-md);
-    /* Butonlar arası boşluk */
-    margin-top: 60px;
-    /* Navbar'ın hemen altına boşluk bırak */
-    box-sizing: border-box;
-    /* Padding dahil genişliği hesapla */
-}
-
-/* Chrome, Safari, Opera'da scrollbar'ı gizle */
-.mobile-story-actions-container::-webkit-scrollbar {
-    display: none;
-}
-
-.action-circle {
-    display: inline-flex;
-    /* Yan yana sıralama */
-    flex-direction: column;
-    /* İkon ve metni alt alta sırala */
-    align-items: center;
-    text-align: center;
-    /* margin: 0 var(--spacing-xs); */
-    /* Bu artık container'daki gap ile yönetiliyor */
-    cursor: pointer;
-    text-decoration: none;
-    flex-shrink: 0;
-    /* Küçülmesini engelle */
-}
-
-/* action-circle:first-child ve :last-child için margin sıfırlaması artık gerekmiyor
-   çünkü container'da justify-content: center ve gap kullanıyoruz.
-   Eğer hala yanlarda boşluk istiyorsanız, mobile-story-actions-container'a yatay padding eklemelisiniz.
-*/
-
-.action-circle a {
-    text-decoration: none;
-    color: var(--text-color-secondary);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-    /* İkon ve metin arası boşluk */
-    transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
-.action-circle a:hover {
-    transform: translateY(-2px);
-    opacity: 0.9;
-    color: var(--text-color-primary);
-}
-
-.action-circle a i,
-.action-circle a img {
-    width: 55px;
-    /* İkon/Resim boyutu */
-    height: 55px;
-    /* İkon/Resim boyutu */
-    border-radius: var(--border-radius-circle);
-    /* Yuvarlak yap */
-    object-fit: cover;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.8em;
-    /* İkon boyutu */
-    background: var(--tertiary-bg);
-    /* Arka plan */
-    color: var(white);
-    /* İkon rengi */
-    border: 2px solid var(--border-color-light);
-    /* Hafif kenarlık */
-    box-shadow: 0 2px 8px var(--shadow-light);
-    transition: all 0.2s ease;
-}
-
-/* Profil resmi için özel stil */
-.action-circle a img {
-    border: 2px solid var(--gradient-primary);
-    /* Profil resmi için farklı kenarlık */
-    box-shadow: 0 2px 8px var(--shadow-medium);
-}
-
-.action-circle a span {
-    font-size: 0.85em;
-    /* Metin boyutu */
-    color: var(--text-color-muted);
-    margin-top: var(--spacing-xxs);
-    white-space: nowrap;
-    /* Metnin tek satırda kalmasını sağla */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 65px;
-    /* Metin için maksimum genişlik */
-}
-
-
-/* --- RESPONSIVE TASARIM BAŞLANGICI --- */
-
-/* Mobil Cihazlar (768px ve altı) */
-@media (max-width: 768px) {
-    /* ... Mevcut 768px altı kurallarınız ... */
-
-    /* Navbar'ın altındaki hızlı erişim butonlarını göster */
-    .mobile-story-actions-container {
-        display: flex;
-        /* Mobil görünümde flex olarak göster */
-        /* Kaydırmayla gitmesi için position: relative ve top kaldırıldı, margin-top ile boşluk veriyoruz */
-    }
-
-    /* main-content-wrapper'ın padding-top değerini ayarla
-       Navbar (60px) + mobile-story-actions-container'ın margin-top (60px)
-       Bu sayede içerik, butonların altına kaymayacak ve butonlar üstten doğru konumda başlayacak.
-    */
-    .main-content-wrapper {
-        padding-top: var(--spacing-md);
-        /* İçerik normal akışta başlayacak, yukarıdaki container'ın margin-top'ı etkileyecek */
-        /* Navbar'ın altında kalan mobil-story-actions-container'ın kapladığı alanı kompanse etmek için main-content-wrapper'ın padding-top'ına dikkat edin.
-           Çünkü mobile-story-actions-container artık sticky değil, normal akışta. */
-        /* Eğer mobile-story-actions-container'ın yüksekliği ~90px ise, ana içerik 60px nav + 90px butondan sonra başlamalı. */
-        /* Bunu da .page-container'a padding-top vererek veya .main-content-wrapper'a uygun margin-top vererek yapabiliriz. */
-        /* Şimdilik: mobile-story-actions-container'ın yüksekliğini hesaplayıp main-content-wrapper'a margin-top verelim. */
-    }
-
-    /* main-content-wrapper'ın kendisi de uygun bir üst boşluğa ihtiyaç duyacak */
-    .main-content-wrapper {
-        /* mobile-story-actions-container'ın yüksekliğini dinamik olarak hesaplamak zor
-           Ancak sabit bir değer verebiliriz. Bir önceki padding-top: 175px'i koruyalım veya düzenleyelim.
-           Veya sadece .page-container'a daha fazla üst boşluk ekleyebiliriz.
-        */
-        padding-top: var(--spacing-lg);
-        /* Örneğin, mevcut içeriğin başlangıcından itibaren 24px boşluk */
-    }
-
-    /* Navbar'ın altındaki hızlı erişim butonları normal akışa geçtiği için,
-       sayfanın ana içeriğinin başladığı noktayı ayarlamak kritik.
-       Navbar 60px, mobile-story-actions-container yaklaşık 90px.
-       Yani main-content-wrapper'ın üstten toplam 150px kadar boşluğa ihtiyacı var.
-       En temiz yol, base.html'deki .main-content-wrapper'ın padding-top değerini dinamik olarak ayarlamak veya
-       her sayfanın ilk elemanına margin-top vermek.
-       Şimdilik CSS'ten .main-content-wrapper'ın padding-top'unu ayarlayalım:
-    */
-    body #main-content .main-content-wrapper {
-        padding-top: calc(60px + 55px + 0.85em * 1.5 + var(--spacing-md) * 2 + var(--spacing-lg));
-        /* Navbar Yüksekliği + İkon Yüksekliği + Metin Yüksekliği + Padding + Gap */
-        /* Yaklaşık 60 + 55 + 15 + 32 + 24 = 186px civarı. Daha güvenli bir sabit değer belirleyelim. */
-        padding-top: 20px;
-        /* Sabit bir değer, gerektiğinde ayarlanabilir */
-    }
-}
-
-/* Küçük Telefonlar (480px ve altı) */
-@media (max-width: 480px) {
-    /* ... Mevcut 480px altı kurallarınız ... */
-
-    .mobile-story-actions-container {
-        padding: var(--spacing-sm) var(--spacing-xs);
-        /* Daha dar yan boşluklar */
-    }
-
-    .action-circle a i,
-    .action-circle a img {
-        width: 45px;
-        /* Küçük telefonlarda biraz daha küçük */
-        height: 45px;
-        font-size: 1.5em;
-    }
-
-    .action-circle a span {
-        font-size: 0.75em;
-        max-width: 55px;
-    }
-
-    body #main-content .main-content-wrapper {
-        padding-top: 10px;
-        /* Daha küçük telefonlar için ayar */
-    }
-}
-
-/* Masaüstü ve Geniş Ekranlar (Min 769px) */
-@media (min-width: 769px) {
-    /* ... Mevcut 769px ve üstü kurallarınız ... */
-
-    .mobile-story-actions-container {
-        display: none !important;
-        /* Masaüstünde kesinlikle gizle */
-    }
-
-    /* Masaüstünde ana içerik padding'ini eski haline getir */
-    body #main-content .main-content-wrapper {
-        padding-top: 70px;
-        /* Masaüstü için orijinal padding-top */
-    }
-}
-
 /* --- CLIPS (REELS) SAYFASI STİLLERİ --- */
 .clips-container {
     width: 100%;
@@ -3630,11 +3466,6 @@ a:hover {
 
 .mobile-bottom-nav .nav-item:hover {
     transform: translateY(-2px);
-}
-
-.mobile-bottom-nav .nav-item i {
-    font-size: 1.8em;
-    /* İkonları büyüt */
 }
 
 .mobile-bottom-nav .nav-item.active {
@@ -4370,731 +4201,6 @@ body.clips-active .feed-page-container {
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-.blink-viewer-overlay.is-active {
-    opacity: 1;
-    visibility: visible;
-}
-
-/* Sayfa kaydırmasını engellemek için */
-body.blinks-active {
-    overflow: hidden;
-}
-
-.blink-viewer-content {
-    position: relative;
-    width: 100%;
-    max-width: 400px; /* Telefon ekranı gibi bir genişlik */
-    height: 100%;
-    max-height: 700px; /* Telefon ekranı gibi bir yükseklik */
-    background-color: #111; /* Blink içeriğinin arkaplanı */
-    border-radius: var(--border-radius-lg);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
-    transform: scale(0.95);
-    transition: transform 0.3s ease;
-}
-
-.blink-viewer-overlay.is-active .blink-viewer-content {
-    transform: scale(1);
-}
-
-.blink-header {
-    display: flex;
-    align-items: center;
-    padding: var(--spacing-sm) var(--spacing-md);
-    background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 10;
-}
-
-.blink-progress-bars {
-    display: flex;
-    flex-grow: 1;
-    gap: 4px;
-    margin-right: var(--spacing-md);
-}
-
-.progress-bar-wrapper {
-    flex-grow: 1;
-    height: 3px;
-    background-color: rgba(255, 255, 255, 0.3);
-    border-radius: 2px;
-    overflow: hidden;
-}
-
-.progress-bar {
-    height: 100%;
-    background-color: #fff;
-    width: 0%; /* JS tarafından ayarlanacak */
-    border-radius: 2px;
-}
-
-@keyframes fillProgressBar {
-    from { width: 0%; }
-    to { width: 100%; }
-}
-
-.blink-user-info {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-}
-
-.blink-user-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-}
-
-.blink-user-username {
-    color: #fff;
-    font-weight: 600;
-    font-size: 0.9em;
-    text-decoration: none;
-}
-
-.blink-close-btn {
-    background: none;
-    border: none;
-    color: #fff;
-    font-size: 1.8em;
-    cursor: pointer;
-    margin-left: var(--spacing-md);
-    opacity: 0.8;
-    transition: opacity 0.2s;
-}
-
-.blink-close-btn:hover {
-    opacity: 1;
-}
-
-.blink-media-area {
-    flex-grow: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    background-color: #000;
-}
-
-.blink-media-image,
-.blink-media-video {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    display: block;
-}
-
-.blink-text-content {
-    position: absolute;
-    bottom: var(--spacing-lg);
-    left: var(--spacing-lg);
-    right: var(--spacing-lg);
-    color: #fff;
-    background-color: rgba(0, 0, 0, 0.6);
-    padding: var(--spacing-sm);
-    border-radius: var(--border-radius-sm);
-    text-align: center;
-    font-size: 1em;
-    line-height: 1.4;
-    max-height: 40%;
-    overflow-y: auto;
-}
-
-.blink-navigation-controls {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 var(--spacing-xs);
-    pointer-events: none; /* Butonların kendilerine tıklanabilmesi için */
-}
-
-.blink-nav-btn {
-    background: none;
-    border: none;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 2.5em;
-    cursor: pointer;
-    padding: var(--spacing-md);
-    pointer-events: auto; /* Kendi tıklamalarına izin ver */
-    transition: color 0.2s ease, transform 0.2s ease;
-}
-
-.blink-nav-btn:hover {
-    color: #fff;
-    transform: scale(1.1);
-}
-
-/* Mobil Cihazlar İçin Duyarlı Ayarlamalar */
-@media (max-width: 480px) {
-    .blink-viewer-content {
-        max-width: 100%;
-        max-height: 100vh;
-        border-radius: 0;
-    }
-
-    .blink-header {
-        padding: var(--spacing-xs);
-    }
-
-    .blink-close-btn {
-        font-size: 1.5em;
-    }
-
-    .blink-nav-btn {
-        font-size: 2em;
-        padding: var(--spacing-sm);
-    }
-
-    .blink-text-content {
-        font-size: 0.9em;
-        padding: var(--spacing-xs);
-        bottom: var(--spacing-md);
-        left: var(--spacing-md);
-        right: var(--spacing-md);
-    }
-}
-
-/* style.css dosyasının sonuna ekleyin */
-
-/* --- YENİ: Navbar Dropdown Menüsü --- */
-.nav-item-dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.nav-link-dropdown-toggle {
-    color: var(--text-color-secondary);
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 15px;
-    padding: var(--spacing-xs) var(--spacing-xxs);
-    border-radius: var(--border-radius-xs);
-    transition: color var(--transition-duration) var(--transition-easing), background-color 0.2s ease;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-.nav-link-dropdown-toggle:hover {
-    color: var(--text-color-primary);
-    background-color: var(--tertiary-bg);
-}
-
-.dropdown-menu {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: var(--secondary-bg);
-    border: 1px solid var(--border-color-light);
-    border-radius: var(--border-radius-sm);
-    box-shadow: 0 4px 15px var(--shadow-medium);
-    min-width: 200px;
-    z-index: 1001;
-    list-style: none;
-    padding: var(--spacing-xs) 0;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: opacity 0.2s ease, transform 0.2s ease;
-    pointer-events: none;
-}
-
-.nav-item-dropdown:hover .dropdown-menu {
-    display: block;
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-}
-
-.dropdown-item {
-    display: block;
-    padding: var(--spacing-sm) var(--spacing-md);
-    color: var(--text-color-secondary);
-    text-decoration: none;
-    font-size: 14px;
-    transition: background-color 0.2s ease, color 0.2s ease;
-    white-space: nowrap;
-}
-
-.dropdown-item:hover {
-    background-color: var(--tertiary-bg);
-    color: var(--text-color-primary);
-    transform: none; /* Override default link hover */
-}
-
-/* --- BLINK (HİKAYE) BÖLÜMÜ STİLLERİ --- */
-
-.blinks-outer-container {
-    width: 100%;
-    /* Ekranın tamamını kapla */
-    max-width: 650px; /* home.html'deki feed-page-container ile aynı genişlikte tutabilirsiniz */
-    margin: var(--spacing-lg) auto; /* Üstte ve altta boşluk, ortala */
-    padding: var(--spacing-sm);
-    background-color: var(--secondary-bg);
-    border: 1px solid var(--border-color-light);
-    border-radius: var(--border-radius-md);
-    box-shadow: 0 4px 15px var(--shadow-medium);
-}
-
-.blinks-container {
-    display: flex;
-    overflow-x: auto; /* Yatay kaydırma */
-    padding: 10px 0;
-    gap: var(--spacing-md); /* Blinkler arası boşluk */
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none;  /* IE and Edge */
-}
-
-.blinks-container::-webkit-scrollbar { /* Chrome, Safari, Opera */
-    display: none;
-}
-
-.blink-item {
-    flex-shrink: 0; /* Küçülmesini engelle */
-    text-align: center;
-    transition: transform 0.2s ease;
-}
-
-.blink-item:hover {
-    transform: translateY(-3px);
-}
-
-.blink-item .view-blinks-btn {
-    display: block;
-    text-decoration: none;
-    color: inherit;
-    font-size: 0.9em;
-}
-
-.blink-avatar {
-    width: 65px; /* Hikaye avatarları için boyut */
-    height: 65px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid var(--gradient-primary); /* Instagram hikayesi gibi renkli çerçeve */
-    padding: 3px; /* Çerçeve ve resim arasında boşluk */
-    transition: border-color 0.2s ease, transform 0.2s ease;
-    box-shadow: 0 2px 8px var(--shadow-light);
-}
-.view-blinks-btn img {
-    background: var(--gradient-primary);
-}
-
-.blink-avatar:hover {
-    border-color: var(--focus-glow-color); /* Hover'da çerçeve rengini değiştir */
-}
-
-.blink-username {
-    display: block;
-    margin-top: var(--spacing-xxs);
-    font-size: 0.8em;
-    color: var(--text-color-muted);
-    white-space: nowrap; /* Kullanıcı adının tek satırda kalması */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 70px; /* Genişliği sınırlayarak taşmayı engelle */
-}
-
-.no-blinks-message {
-    text-align: center;
-    width: 100%;
-    color: var(--text-color-muted);
-    padding: var(--spacing-md);
-}
-
-/* --- YENİ: ÖZEL BLINK GÖRÜNTÜLEYİCİ MODALI --- */
-.blink-viewer-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.9); /* Koyu, hafif şeffaf arka plan */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000; /* En üstte olmalı */
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-    backdrop-filter: blur(8px); /* Hafif bulanıklık efekti */
-}
-
-.blink-viewer-overlay.is-active {
-    opacity: 1;
-    visibility: visible;
-}
-
-/* Sayfa kaydırmasını engellemek için */
-body.blinks-active {
-    overflow: hidden;
-}
-
-.blink-viewer-content {
-    position: relative;
-    width: 100%;
-    max-width: 400px; /* Telefon ekranı gibi bir genişlik */
-    height: 100%;
-    max-height: 700px; /* Telefon ekranı gibi bir yükseklik */
-    background-color: #111; /* Blink içeriğinin arkaplanı */
-    border-radius: var(--border-radius-lg);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
-    transform: scale(0.95);
-    transition: transform 0.3s ease;
-}
-
-.blink-viewer-overlay.is-active .blink-viewer-content {
-    transform: scale(1);
-}
-
-.blink-header {
-    display: flex;
-    align-items: center;
-    padding: var(--spacing-sm) var(--spacing-md);
-    background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 10;
-}
-
-.blink-progress-bars {
-    display: flex;
-    flex-grow: 1;
-    gap: 4px;
-    margin-right: var(--spacing-md);
-}
-
-.progress-bar-wrapper {
-    flex-grow: 1;
-    height: 3px;
-    background-color: rgba(255, 255, 255, 0.3);
-    border-radius: 2px;
-    overflow: hidden;
-}
-
-.progress-bar {
-    height: 100%;
-    background-color: #fff;
-    width: 0%; /* JS tarafından ayarlanacak */
-    border-radius: 2px;
-}
-
-@keyframes fillProgressBar {
-    from { width: 0%; }
-    to { width: 100%; }
-}
-
-.blink-user-info {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-}
-
-.blink-user-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-}
-
-.blink-user-username {
-    color: #fff;
-    font-weight: 600;
-    font-size: 0.9em;
-    text-decoration: none;
-}
-
-.blink-close-btn {
-    background: none;
-    border: none;
-    color: #fff;
-    font-size: 1.8em;
-    cursor: pointer;
-    margin-left: var(--spacing-md);
-    opacity: 0.8;
-    transition: opacity 0.2s;
-}
-
-.blink-close-btn:hover {
-    opacity: 1;
-}
-
-.blink-media-area {
-    flex-grow: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    background-color: #000;
-}
-
-.blink-media-image,
-.blink-media-video {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    display: block;
-}
-
-.blink-text-content {
-    position: absolute;
-    bottom: var(--spacing-lg);
-    left: var(--spacing-lg);
-    right: var(--spacing-lg);
-    color: #fff;
-    background-color: rgba(0, 0, 0, 0.6);
-    padding: var(--spacing-sm);
-    border-radius: var(--border-radius-sm);
-    text-align: center;
-    font-size: 1em;
-    line-height: 1.4;
-    max-height: 40%;
-    overflow-y: auto;
-}
-
-.blink-navigation-controls {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 var(--spacing-xs);
-    pointer-events: none; /* Butonların kendilerine tıklanabilmesi için */
-}
-
-.blink-nav-btn {
-    background: none;
-    border: none;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 2.5em;
-    cursor: pointer;
-    padding: var(--spacing-md);
-    pointer-events: auto; /* Kendi tıklamalarına izin ver */
-    transition: color 0.2s ease, transform 0.2s ease;
-}
-
-.blink-nav-btn:hover {
-    color: #fff;
-    transform: scale(1.1);
-}
-
-/* Mobil Cihazlar İçin Duyarlı Ayarlamalar */
-@media (max-width: 480px) {
-    .blink-viewer-content {
-        max-width: 100%;
-        max-height: 100vh;
-        border-radius: 0;
-    }
-
-    .blink-header {
-        padding: var(--spacing-xs);
-    }
-
-    .blink-close-btn {
-        font-size: 1.5em;
-    }
-
-    .blink-nav-btn {
-        font-size: 2em;
-        padding: var(--spacing-sm);
-    }
-
-    .blink-text-content {
-        font-size: 0.9em;
-        padding: var(--spacing-xs);
-        bottom: var(--spacing-md);
-        left: var(--spacing-md);
-        right: var(--spacing-md);
-    }
-}
-
-/* style.css dosyasının sonuna ekleyin */
-
-/* --- YENİ: Navbar Dropdown Menüsü --- */
-.nav-item-dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.nav-link-dropdown-toggle {
-    color: var(--text-color-secondary);
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 15px;
-    padding: var(--spacing-xs) var(--spacing-xxs);
-    border-radius: var(--border-radius-xs);
-    transition: color var(--transition-duration) var(--transition-easing), background-color 0.2s ease;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-.nav-link-dropdown-toggle:hover {
-    color: var(--text-color-primary);
-    background-color: var(--tertiary-bg);
-}
-
-.dropdown-menu {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: var(--secondary-bg);
-    border: 1px solid var(--border-color-light);
-    border-radius: var(--border-radius-sm);
-    box-shadow: 0 4px 15px var(--shadow-medium);
-    min-width: 200px;
-    z-index: 1001;
-    list-style: none;
-    padding: var(--spacing-xs) 0;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: opacity 0.2s ease, transform 0.2s ease;
-    pointer-events: none;
-}
-
-.nav-item-dropdown:hover .dropdown-menu {
-    display: block;
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-}
-
-.dropdown-item {
-    display: block;
-    padding: var(--spacing-sm) var(--spacing-md);
-    color: var(--text-color-secondary);
-    text-decoration: none;
-    font-size: 14px;
-    transition: background-color 0.2s ease, color 0.2s ease;
-    white-space: nowrap;
-}
-
-.dropdown-item:hover {
-    background-color: var(--tertiary-bg);
-    color: var(--text-color-primary);
-    transform: none; /* Override default link hover */
-}
-
-/* --- BLINK (HİKAYE) BÖLÜMÜ STİLLERİ --- */
-
-.blinks-outer-container {
-    width: 100%;
-    /* Ekranın tamamını kapla */
-    max-width: 650px; /* home.html'deki feed-page-container ile aynı genişlikte tutabilirsiniz */
-    margin: var(--spacing-lg) auto; /* Üstte ve altta boşluk, ortala */
-    padding: var(--spacing-sm);
-    background-color: var(--secondary-bg);
-    border: 1px solid var(--border-color-light);
-    border-radius: var(--border-radius-md);
-    box-shadow: 0 4px 15px var(--shadow-medium);
-}
-
-.blinks-container {
-    display: flex;
-    overflow-x: auto; /* Yatay kaydırma */
-    padding: 10px 0;
-    gap: var(--spacing-md); /* Blinkler arası boşluk */
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none;  /* IE and Edge */
-}
-
-.blinks-container::-webkit-scrollbar { /* Chrome, Safari, Opera */
-    display: none;
-}
-
-.blink-item {
-    flex-shrink: 0; /* Küçülmesini engelle */
-    text-align: center;
-    transition: transform 0.2s ease;
-}
-
-.blink-item:hover {
-    transform: translateY(-3px);
-}
-
-.blink-item .view-blinks-btn {
-    display: block;
-    text-decoration: none;
-    color: inherit;
-    font-size: 0.9em;
-}
-
-.blink-avatar {
-    width: 65px; /* Hikaye avatarları için boyut */
-    height: 65px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid var(--gradient-primary); /* Instagram hikayesi gibi renkli çerçeve */
-    padding: 3px; /* Çerçeve ve resim arasında boşluk */
-    transition: border-color 0.2s ease, transform 0.2s ease;
-    box-shadow: 0 2px 8px var(--shadow-light);
-}
-.view-blinks-btn img {
-    background: var(--gradient-primary);
-}
-
-.blink-avatar:hover {
-    border-color: var(--focus-glow-color); /* Hover'da çerçeve rengini değiştir */
-}
-
-.blink-username {
-    display: block;
-    margin-top: var(--spacing-xxs);
-    font-size: 0.8em;
-    color: var(--text-color-muted);
-    white-space: nowrap; /* Kullanıcı adının tek satırda kalması */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 70px; /* Genişliği sınırlayarak taşmayı engelle */
-}
-
-.no-blinks-message {
-    text-align: center;
-    width: 100%;
-    color: var(--text-color-muted);
-    padding: var(--spacing-md);
-}
-
-/* --- YENİ: ÖZEL BLINK GÖRÜNTÜLEYİCİ MODALI --- */
-.blink-viewer-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.9); /* Koyu, hafif şeffaf arka plan */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000; /* En üstte olmalı */
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
     backdrop-filter: blur(8px); /* Hafif bulanıklık efekti */
 }
 
@@ -5296,4 +4402,203 @@ body.blinks-active {
         /* Mobil için de ortalamayı korur */
         width: calc(100% - (var(--spacing-md) * 2)); /* Mobil için daha az yan boşluk */
     }
+}
+
+
+/* --- YENİ EKLENEN MOBİL BÖLÜMLERİN STİLLERİ --- */
+
+/* Genel Mobil Bölüm Kapsayıcısı */
+.mobile-trending-sections-wrapper,
+.mobile-info-sections-wrapper {
+    display: none; /* Varsayılan olarak masaüstünde gizle */
+    width: 100%;
+    max-width: 650px; /* Feed ile aynı genişlikte tut */
+    margin: var(--spacing-lg) auto; /* Ortala */
+    padding: 0 var(--spacing-sm); /* Yan boşluklar */
+    box-sizing: border-box; /* Padding dahil genişliği hesapla */
+}
+
+/* Mobil Bölüm Kartı */
+.mobile-section-card {
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color-light);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 4px 15px var(--shadow-medium);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-lg); /* Altındaki elementle boşluk */
+}
+
+.mobile-section-title {
+    font-size: 1.1em;
+    font-weight: 600;
+    margin-bottom: var(--spacing-md);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--border-color-light);
+}
+
+/* Mobil Trend Karusel */
+.mobile-trending-carousel {
+    display: flex;
+    overflow-x: auto; /* Yatay kaydırma */
+    -webkit-overflow-scrolling: touch; /* iOS için akıcı kaydırma */
+    scrollbar-width: none; /* Firefox'ta gizle */
+    -ms-overflow-style: none; /* IE/Edge'de gizle */
+    padding-bottom: var(--spacing-xs); /* Kaydırma çubuğu boşluğu */
+    gap: var(--spacing-md); /* Trend grupları arası boşluk */
+}
+
+.mobile-trending-carousel::-webkit-scrollbar {
+    display: none; /* Chrome/Safari/Opera'da gizle */
+}
+
+.mobile-trending-group {
+    flex-shrink: 0; /* Küçülmesini engelle */
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    padding-right: var(--spacing-md); /* Grup bitiminde boşluk */
+    border-right: 1px solid var(--border-color-light); /* Gruplar arasına ayırıcı */
+}
+
+.mobile-trending-group:last-child {
+    border-right: none; /* Son grupta ayırıcı olmasın */
+    padding-right: 0;
+}
+
+.mobile-trending-group .group-title {
+    font-size: 0.9em;
+    font-weight: 700;
+    color: var(--text-color-muted);
+    margin-bottom: var(--spacing-sm);
+    text-transform: uppercase;
+}
+
+.trending-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    text-decoration: none;
+    color: var(--text-color-secondary);
+    font-size: 0.95em;
+    transition: color 0.2s ease, transform 0.2s ease;
+    white-space: nowrap; /* Tek satırda tut */
+}
+
+.trending-item:hover {
+    color: var(--text-color-primary);
+    transform: translateX(3px);
+}
+
+.trending-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--border-radius-circle);
+    object-fit: cover;
+    border: 1px solid var(--border-color-light);
+}
+
+.trending-text {
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.trending-count {
+    font-size: 0.8em;
+    color: var(--text-color-muted);
+}
+
+/* Mobil Bilgi Kartları */
+.mobile-info-sections-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg); /* Kartlar arası boşluk */
+}
+
+.mobile-info-card {
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color-light);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 4px 15px var(--shadow-medium);
+    padding: var(--spacing-md);
+    text-align: center;
+}
+
+.mobile-info-card .card-title {
+    font-size: 1.1em;
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xs);
+}
+
+.mobile-info-card .card-text {
+    font-size: 0.95em;
+    color: var(--text-color-secondary);
+    margin-bottom: var(--spacing-xxs);
+}
+
+.mobile-info-card .card-text-muted {
+    font-size: 0.85em;
+    color: var(--text-color-muted);
+    margin-bottom: var(--spacing-md);
+}
+
+.mobile-info-card .btn-primary-custom {
+    margin-top: var(--spacing-md);
+}
+
+/* Hızlı Gönderi Oluşturma Kartı */
+.quick-post-card {
+    margin: var(--spacing-lg) auto; /* Ortala */
+    max-width: 650px; /* Feed ile aynı genişlik */
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md); /* Daha kompakt padding */
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.quick-post-card .post-header {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    gap: var(--spacing-md);
+    border-bottom: none; /* Başlıkta alt çizgi olmasın */
+    padding: 0; /* İç padding olmasın */
+}
+
+.quick-post-card .post-author-img {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--border-radius-circle);
+    object-fit: cover;
+    border: 2px solid var(--gradient-primary);
+    flex-shrink: 0;
+}
+
+.quick-post-card .post-author-info {
+    flex-grow: 1;
+}
+
+.quick-post-input {
+    width: 100%;
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius-lg);
+    background-color: var(--tertiary-bg);
+    border: 1px solid var(--border-color-light);
+    color: var(--text-color-primary);
+    font-size: 0.95em;
+}
+
+.quick-post-btn {
+    flex-shrink: 0;
+    padding: var(--spacing-xs) var(--spacing-md);
+    font-size: 0.9em;
+    width: auto;
 }
