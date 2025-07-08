@@ -139,6 +139,32 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // Takip Et/Takibi Bırak aksiyonları
+        if (action === 'follow' || action === 'unfollow') {
+            if (data.success) {
+                // Buton metnini ve data-action özniteliğini güncelle
+                if (action === 'follow') {
+                    button.textContent = 'Takibi Bırak';
+                    button.dataset.action = 'unfollow';
+                    button.classList.remove('profile-follow-btn');
+                    button.classList.add('profile-unfollow-btn');
+                } else { // action === 'unfollow'
+                    button.textContent = 'Takip Et';
+                    button.dataset.action = 'follow';
+                    button.classList.remove('profile-unfollow-btn');
+                    button.classList.add('profile-follow-btn');
+                }
+
+                // Takipçi sayısını güncelle (eğer varsa)
+                const followerCountElement = document.querySelector('.stat-number.follower-count');
+                if (followerCountElement && data.count !== undefined) {
+                    updateCountWithAnimation(followerCountElement, data.count);
+                }
+            }
+            return; // Takip aksiyonları için buradan çık
+        }
+
+
         const card = button.closest('[data-post-id]');
         if (!card) return;
 
@@ -194,20 +220,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (riseIcon) riseIcon.className = data.risen ? 'fas fa-arrow-alt-circle-up' : 'far fa-arrow-alt-circle-up';
             let riseCount = card.querySelector('.rise-count');
             if (riseCount) updateCountWithAnimation(riseCount, data.rise_count);
-        }
-
-        if (action === 'follow' || action === 'unfollow') {
-            button.textContent = action === 'follow' ? 'Takibi Bırak' : 'Takip Et';
-            button.classList.toggle('follow-button', action !== 'follow');
-            button.classList.toggle('unfollow-button', action === 'follow');
-            button.classList.toggle('profile-unfollow-btn', action === 'follow');
-            button.classList.toggle('profile-follow-btn', action !== 'follow');
-            button.dataset.action = action === 'follow' ? 'unfollow' : 'follow';
-
-            const followerCount = document.querySelector('.stat-number.follower-count');
-            if (followerCount && data.count !== undefined) {
-                followerCount.textContent = data.count;
-            }
         }
     };
 
@@ -311,5 +323,155 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         loadFeed(initialFeed, false);
+    }
+
+    // === BLINK SİSTEMİ (YENİ VE GÜNCELLENMİŞ) ===
+    const blinksData = window.blinksData; // home.html'den gelen global veri
+    const customBlinkViewer = document.getElementById('customBlinkViewer');
+    const blinkUserAvatar = customBlinkViewer.querySelector('.blink-user-avatar');
+    const blinkUserUsername = customBlinkViewer.querySelector('.blink-user-username');
+    const blinkProgressBars = customBlinkViewer.querySelector('.blink-progress-bars');
+    const blinkMediaImage = customBlinkViewer.querySelector('.blink-media-image');
+    const blinkMediaVideo = customBlinkViewer.querySelector('.blink-media-video');
+    const blinkTextContent = customBlinkViewer.querySelector('.blink-text-content');
+    const blinkCloseBtn = customBlinkViewer.querySelector('.blink-close-btn');
+    const prevBlinkBtn = customBlinkViewer.querySelector('.prev-btn');
+    const nextBlinkBtn = customBlinkViewer.querySelector('.next-btn');
+
+    let currentUserBlinks = null; // Şu an gösterilen kullanıcının blinkler dizisi
+    let currentBlinkIndex = 0; // Şu anki blink'in indeksi
+    let autoAdvanceTimeout = null; // Otomatik ilerleme zamanlayıcısı
+
+    // Blinks görüntüleyiciyi açma
+    document.querySelectorAll('.view-blinks-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const userId = this.dataset.userId;
+            currentUserBlinks = blinksData[userId];
+            currentBlinkIndex = 0;
+            
+            if (currentUserBlinks && currentUserBlinks.length > 0) {
+                document.body.classList.add('blinks-active'); // Blink aktif sınıfını ekle
+                customBlinkViewer.classList.add('is-active');
+                displayBlink(currentBlinkIndex);
+            }
+        });
+    });
+
+    // Blinks görüntüleyiciyi kapatma
+    blinkCloseBtn.addEventListener('click', closeBlinkViewer);
+    customBlinkViewer.addEventListener('click', function(e) {
+        if (e.target === customBlinkViewer) { // Sadece dış katmana tıklanırsa kapat
+            closeBlinkViewer();
+        }
+    });
+
+    // Esc tuşuyla kapatma
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && customBlinkViewer.classList.contains('is-active')) {
+            closeBlinkViewer();
+        }
+    });
+
+    // İleri/Geri butonları
+    nextBlinkBtn.addEventListener('click', () => navigateBlink(1));
+    prevBlinkBtn.addEventListener('click', () => navigateBlink(-1));
+
+    // Klavyeyle ileri/geri gitme
+    document.addEventListener('keydown', function(e) {
+        if (customBlinkViewer.classList.contains('is-active')) {
+            if (e.key === 'ArrowRight') {
+                navigateBlink(1);
+            } else if (e.key === 'ArrowLeft') {
+                navigateBlink(-1);
+            }
+        }
+    });
+
+    function displayBlink(index) {
+        if (!currentUserBlinks || index < 0 || index >= currentUserBlinks.length) {
+            closeBlinkViewer();
+            return;
+        }
+
+        currentBlinkIndex = index;
+        const blink = currentUserBlinks[currentBlinkIndex];
+
+        // Temizle
+        blinkMediaImage.style.display = 'none';
+        blinkMediaVideo.style.display = 'none';
+        blinkTextContent.style.display = 'none';
+        blinkMediaVideo.pause();
+        blinkMediaVideo.currentTime = 0;
+
+        // Kullanıcı bilgileri
+        blinkUserAvatar.src = blink.profile_picture_url;
+        blinkUserUsername.textContent = '@' + blink.username;
+        blinkUserUsername.href = `/profile/${blink.username}`; // Profil linki
+
+        // İçerik yükle
+        if (blink.image_url) {
+            blinkMediaImage.src = blink.image_url;
+            blinkMediaImage.style.display = 'block';
+        } else if (blink.video_url) {
+            blinkMediaVideo.src = blink.video_url;
+            blinkMediaVideo.style.display = 'block';
+            blinkMediaVideo.play().catch(e => console.log("Video auto-play failed:", e));
+        } else if (blink.text_content) {
+            blinkTextContent.textContent = blink.text_content;
+            blinkTextContent.style.display = 'block';
+        }
+
+        updateProgressBars();
+        startAutoAdvance();
+    }
+
+    function updateProgressBars() {
+        blinkProgressBars.innerHTML = ''; // Önceki barları temizle
+        currentUserBlinks.forEach((_, i) => {
+            const barWrapper = document.createElement('div');
+            barWrapper.classList.add('progress-bar-wrapper');
+            const bar = document.createElement('div');
+            bar.classList.add('progress-bar');
+            barWrapper.appendChild(bar);
+            blinkProgressBars.appendChild(barWrapper);
+
+            if (i < currentBlinkIndex) {
+                bar.style.width = '100%'; // Geçilen barlar tam dolu
+            } else if (i === currentBlinkIndex) {
+                // Aktif barın animasyonu CSS ile yönetilecek
+                bar.style.width = '0%'; // Animasyona başlamadan önce 0'a çek
+                bar.style.animation = `fillProgressBar 5s linear forwards`; // 5 saniye sürecek
+            } else {
+                bar.style.width = '0%'; // Henüz gelmemiş barlar boş
+            }
+        });
+    }
+
+    function startAutoAdvance() {
+        clearTimeout(autoAdvanceTimeout);
+        autoAdvanceTimeout = setTimeout(() => {
+            navigateBlink(1);
+        }, 5000); // Her blink 5 saniye görünsün
+    }
+
+    function navigateBlink(direction) {
+        let newIndex = currentBlinkIndex + direction;
+        if (newIndex >= 0 && newIndex < currentUserBlinks.length) {
+            displayBlink(newIndex);
+        } else {
+            // Son blink'ten sonra veya ilk blink'ten önce, görüntüleyiciyi kapat
+            closeBlinkViewer();
+        }
+    }
+
+    function closeBlinkViewer() {
+        customBlinkViewer.classList.remove('is-active');
+        document.body.classList.remove('blinks-active'); // Blink aktif sınıfını kaldır
+        blinkMediaVideo.pause();
+        blinkMediaVideo.currentTime = 0;
+        clearTimeout(autoAdvanceTimeout);
+        currentUserBlinks = null; // Verileri sıfırla
+        currentBlinkIndex = 0;
     }
 });

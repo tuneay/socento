@@ -223,15 +223,15 @@
     <div class="creation-panel" id="creation-panel">
         <div class="tab-headers">
             <div class="tab-header-item" data-target="#echo-creator" role="button" tabindex="0">
-                <i class="fas fa-microphone-lines"></i> Premium Echo
+                <i class="fas fa-microphone-lines"></i> Echo Tabanlı içerik
             </div>
             <div class="tab-header-item" data-target="#clip-creator" role="button" tabindex="0">
-                <i class="fas fa-film"></i> Premium Clips
+                <i class="fas fa-film"></i> Clips Tabanlı İçerik
             </div>
         </div>
         <div class="tab-content-container">
             <div class="tab-content" id="echo-creator">
-                <h4 class="tab-content-title"><i class="fas fa-microphone-lines"></i> Bir Echo Yarat!</h4>
+                <h4 class="tab-content-title"><i class="fa-solid fa-terminal"></i> Geliştirici Ekibimizle İsteğini Paylaş</h4>
                 <form method="post" action="{{ url_for('new_inner_echo') }}" class="premium-form">
                     <div class="form-group">
                         <textarea name="content" class="form-control" rows="4" maxlength="500" placeholder="Aklındakileri premium toplulukla paylaş..." required></textarea>

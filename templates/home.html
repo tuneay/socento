@@ -5,7 +5,9 @@
 {% block content %}
 <div class="main-content-flex-wrapper" data-initial-feed="{{ initial_feed or 'posts' }}">
     
+    {# BLINKLER İÇİN YENİ DIŞ KAPSAYICI #}
     <div class="blinks-outer-container">
+        <h3>Blink's</h3>
         <div class="blinks-container">
             {% if blinks %}
                 {% for user_id, user_blinks in blinks.items() %}
@@ -13,7 +15,7 @@
                     {% set owner_username = user_blinks[0].username %}
                     {% set owner_profile_pic_url = user_blinks[0].profile_picture_url %}
                     
-                    <div class="blink-item" data-user-id="{{ user_id }}" data-blink-count="{{ user_blinks|length }}">
+                    <div class="blink-item" data-user-id="{{ user_id }}">
                         <a href="#" class="view-blinks-btn" data-user-id="{{ user_id }}">
                             <img src="{{ owner_profile_pic_url }}" alt="{{ owner_username }}" class="blink-avatar">
                             <span class="blink-username">{{ owner_username }}</span>
@@ -26,27 +28,33 @@
         </div>
     </div>
 
-  <div id="blinkModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="blinkModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="blinkModalLabel"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+    {# YENİ BLINK GÖRÜNTÜLEYİCİ - Tam Ekran Overlay #}
+    <div id="customBlinkViewer" class="blink-viewer-overlay">
+        <div class="blink-viewer-content">
+            <div class="blink-header">
+                <div class="blink-progress-bars"></div>
+                <div class="blink-user-info">
+                    <img src="" alt="Profil Resmi" class="blink-user-avatar">
+                    <span class="blink-user-username"></span>
+                </div>
+                <button class="blink-close-btn">&times;</button>
             </div>
-            <div class="modal-body">
-                <div id="blinkContent">
-                    {# Blink içeriği buraya yüklenecek #}
-                </div>
-                <div class="blink-navigation">
-                    <button class="btn btn-secondary" id="prevBlink"><i class="fa-solid fa-backward"></i></button>
-                    <button class="btn btn-secondary" id="nextBlink"><i class="fa-solid fa-forward"></i></button>
-                </div>
+            <div class="blink-media-area">
+                <img src="" alt="Blink Medya" class="blink-media-image">
+                <video controls playsinline class="blink-media-video">
+                    <source src="" type="video/mp4">
+                    Tarayıcınız video etiketini desteklemiyor.
+                </video>
+                <p class="blink-text-content"></p>
+            </div>
+            <div class="blink-navigation-controls">
+                <button class="blink-nav-btn prev-btn"><i class="fas fa-chevron-left"></i></button>
+                <button class="blink-nav-btn next-btn"><i class="fas fa-chevron-right"></i></button>
             </div>
         </div>
     </div>
-</div>
+    {# END OF YENİ BLINK GÖRÜNTÜLEYİCİ #}
+
     <div class="main-content-flex-wrapper" data-initial-feed="{{ initial_feed or 'posts' }}">
         
         {% if current_user.is_authenticated %}
@@ -140,72 +148,5 @@
 <script>
     // Python'dan gelen blinks dict'ini JS objesine dönüştürür ve global yapar
     window.blinksData = {{ blinks | tojson }};
-
-    // jQuery'nin yüklendiğinden emin olmak için kodunuzu buraya taşıyın
-    $(document).ready(function() {
-        let currentBlinksData = window.blinksData; // Global blinksData'yı kullanın
-        let currentBlinkUser = null;
-        let currentBlinkIndex = 0;
-
-        // Blinkler'i görüntüle düğmesine tıklama
-        $('.view-blinks-btn').on('click', function(e) {
-            e.preventDefault(); // Bu satırın çalıştığından emin olun
-            const userId = $(this).data('user-id');
-            currentBlinkUser = userId;
-            currentBlinkIndex = 0;
-
-            if (currentBlinksData && currentBlinksData[userId]) { // currentBlinksData'nın null/undefined olmadığından emin olun
-                displayBlink(userId, currentBlinkIndex);
-                $('#blinkModal').modal('show');
-            } else {
-                alert('Bu kullanıcının aktif Blinkler\'i yok.');
-            }
-        });
-
-        function displayBlink(userId, index) {
-            const blinks = currentBlinksData[userId];
-            if (!blinks || blinks.length === 0) return;
-
-            const blink = blinks[index];
-            $('#blinkModalLabel').text(blink.username + ' Blinkleri');
-            let contentHtml = '';
-
-            if (blink.image_url) {
-                contentHtml += `<img src="${blink.image_url}" class="img-fluid" alt="Blink">`;
-            } else if (blink.video_url) {
-                contentHtml += `<video controls autoplay class="img-fluid"><source src="${blink.video_url}" type="video/mp4"></video>`;
-            }
-            if (blink.text_content) {
-                contentHtml += `<p>${blink.text_content}</p>`;
-            }
-            $('#blinkContent').html(contentHtml);
-
-            $('#prevBlink').prop('disabled', index === 0);
-            $('#nextBlink').prop('disabled', index === blinks.length - 1);
-        }
-
-        // Sonraki Blink
-        $('#nextBlink').on('click', function() {
-            if (currentBlinkUser && currentBlinksData[currentBlinkUser] && currentBlinkIndex < currentBlinksData[currentBlinkUser].length - 1) {
-                currentBlinkIndex++;
-                displayBlink(currentBlinkUser, currentBlinkIndex);
-            }
-        });
-
-        // Önceki Blink
-        $('#prevBlink').on('click', function() {
-            if (currentBlinkUser && currentBlinksData[currentBlinkUser] && currentBlinkIndex > 0) {
-                currentBlinkIndex--;
-                displayBlink(currentBlinkUser, currentBlinkIndex);
-            }
-        });
-
-        // Modal kapandığında sıfırla
-        $('#blinkModal').on('hidden.bs.modal', function () {
-            currentBlinkUser = null;
-            currentBlinkIndex = 0;
-            $('#blinkContent').empty();
-        });
-    });
 </script>
 {% endblock %}
