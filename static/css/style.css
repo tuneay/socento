@@ -3198,7 +3198,8 @@ gn-items: flex-start;
         /* Navbar + padding + ikon + yazı yüksekliği */
         /* Yaklaşık olarak: 70px (nav) + 32px (padding) + 55px (ikon) + ~15px (yazı) = ~172px */
         /* Daha güvenli bir değer için: */
-        padding-top: 175px;
+        padding-top: 30px;
+        width: 90%;
     }
 
     /* Mobil hızlı erişim butonları aktifken alttaki mobil navbarı gizle */
