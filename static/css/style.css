@@ -3861,3 +3861,336 @@ body.clips-active .feed-page-container {
     color: var(--text-color-primary);
     transform: none; /* Override default link hover */
 }
+
+.blinks-container {
+    display: flex;
+    overflow-x: auto; /* Yatay kaydırma */
+    padding: 10px 0;
+    gap: 15px; /* Blinkler arası boşluk */
+    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+}
+
+.blinks-container::-webkit-scrollbar { /* Chrome, Safari, Opera */
+    display: none;
+}
+
+.blink-item {
+    flex-shrink: 0; /* Küçülmesini engelle */
+    text-align: center;
+}
+
+.blink-item .view-blinks-btn {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    font-size: 0.9em;
+}
+
+.blink-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #007bff; /* Blink olduğunu belirtmek için çerçeve */
+    padding: 2px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.blink-avatar:hover {
+    transform: scale(1.05);
+}
+
+.blink-username {
+    display: block;
+    margin-top: 5px;
+    white-space: nowrap; /* Kullanıcı adının tek satırda kalması */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 70px; /* Genişliği sınırlayarak taşmayı engelle */
+}
+
+/* Modal Stilleri */
+#blinkModal .modal-dialog {
+    max-width: 400px; /* Blink modalı için daha dar genişlik */
+}
+
+#blinkModal .modal-content {
+    background-color: black; /* Hikaye arkaplanı genellikle siyah */
+    color: white;
+    border: none;
+}
+
+#blinkModal .modal-header {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+#blinkModal .modal-title {
+    color: white;
+}
+
+#blinkModal .close {
+    color: white;
+    opacity: 0.8;
+    text-shadow: none; /* Metin gölgesini kaldır */
+}
+
+#blinkModal .modal-body {
+    position: relative;
+    padding: 0;
+}
+
+#blinkContent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px; /* Minimum yükseklik */
+    max-height: 600px;
+    overflow: hidden;
+    background-color: #333;
+    border-radius: 5px;
+}
+
+#blinkContent img, #blinkContent video {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block; /* img ve video altındaki boşluğu kaldır */
+}
+
+#blinkContent p {
+    position: absolute;
+    bottom: 20px;
+    width: 90%;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.blink-navigation {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+    padding: 0 10px;
+    z-index: 10;
+}
+
+.blink-navigation button {
+    background: rgba(100, 100, 100, 0.5);
+    border: none;
+    color: white;
+    font-size: 1.5em;
+    padding: 5px 10px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.blink-navigation button:hover {
+    background: rgba(100, 100, 100, 0.8);
+}
+
+/* --- BLINK (HİKAYE) BÖLÜMÜ STİLLERİ --- */
+
+.blinks-outer-container {
+    width: 100%;
+    /* Ekranın tamamını kapla */
+    max-width: 650px; /* home.html'deki feed-page-container ile aynı genişlikte tutabilirsiniz */
+    margin: var(--spacing-lg) auto; /* Üstte ve altta boşluk, ortala */
+    padding: var(--spacing-sm);
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color-light);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 4px 15px var(--shadow-medium);
+}
+
+.blinks-container {
+    display: flex;
+    overflow-x: auto; /* Yatay kaydırma */
+    padding: 10px 0;
+    gap: var(--spacing-md); /* Blinkler arası boşluk */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+}
+
+.blinks-container::-webkit-scrollbar { /* Chrome, Safari, Opera */
+    display: none;
+}
+
+.blink-item {
+    flex-shrink: 0; /* Küçülmesini engelle */
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.blink-item:hover {
+    transform: translateY(-3px);
+}
+
+.blink-item .view-blinks-btn {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    font-size: 0.9em;
+}
+
+.blink-avatar {
+    width: 65px; /* Hikaye avatarları için boyut */
+    height: 65px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--gradient-primary); /* Instagram hikayesi gibi renkli çerçeve */
+    padding: 2px; /* Çerçeve ve resim arasında boşluk */
+    transition: border-color 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 2px 8px var(--shadow-light);
+}
+
+.blink-avatar:hover {
+    border-color: var(--focus-glow-color); /* Hover'da çerçeve rengini değiştir */
+}
+
+.blink-username {
+    display: block;
+    margin-top: var(--spacing-xxs);
+    font-size: 0.8em;
+    color: var(--text-color-muted);
+    white-space: nowrap; /* Kullanıcı adının tek satırda kalması */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 70px; /* Genişliği sınırlayarak taşmayı engelle */
+}
+
+.no-blinks-message {
+    text-align: center;
+    width: 100%;
+    color: var(--text-color-muted);
+    padding: var(--spacing-md);
+}
+
+/* --- BLINK MODAL STİLLERİ --- */
+#blinkModal .modal-dialog {
+    max-width: 450px; /* Blink modalı için daha dar genişlik */
+    margin: 1.75rem auto; /* Ortala */
+}
+
+#blinkModal .modal-content {
+    background-color: #000; /* Hikaye arkaplanı genellikle siyah */
+    color: #fff;
+    border: none;
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+}
+
+#blinkModal .modal-header {
+    border-bottom: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent);
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#blinkModal .modal-title {
+    color: #fff;
+    font-size: 1.1em;
+    font-weight: 600;
+}
+
+#blinkModal .close {
+    color: #fff;
+    opacity: 0.7;
+    text-shadow: none;
+    font-size: 1.8em;
+    transition: opacity 0.2s;
+}
+
+#blinkModal .close:hover {
+    opacity: 1;
+}
+
+#blinkModal .modal-body {
+    position: relative;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px; /* Minimum yükseklik */
+    max-height: 80vh; /* Ekran yüksekliğinin %80'ini geçmesin */
+    overflow: hidden;
+    background-color: #333; /* Yüklenirken veya boşken arkaplan */
+}
+
+#blinkContent {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#blinkContent img, #blinkContent video {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* İçeriği kutuya sığdırırken oranını koru */
+    display: block;
+    margin: auto;
+}
+
+#blinkContent p {
+    position: absolute;
+    bottom: var(--spacing-lg);
+    width: calc(100% - var(--spacing-xl));
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    text-align: center;
+    font-size: 1em;
+    color: #fff;
+    line-height: 1.4;
+    z-index: 1;
+}
+
+.blink-navigation {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 var(--spacing-xs);
+    z-index: 5;
+    pointer-events: none; /* Butonların üzerindeki tıklamaları engelleme */
+}
+
+.blink-navigation button {
+    background: rgba(100, 100, 100, 0.5);
+    border: none;
+    color: #fff;
+    font-size: 1.8em;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: 50%;
+    cursor: pointer;
+    pointer-events: auto; /* Kendi tıklamalarına izin ver */
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.blink-navigation button:hover {
+    background: rgba(100, 100, 100, 0.8);
+    transform: scale(1.05);
+}

@@ -12,7 +12,9 @@ from werkzeug.utils import secure_filename
 import re
 import secrets
 import string
+import sqlalchemy
 from sqlalchemy import func, case
+from sqlalchemy import desc, or_
 from sqlalchemy.orm import joinedload
 from sqlalchemy.exc import IntegrityError
 
@@ -49,6 +51,15 @@ app.config['ALLOWED_FILE_EXTENSIONS'] = app.config['ALLOWED_IMAGE_EXTENSIONS'].u
 
 db = SQLAlchemy(app)
 
+UPLOAD_FOLDER = 'static/uploads/blinks' # Blink'ler için ayrı bir yükleme klasörü
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+app.config['BLINK_UPLOAD_FOLDER'] = UPLOAD_FOLDER
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'mp4', 'mov'} # Desteklenen dosya türleri
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # === PREMIUM PLAN SABİT YAPISI ===
 PREMIUM_PLANS = {
@@ -485,6 +496,22 @@ class CommunityPostComment(db.Model):
     user = db.relationship('User')
     post = db.relationship('CommunityPost', backref='comments')
 
+class Blink(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship('User', backref='blinks', lazy=True)
+    image_url = db.Column(db.String(200), nullable=True) # Resim veya video URL'si
+    video_url = db.Column(db.String(200), nullable=True) # Video URL'si
+    text_content = db.Column(db.String(500), nullable=True) # Metin içeriği
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+
+    # Blink'in 24 saat içinde geçerli olup olmadığını kontrol eden özellik
+    @property
+    def is_active(self):
+        return datetime.utcnow() - self.timestamp < timedelta(hours=24)
+
+    def __repr__(self):
+        return f'<Blink {self.id} by User {self.user_id}>'
 
 # --- Context Processors ve Template Filters ---
 # app.py dosyasındaki mevcut inject_premium_context fonksiyonunu bununla değiştirin
@@ -618,12 +645,90 @@ def home():
             hashtag_counts[hashtag.lower()] = hashtag_counts.get(hashtag.lower(), 0) + 1
     top_hashtags = sorted(hashtag_counts.items(), key=lambda item: item[1], reverse=True)[:5]
     trending_topics = []
+    
+    # HATA AYIKLAMA SATIRLARI
+    # print(f"DEBUG: Type of datetime.utcnow: {type(datetime.utcnow)}")
+    # print(f"DEBUG: Type of timedelta: {type(timedelta)}")
+    # print(f"DEBUG: Type of desc: {type(desc)}") # Bu satırı yoruma alabilirsiniz, çünkü artık sqlalchemy.desc kullanıyoruz
+    # print(f"DEBUG: Type of Blink.query.filter: {type(Blink.query.filter)}")
+
+
+    all_blinks_query = Blink.query.filter(Blink.timestamp >= datetime.utcnow() - timedelta(hours=24)).order_by(sqlalchemy.desc(Blink.timestamp))
+
+    # Kendi Blink'leri
+    current_user_blinks = all_blinks_query.filter_by(user_id=current_user.id).options(joinedload(Blink.user)).all()
+
+    # Takip edilenlerin Blink'leri
+    following_user_ids = [f.followed.id for f in current_user.followed.all()]
+    followed_blinks_raw = []
+    if following_user_ids:
+        followed_blinks_raw = all_blinks_query.filter(Blink.user_id.in_(following_user_ids)).options(joinedload(Blink.user)).all()
+
+    all_active_blinks = current_user_blinks + followed_blinks_raw
+
+    # Burada her kullanıcının aktif Blinkler'ini gruplayıp serileştiriyoruz
+    blinks_for_template = {}
+    
+    # Kendi Blinkler'iniz
+    user_blinks_list = [b for b in current_user_blinks if b.is_active]
+    if user_blinks_list:
+        blinks_for_template[current_user.id] = []
+        for blink in user_blinks_list:
+            blinks_for_template[current_user.id].append({
+                'id': blink.id,
+                'user_id': blink.user_id,
+                'image_url': blink.image_url,
+                'video_url': blink.video_url,
+                'text_content': blink.text_content,
+                'timestamp': blink.timestamp.isoformat(), # Tarihi string olarak sakla
+                'username': blink.user.username,
+                'profile_picture_url': url_for('static', filename='uploads/profile_pics/' + blink.user.profile_image) # Kullanıcının profil fotoğrafı URL'si
+            })
+
+
+    # Takip edilenlerin Blinkler'i
+    for blink in all_active_blinks:
+        if blink.user_id not in blinks_for_template and blink.is_active: # Kendi blinklerimizi tekrar eklememek için
+            # Kullanıcının tüm aktif blinkler'ini çek
+            user_all_blinks = all_blinks_query.filter_by(user_id=blink.user_id).options(joinedload(Blink.user)).all() # Burada da user'ı yükle
+            for b in user_all_blinks:
+                if b.is_active:
+                    if blink.user_id not in blinks_for_template:
+                        blinks_for_template[blink.user_id] = []
+                    blinks_for_template[blink.user_id].append({
+                        'id': b.id,
+                        'user_id': b.user_id,
+                        'image_url': b.image_url,
+                        'video_url': b.video_url,
+                        'text_content': b.text_content,
+                        'timestamp': b.timestamp.isoformat(),
+                        'username': b.user.username,
+                        'profile_picture_url': url_for('static', filename='uploads/profile_pics/' + b.user.profile_image)
+                    })
+    
+    # Kendi Blinkleriniz ile takip ettiklerinizin Blinkler'ini birleştirin
+    final_blinks_for_display = {}
+    
+    # Önce kendi Blinkler'inizi ekleyin
+    if current_user.id in blinks_for_template:
+        final_blinks_for_display[current_user.id] = blinks_for_template[current_user.id]
+
+    # Ardından takip edilenlerin Blinkler'ini ekleyin (kendi Blinkler'inizi üzerine yazmadan)
+    for user_id, blinks_list in blinks_for_template.items():
+        if user_id != current_user.id and user_id not in final_blinks_for_display:
+            final_blinks_for_display[user_id] = blinks_list
+
+    # Template'e gönderilecek son Blinkler, artık serileştirilmiş durumda
+    blinks=final_blinks_for_display # Değişken adını blinks olarak ayarlayın
+
+
     return render_template('home.html', 
-                           initial_feed=initial_feed_type,
-                           recommended_users=recommended_users, 
-                           top_users=top_users, 
-                           top_hashtags=top_hashtags,
-                           trending_topics=trending_topics)
+                            initial_feed=initial_feed_type,
+                            recommended_users=recommended_users, 
+                            top_users=top_users, 
+                            top_hashtags=top_hashtags,
+                            trending_topics=trending_topics,
+                            blinks=blinks) # Değişkeni buraya geçiyoruz
 
 # --- Infinity Network Rotaları ---
 
@@ -693,14 +798,14 @@ def my_network_slug(slug):
     polls = getattr(network, 'polls', [])
 
     return render_template('infinity_network_home.html', 
-                           network=network, 
-                           members=members, 
-                           moderators=moderators, 
-                           posts=posts, 
-                           announcements=announcements, 
-                           polls=polls, 
-                           invite_status=invite_status,
-                           latest_invite=latest_invite)
+                            network=network, 
+                            members=members, 
+                            moderators=moderators, 
+                            posts=posts, 
+                            announcements=announcements, 
+                            polls=polls, 
+                            invite_status=invite_status,
+                            latest_invite=latest_invite)
 
 # app.py'ye EKLENECEK YENİ BLOG ROTALARI
 
@@ -1091,6 +1196,63 @@ def new_post():
         flash('Gönderiniz başarıyla oluşturuldu!', 'success')
         return redirect(url_for('home'))
     return render_template('create_post.html', title='Yeni Gönderi')
+
+@app.route('/create_blink', methods=['GET', 'POST'])
+@login_required
+def create_blink():
+    if request.method == 'POST':
+        text_content = request.form.get('text_content')
+        file = request.files.get('media_file') # 'media_file' HTML formdaki input'un name'i olmalı
+        image_url = None
+        video_url = None
+
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            filepath = os.path.join(app.config['BLINK_UPLOAD_FOLDER'], filename)
+            file.save(filepath)
+            # Dosya uzantısına göre resim mi video mu olduğunu ayır
+            if filename.rsplit('.', 1)[1].lower() in {'mp4', 'mov'}:
+                video_url = url_for('static', filename=f'uploads/blinks/{filename}')
+            else:
+                image_url = url_for('static', filename=f'uploads/blinks/{filename}')
+        elif not text_content: # Ne dosya ne de metin varsa
+            flash('Blink için metin veya medya eklemelisiniz.', 'danger')
+            return redirect(url_for('home'))
+
+        new_blink = Blink(user_id=current_user.id,
+                          image_url=image_url,
+                          video_url=video_url,
+                          text_content=text_content)
+        db.session.add(new_blink)
+        db.session.commit()
+        flash('Blink başarıyla oluşturuldu!', 'success')
+        return redirect(url_for('home'))
+    return render_template('create_blink.html') # Bu template'i sonra oluşturacağız
+
+@app.route('/delete_blink/<int:blink_id>', methods=['POST'])
+@login_required
+def delete_blink(blink_id):
+    blink = Blink.query.get_or_404(blink_id)
+    if blink.user_id != current_user.id and not current_user.is_admin: # Admin yetkiniz varsa
+        flash('Bu Blink\'i silme yetkiniz yok.', 'danger')
+        return redirect(url_for('home'))
+
+    # Dosyayı sunucudan da silmek isterseniz
+    if blink.image_url:
+        try:
+            os.remove(os.path.join(app.root_path, blink.image_url.replace('/static/', 'static/')))
+        except FileNotFoundError:
+            pass # Dosya bulunamazsa hata vermemesi için
+    if blink.video_url:
+        try:
+            os.remove(os.path.join(app.root_path, blink.video_url.replace('/static/', 'static/')))
+        except FileNotFoundError:
+            pass
+
+    db.session.delete(blink)
+    db.session.commit()
+    flash('Blink başarıyla silindi.', 'success')
+    return redirect(url_for('home'))
 
 @app.route('/post/<int:post_id>', methods=['GET', 'POST'])
 @login_required
@@ -1518,7 +1680,7 @@ def register_inner_network_routes(app):
                 return redirect(url_for('upgrade_plan'))
             return f(*args, **kwargs)
         return decorated_function
-    
+        
     @app.route('/inner-network', methods=['GET'])
     @login_required
     @premium_required
@@ -1616,6 +1778,37 @@ def register_inner_network_routes(app):
     @login_required
     def locked_premium():
         return render_template('locked_premium.html')
+def clean_expired_blinks():
+    with app.app_context(): # Flask uygulama bağlamı içinde çalışmalı
+        print("Süresi dolan Blinkler temizleniyor...")
+        # Süresi dolmuş Blinkler (24 saatten eski)
+        expired_blinks = Blink.query.filter(Blink.timestamp < datetime.utcnow() - timedelta(hours=24)).all()
+        for blink in expired_blinks:
+            # Dosyayı da sunucudan silmek isterseniz
+            if blink.image_url and 'uploads/blinks' in blink.image_url:
+                try:
+                    # url_for ile oluşturulan path'i gerçek dosya sistemindeki path'e çevir
+                    relative_path = blink.image_url.replace(url_for('static', filename=''), '')
+                    full_path = os.path.join(app.root_path, 'static', relative_path)
+                    os.remove(full_path)
+                    print(f"Silindi: {full_path}")
+                except FileNotFoundError:
+                    print(f"Dosya bulunamadı: {full_path}")
+                except Exception as e:
+                    print(f"Dosya silinirken hata oluştu {full_path}: {e}")
+            if blink.video_url and 'uploads/blinks' in blink.video_url:
+                try:
+                    relative_path = blink.video_url.replace(url_for('static', filename=''), '')
+                    full_path = os.path.join(app.root_path, 'static', relative_path)
+                    os.remove(full_path)
+                    print(f"Silindi: {full_path}")
+                except FileNotFoundError:
+                    print(f"Dosya bulunamadı: {full_path}")
+                except Exception as e:
+                    print(f"Dosya silinirken hata oluştu {full_path}: {e}")
+            db.session.delete(blink)
+        db.session.commit()
+        print(f"{len(expired_blinks)} adet Blink temizlendi.")
 
 if __name__ == '__main__':
     with app.app_context():
@@ -1644,5 +1837,17 @@ if __name__ == '__main__':
 
         register_premium_community_routes(app)
         register_inner_network_routes(app)
+if __name__ == '__main__':
+    # Buraya APScheduler importunu ekleyin (dosyanın en üstündeki diğer import'ların yanına da ekleyebilirsiniz):
+    from apscheduler.schedulers.background import BackgroundScheduler
+
+    # Zamanlayıcıyı başlatma ve görevi ekleme
+    scheduler = BackgroundScheduler()
+    # clean_expired_blinks fonksiyonunu her saatte bir çalıştırmak için
+    scheduler.add_job(func=clean_expired_blinks, trigger="interval", hours=1)
+    scheduler.start() # Zamanlayıcıyı başlat
+
+    print("Uygulama çalışıyor ve Blink temizleme görevi planlandı.")
+
 
     app.run(debug=True)
