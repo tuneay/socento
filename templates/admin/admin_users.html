@@ -1,0 +1,49 @@
+{% extends "admin/admin_base.html" %}
+
+{% block title %}Kullanıcıları Yönet{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <h1>Kullanıcı Yönetimi (God Mode)</h1>
+</div>
+
+<div class="card">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Kullanıcı Adı</th>
+                <th>E-posta</th>
+                <th>Mevcut Rol</th>
+                <th>Rolü Değiştir</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>@{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td><strong>{{ user.role }}</strong></td>
+                <td>
+                    {% if user.id == current_user.id and user.role == 'super_admin' %}
+                        <small>Kendini düzenleyemezsin</small>
+                    {% else %}
+                    <form action="{{ url_for('admin_set_user_role') }}" method="POST">
+                        <input type="hidden" name="user_id" value="{{ user.id }}">
+                        <select name="role" style="padding: 5px; border-radius: 4px;">
+                            <option value="basic" {% if user.role == 'basic' %}selected{% endif %}>Basic</option>
+                            <option value="premium" {% if user.role == 'premium' %}selected{% endif %}>Premium</option>
+                            <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
+                            <option value="super_admin" {% if user.role == 'super_admin' %}selected{% endif %}>Super Admin</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary btn-sm">Ayarla</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

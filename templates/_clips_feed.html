@@ -1,0 +1,45 @@
+<div class="clips-viewer-container" id="clips-container">
+    {% if video_posts %}
+        {% for post in video_posts %}
+        <div class="clip-slide" 
+             data-post-id="{{ post.id }}"
+             data-video-url="{{ url_for('static', filename='uploads/post_media/' + post.video_file) }}">
+            <video class="clip-video" loop playsinline preload="none"></video>
+            
+            <div class="clip-overlay">
+                <div class="clip-user-info">
+                    <a href="{{ url_for('profile', username=post.author.username) }}">
+                        <img src="{{ url_for('static', filename='uploads/profile_pics/' + post.author.profile_image) }}" alt="{{ post.author.username }}">
+                        <span>@{{ post.author.username }} {{ post.author.get_blue_tick_html() | safe }}</span>
+                    </a>
+                </div>
+                <div class="clip-caption">
+                    <p>{{ post.content | process_tags | safe }}</p>
+                </div>
+            </div>
+
+            <div class="clip-actions">
+                <button class="clip-action-button action-button like-button {% if post.is_liked_by_current_user %}liked{% endif %}" data-action="like" title="Beğen">
+                    <i class="fas fa-heart"></i>
+                    <span>{{ post.likes|length }}</span>
+                </button>
+                <a href="{{ url_for('post_detail', post_id=post.id) }}" class="clip-action-button" title="Yorumlar">
+                    <i class="fas fa-comment-dots"></i>
+                    <span>{{ post.comments|length }}</span>
+                </a>
+                <button class="clip-action-button action-button lift-button {% if post.is_lifted_by_current_user %}lifted{% endif %}" data-action="lift" title="Lift Et">
+                    <i class="fas fa-retweet"></i>
+                    <span>{{ post.lifts|length }}</span>
+                </button>
+            </div>
+            <div class="volume-control">
+                <i class="fas fa-volume-mute"></i>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="no-content-message">
+            <p>Akışta Clips yok. Sen oluşturmaya ne dersin?</p>
+        </div>
+    {% endif %}
+</div>

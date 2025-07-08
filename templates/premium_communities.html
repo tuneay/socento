@@ -1,0 +1,437 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    /* --- 💎 TEMA DEĞİŞKENLERİ VE TEMEL AYARLAR (İstediğiniz Tema) --- */
+    :root {
+        --bg-primary: #0D1117;
+        --bg-secondary: #161B22;
+        --bg-card: rgba(22, 27, 34, 0.7);
+        --border-color-soft: rgba(255, 255, 255, 0.1);
+        --border-color-hard: rgba(255, 255, 255, 0.25);
+        --text-primary: #F0F6FC;
+        --text-secondary: #8B949E;
+        --premium-gold: #FFD700;
+        --premium-purple: #9f5eff;
+        --premium-gradient: linear-gradient(135deg, var(--premium-purple), var(--premium-gold));
+        --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        /* Mouse pozisyonu için değişkenler */
+        --mouse-x: 50%;
+        --mouse-y: 50%;
+        --card-mouse-x: 50%;
+        --card-mouse-y: 50%;
+    }
+
+    /* --- ANİMASYONLAR --- */
+    @keyframes fadeIn-stagger {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes gradient-flow {
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    /* --- TEMEL AYARLAR & DİNAMİK ARKA PLAN --- */
+    body {
+        background-color: var(--bg-primary);
+        background-image:
+            radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(159, 94, 255, 0.2), transparent 30%),
+            radial-gradient(circle at calc(100% - var(--mouse-x)) calc(100% - var(--mouse-y)), rgba(255, 215, 0, 0.15), transparent 35%);
+        color: var(--text-primary);
+        font-family: var(--font-main);
+        transition: background-position 0.8s ease-out;
+    }
+
+    /* YENİ: Genişletilmiş ana konteyner */
+    .container {
+        width: 100%;
+        max-width: 1280px;
+        /* 3'lü dizilim için yeterli alan */
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0 1.5rem;
+        /* Yan boşluklar */
+    }
+
+    /* Akıcı Giriş Animasyonları */
+    .page-hero,
+    .cta-bar,
+    .community-grid,
+    .empty-state {
+        opacity: 0;
+        animation: fadeIn-stagger 0.8s ease-out forwards;
+    }
+
+    .cta-bar {
+        animation-delay: 0.1s;
+    }
+
+    .community-grid,
+    .empty-state {
+        animation-delay: 0.2s;
+    }
+
+
+    /* --- SAYFA BAŞLIĞI (HERO) --- */
+    .page-hero {
+        text-align: center;
+        padding: 3rem 1rem 1rem;
+    }
+
+    .page-hero h2 {
+        font-size: 2.8rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+    }
+
+    .page-hero .header-icon {
+        color: var(--premium-gold);
+        text-shadow: 0 0 15px var(--premium-gold);
+        margin-right: 0.5rem;
+    }
+
+    .page-hero p {
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    /* --- ANA EYLEM BUTONU (CTA) --- */
+    .cta-bar {
+        text-align: center;
+        padding: 2rem 0;
+    }
+
+    .btn-premium {
+        display: inline-block;
+        background: var(--premium-gradient);
+        background-size: 250% 250%;
+        color: var(--bg-primary);
+        padding: 14px 32px;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 8px 25px -8px rgba(159, 94, 255, 0.5);
+    }
+
+    .btn-premium:hover {
+        transform: translateY(-4px) scale(1.03);
+        box-shadow: 0 12px 30px -8px rgba(255, 215, 0, 0.5);
+        animation: gradient-flow 3s ease infinite;
+        color: var(--bg-primary);
+    }
+
+    .btn-premium i {
+        margin-right: 8px;
+    }
+
+    .btn-premium[disabled] {
+        pointer-events: none;
+        background: var(--bg-secondary);
+        color: var(--text-secondary);
+        opacity: 0.6;
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: none;
+        animation: none;
+    }
+
+    .content-divider {
+        border: 0;
+        height: 1px;
+        background: var(--border-color-hard);
+        margin: 2rem auto;
+        max-width: 400px;
+    }
+
+    /* --- YENİDEN DÜZENLENMİŞ 3'LÜ GRID YAPISI --- */
+    .community-grid {
+        display: grid;
+        gap: 1.75rem;
+        /* Mobil için varsayılan: Tek sütun */
+        grid-template-columns: 1fr;
+    }
+
+    /* Tablet için: 2 sütun */
+    @media (min-width: 768px) {
+        .community-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    /* Geniş ekranlar için KESİN 3 sütun */
+    @media (min-width: 1024px) {
+        .community-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+
+    /* --- TEMA UYUMLU TOPLULUK KARTI --- */
+    .community-card {
+        background: var(--bg-card);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid var(--border-color-soft);
+        border-radius: 16px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        text-decoration: none;
+        color: var(--text-primary);
+        position: relative;
+        opacity: 0;
+        animation: fadeIn-stagger 0.6s ease-out forwards;
+    }
+
+    .community-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at var(--card-mouse-x) var(--card-mouse-y), rgba(255, 255, 255, 0.08), transparent 40%);
+        opacity: 0;
+        transition: opacity 0.5s;
+        pointer-events: none;
+        border-radius: 16px;
+    }
+
+    .community-card:hover {
+        transform: translateY(-10px);
+        border-color: var(--premium-purple);
+        box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.4);
+    }
+
+    .community-card:hover::before {
+        opacity: 1;
+    }
+
+    .community-card-cover {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        transition: transform 0.4s ease-out;
+        border-bottom: 1px solid var(--border-color-soft);
+    }
+
+    .community-card:hover .community-card-cover {
+        transform: scale(1.05);
+    }
+
+    .card-body {
+        padding: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+    .card-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .card-title .fa-crown {
+        color: var(--premium-gold);
+        font-size: 0.9em;
+        margin-right: 8px;
+    }
+
+    .card-text {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        flex-grow: 1;
+        /* Açıklama alanının esneyerek boşluğu doldurmasını sağlar */
+        line-height: 1.6;
+        margin-bottom: 1rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .card-footer {
+        margin-top: auto;
+        /* DÜZELTME: Bu, footer'ı her zaman kartın dibine yaslar */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border-color-soft);
+    }
+
+    .category-badge {
+        background-color: var(--border-color-hard);
+        color: var(--text-secondary);
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .action-link {
+        color: var(--text-primary);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s ease;
+    }
+
+    .action-link:hover {
+        color: var(--premium-gold);
+    }
+
+    .action-link i {
+        margin-left: 5px;
+        transition: transform 0.2s ease;
+    }
+
+    .action-link:hover i {
+        transform: translateX(4px);
+    }
+
+    /* --- TOPLULUK YOK UYARISI --- */
+    .empty-state {
+        background-color: transparent;
+        border: 2px dashed var(--border-color-hard);
+        border-radius: 16px;
+        padding: 3rem 2rem;
+        text-align: center;
+        color: var(--text-secondary);
+        margin-top: 2rem;
+    }
+
+    .empty-state i {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        display: block;
+        color: var(--premium-purple);
+    }
+
+    .empty-state h4 {
+        font-size: 1.25rem;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state p {
+        line-height: 1.7;
+    }
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+
+<main class="container mt-4">
+        <header class="page-hero">
+                <h2><i class="fas fa-gem header-icon"></i> Premium Topluluklar</h2>
+                <p>Yalnızca premium üyelerin katılabildiği, özel içerik ve etkileşim sunan seçkin alanlar.</p>
+            </header>
+
+        <div class="cta-bar">
+                {% if is_limit_reached %}
+                    <button class="btn-premium" disabled><i class="fas fa-ban"></i> Topluluk Hakkınız Doldu</button>
+                {% else %}
+                    <a href="{{ url_for('create_premium_community') }}" class="btn-premium"><i class="fas fa-plus"></i>
+            Yeni Premium Topluluk Oluştur</a>
+                {% endif %}
+            </div>
+
+       
+    <hr class="content-divider">
+
+        {% if communities %}
+            <div class="community-grid">
+                    {% for community in communities %}
+                        <a href="{{ url_for('premium_community_page', community_id=community.id) }}"
+            class="community-card">
+                                {% if community.cover_image %}
+                                    <img
+                src="{{ url_for('static', filename='uploads/profile_pics/' ~ community.cover_image) }}"
+                class="community-card-cover" alt="{{ community.name }} Kapak Fotoğrafı" loading="lazy">
+                                {% else %}
+                                    <img src="{{ url_for('static', filename='uploads/profile_pics/PremiumSoce.png') }}"
+                class="community-card-cover" alt="Varsayılan Kapak Fotoğrafı" loading="lazy">
+                                {% endif %}
+                               
+                                <div class="card-body">
+                                        <h5 class="card-title"><i class="fas fa-crown"></i> {{ community.name }}</h5>
+                                        <p class="card-text">{{ community.description|default('Bu topluluk için bir
+                    açıklama girilmemiş.') }}</p>
+                                        <div class="card-footer">
+                                                <span class="category-badge">{{ community.category|default('Genel')
+                        }}</span>
+                                                <span class="action-link">Topluluğu Gör <i
+                            class="fas fa-arrow-right"></i></span>
+                                            </div>
+                                    </div>
+                            </a>
+                    {% endfor %}
+                </div>
+        {% else %}
+            <div class="empty-state">
+                    <i class="fas fa-satellite-dish"></i>
+                    <h4>Henüz Keşfedilecek Bir Yer Yok</h4>
+                    <p>Görünüşe göre henüz hiç premium topluluk oluşturulmamış.<br>Yukarıdaki butona tıklayarak ilk
+            kaşif siz olun!</p>
+                </div>
+        {% endif %}
+</main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- DİNAMİK ARKA PLAN & KART EFEKTİ ---
+        const updateMousePosition = (e) => {
+            // Genel sayfa arka planı için
+            const xPos = (e.clientX / window.innerWidth * 100).toFixed(2);
+            const yPos = (e.clientY / window.innerHeight * 100).toFixed(2);
+            document.documentElement.style.setProperty('--mouse-x', `${xPos}%`);
+            document.documentElement.style.setProperty('--mouse-y', `${yPos}%`);
+
+            // Kartın kendi içindeki parlama için
+            const card = e.target.closest('.community-card');
+            if (card) {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--card-mouse-x', `${x}px`);
+                card.style.setProperty('--card-mouse-y', `${y}px`);
+            }
+        };
+        window.addEventListener('mousemove', updateMousePosition);
+
+        // --- KARTLARIN GECİKMELİ YÜKLENMESİ ---
+        const cards = document.querySelectorAll('.community-card');
+        cards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.08}s`;
+        });
+    });
+</script>
+{% endblock %}

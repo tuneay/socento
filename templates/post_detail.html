@@ -1,0 +1,311 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - Socento Social{% endblock %}
+
+{% block content %}
+<div class="two-column-layout">
+    {# SOL SÜTUN - GÖNDERİ İÇERİĞİ #}
+    <div class="main-content-column">
+        <div class="post-card">
+            {# 1. BÖLÜM: GÖNDERİ SAHİBİ BİLGİLERİ #}
+            <div class="post-section author-section">
+                <img src="{{ url_for('static', filename='uploads/profile_pics/' + post.author.profile_image) }}"
+                     alt="Profil Resmi" class="author-avatar">
+                <div class="author-meta">
+                    <a href="{{ url_for('profile', username=post.author.username) }}"
+                       class="author-username gradient-text">
+                        @{{ post.author.username }}
+                        {{ post.author.get_blue_tick_html() | safe }}
+                    </a>
+                    <span class="post-date">
+                        <i class="fa-regular fa-clock"></i>
+                        {{ post.date_posted.strftime('%d %B %Y') }}
+                    </span>
+                </div>
+            </div>
+
+            {# 2. BÖLÜM: İÇERİK (BAŞLIK VE METİN) #}
+            <div class="post-section content-section">
+                {% if post.title %}
+                    <h3 class="post-title gradient-text">{{ post.title }}</h3>
+                {% endif %}
+                {% if post.content %}
+                    <p class="post-content-text">{{ post.content | process_tags | safe }}</p>
+                {% endif %}
+            </div>
+
+            {# 3. BÖLÜM: MEDYA (RESİM/VİDEO) #}
+            {% if post.image_file %}
+            <div class="post-section media-section">
+                <img src="{{ url_for('static', filename='uploads/post_media/' + post.image_file) }}"
+                     alt="{{ post.title or 'Gönderi Resmi' }}" class="media-content">
+            </div>
+            {% elif post.video_file %}
+            <div class="post-section media-section">
+                <video controls class="media-content">
+                    <source src="{{ url_for('static', filename='uploads/post_media/' + post.video_file) }}"
+                            type="video/mp4">
+                    Tarayıcınız video etiketini desteklemiyor.
+                </video>
+            </div>
+            {% endif %}
+
+            {# 4. BÖLÜM: AKSİYON BUTONLARI #}
+            <div class="post-section actions-section">
+                <div class="action-group">
+                    <button class="action-button like-button {% if user_liked %}liked{% endif %}" data-action="like" title="Beğen">
+                        <i class="{% if user_liked %}fas{% else %}far{% endif %} fa-heart"></i>
+                    </button>
+                    <span class="action-count">{{ post.likes|length }}</span>
+                </div>
+                <div class="action-group">
+                     <button class="action-button lift-button {% if user_lifted %}lifted{% endif %}" data-action="lift" title="Tekrar Paylaş (Lift)">
+                        <i class="fas fa-retweet"></i>
+                    </button>
+                    <span class="action-count">{{ post.lifts|length }}</span>
+                </div>
+                {# Sadece mobilde görünecek yorumları açma butonu #}
+                <div class="action-group mobile-comment-button">
+                     <a href="#comments-section-start" id="show-comments-btn" class="action-button">
+                         <i class="far fa-comment"></i>
+                     </a>
+                    <span class="action-count">{{ comments|length }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# SAĞ SÜTUN - YORUMLAR BÖLÜMÜ #}
+    <div id="comments-section-start" class="sidebar-comments-column">
+        <div class="comments-sticky-box">
+             {# Yorum Formu #}
+            {% if current_user.is_authenticated %}
+            <div class="comment-form-card card-custom">
+                <div class="comment-form-header">
+                     <h3 class="gradient-text comment-form-title">Düşünceni Ekle</h3>
+                     {# Sadece mobilde görünecek kapatma butonu #}
+                     <button id="close-comments-btn" type="button" class="btn-close-mobile">✖</button>
+                </div>
+                <form method="POST" action="{{ url_for('post_detail', post_id=post.id) }}">
+                    <div class="form-group">
+                        <textarea class="form-input" id="comment_content" name="comment_content" rows="4" required placeholder="Düşüncelerin değerli..."></textarea>
+                    </div>
+                    <div class="form-group submit-group">
+                        <button type="submit" class="btn-primary-custom btn-small">Paylaş <i class="fa-solid fa-share"></i></button>
+                    </div>
+                </form>
+            </div>
+            {% else %}
+            <div class="no-content-message card-custom">
+                <p>Yorum yapmak için lütfen <a href="{{ url_for('login') }}">giriş yapın</a> veya <a href="{{ url_for('register') }}">kaydolun</a>.</p>
+            </div>
+            {% endif %}
+    
+            {# Yorum Listesi #}
+            <div class="comment-list-wrapper">
+                <h4 class="comments-list-title">Yorumlar ({{ comments|length }})</h4>
+                <div class="comment-list">
+                    {% if comments %}
+                    {% for comment in comments %}
+                    <div class="comment-card card-custom">
+                        <div class="comment-meta" style="gap: 0.75rem; align-items: flex-start;">
+                            <a href="{{ url_for('profile', username=comment.author.username) }}" class="comment-author-username" style="display: flex; align-items: center; gap: 0.5rem; text-decoration: none;">
+                                <img src="{{ url_for('static', filename='uploads/profile_pics/' + comment.author.profile_image) }}"
+                                     alt="Profil Resmi" class="comment-author-img" style="margin-right: 0.5rem;">
+                                <span style="font-weight: 600; color: var(--accent-gold); font-size: 1rem;">
+                                    {{ comment.author.username }} {{ comment.author.get_blue_tick_html() | safe }}
+                                </span>
+                            </a>
+                            <span class="comment-date" style="margin-left: auto; font-size: 0.9rem; color: #9ab; white-space: nowrap;">
+                                {{ comment.date_posted.strftime('%d %b %y') }}
+                            </span>
+                        </div>
+                        <div class="comment-content-text">
+                            <p>{{ comment.content | process_tags | safe }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <p style="text-align:center; color: #9ab; padding: 1rem 0;">Henüz yorum yok.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    :root {
+        --dark-bg: #111827;
+        --card-bg: #1f2937;
+        --border-color: rgba(255, 255, 255, 0.1);
+        --text-primary: #e6e6e6;
+        --text-secondary: #b0b8c1;
+        --accent-gold: #FFD04F;
+    }
+
+    .gradient-text {
+        background: linear-gradient(90deg, #FF6F61 0%, var(--accent-gold) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .two-column-layout {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    /* Sol Sütun */
+    .main-content-column {
+        flex: 2;
+        max-width: 700px;
+    }
+    .post-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        overflow: hidden;
+    }
+    .post-section {
+        padding: 1rem 1.5rem;
+    }
+    .author-section { display: flex; align-items: center; gap: 1rem; }
+    .author-avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-gold); }
+    .author-meta { display: flex; flex-direction: column; gap: 0.25rem; }
+    .author-username { font-size: 1.1rem; font-weight: 700; text-decoration: none; }
+    .post-date { font-size: 0.9rem; color: var(--text-secondary); }
+    
+    .content-section .post-title { font-size: 1.5rem; margin-bottom: 0.75rem; font-weight: 800; }
+    .content-section .post-content-text { font-size: 1.1rem; line-height: 1.7; font-weight: 500; color: var(--text-primary); }
+    
+    .media-section { padding: 0; }
+    .media-content { width: 100%; height: auto; max-height: 75vh; display: block; }
+    
+    .actions-section { 
+        display: flex; 
+        justify-content: flex-start; 
+        align-items: center; 
+        gap: 1.5rem;
+        border-top: 1px solid var(--border-color);
+        padding-top: 1rem;
+    }
+    .action-group { display: flex; align-items: center; gap: 0.5rem; }
+    .action-button { background: none; border: none; color: var(--text-secondary); font-size: 1.25rem; cursor: pointer; transition: all 0.2s ease; padding: 0.5rem; border-radius: 50%; text-decoration: none; }
+    .action-button:hover { background-color: rgba(255, 255, 255, 0.1); color: #fff; }
+    .action-button.like-button.liked { color: #ff7b7b; }
+    .action-button.lift-button.lifted { color: #4caf50; }
+    .action-count { font-size: 0.95rem; font-weight: 600; color: var(--text-secondary); }
+    
+    /* Sağ Sütun */
+    .sidebar-comments-column {
+        flex: 1;
+        max-width: 400px;
+    }
+    .comments-sticky-box {
+        position: sticky;
+        top: 2rem;
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 1.5rem;
+    }
+    .comment-form-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .comment-form-title { margin: 0; font-size: 1.2rem; }
+    .btn-close-mobile { display: none; background: none; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; }
+    
+    .comments-list-title {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        border-top: 1px solid var(--border-color);
+        padding-top: 1.5rem;
+    }
+    .comment-list .comment-card {
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .comment-list .comment-card:first-child { padding-top: 0; }
+    .comment-list .comment-card:last-child { border-bottom: none; }
+    .comment-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .comment-author-username { color: var(--accent-gold); font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 0.5rem;}
+    .comment-author-img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+    .comment-date { font-size: 0.85rem; color: #9ab; }
+    .comment-content-text p { color: var(--text-primary); font-size: 0.98rem; margin: 0; line-height: 1.6; }
+
+    /* Mobil için Buton Görünürlüğü */
+    .mobile-comment-button {
+        display: none; /* Masaüstünde gizli */
+    }
+
+    /* Medya Sorgusu - MOBİL GÖRÜNÜM */
+    @media (max-width: 992px) {
+        .two-column-layout {
+            flex-direction: column;
+            padding: 0;
+            gap: 0;
+        }
+        .main-content-column {
+            max-width: 100%;
+            width: 100%;
+        }
+        .post-card {
+            border-radius: 0;
+            border-left: none;
+            border-right: none;
+        }
+        .sidebar-comments-column {
+            display: none; /* Mobilde varsayılan olarak gizli */
+            width: 100%;
+            max-width: 100%;
+            margin-top: 1rem;
+        }
+        .comments-sticky-box {
+            position: static;
+            border-radius: 0;
+            border-top: 2px solid var(--border-color);
+        }
+        .mobile-comment-button {
+            display: flex; /* Mobilde görünür */
+            margin-left: auto; /* Sağa yasla */
+        }
+        .actions-section {
+            justify-content: flex-start;
+        }
+        .btn-close-mobile {
+            display: block; /* Mobilde kapatma butonu görünür */
+        }
+    }
+
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const showBtn = document.getElementById('show-comments-btn');
+        const closeBtn = document.getElementById('close-comments-btn');
+        const commentsSection = document.getElementById('comments-section-start');
+
+        if (showBtn && commentsSection) {
+            showBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                commentsSection.style.display = 'block';
+                commentsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        }
+        
+        if (closeBtn && commentsSection) {
+             closeBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                commentsSection.style.display = 'none';
+            });
+        }
+    });
+</script>
+{% endblock %}

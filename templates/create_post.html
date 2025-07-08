@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - Socento Social{% endblock %}
+
+{% block content %}
+
+<div class="page-container"
+    style="display: flex; justify-content: center; align-items: flex-start; min-height: calc(100vh - 100px);">
+    <div class="card-custom" style="max-width: 600px;"> {# Kart genişliğini artıralım #}
+        <h2 class="gradient-text" style="text-align: center; margin-bottom: 25px;">Yeni Gönderi Oluştur</h2>
+        <form method="POST" enctype="multipart/form-data"> {# enctype ÖNEMLİ! #}
+            <div class="form-group">
+                <label for="title" class="form-label">Başlık (Opsiyonel)</label>
+                <input type="text" class="form-input" id="title" name="title">
+            </div>
+            <div class="form-group">
+                <label for="content" class="form-label">İçerik (Opsiyonel)</label>
+                <textarea class="form-input" id="content" name="content" rows="6"></textarea> {# Rows azaltıldı #}
+            </div>
+
+            <hr style="border-color: var(--border-color-light); margin: 30px 0;">
+
+            <div class="form-group">
+                <label class="form-label" style="margin-bottom: 15px;">Resim Yükle (Opsiyonel)</label>
+                <input type="file" class="form-input" id="image_file" name="image_file"
+                    accept="image/png, image/jpeg, image/gif" style="height: auto;">
+                <small class="input-help-text">Sadece JPG, JPEG, PNG veya GIF dosyaları yüklenebilir.</small>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" style="margin-bottom: 15px;">Video Yükle (Opsiyonel)</label>
+                <input type="file" class="form-input" id="video_file" name="video_file"
+                    accept="video/mp4, video/mov, video/avi, video/mkv" style="height: auto;">
+                <small class="input-help-text">Sadece MP4, MOV, AVI veya MKV dosyaları yüklenebilir. Aynı anda hem resim
+                    hem video yüklenemez.</small>
+            </div>
+
+            <div class="form-group" style="margin-top: 35px;">
+                <button type="submit" class="btn-primary-custom">Gönderi Paylaş</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

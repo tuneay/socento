@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - Socento Social{% endblock %}
+
+{% block content %}
+<div class="clips-container" id="clips-container">
+    {% if video_posts %}
+    {% for post in video_posts %}
+    <div class="clip-slide">
+        <video class="clip-video" src="{{ url_for('static', filename='uploads/post_media/' + post.video_file) }}" loop
+            playsinline preload="metadata"></video>
+
+        <div class="clip-overlay">
+            <div class="clip-user-info">
+                <a href="{{ url_for('profile', username=post.author.username) }}">
+                    <img src="{{ url_for('static', filename='uploads/profile_pics/' + post.author.profile_image) }}"
+                        alt="{{ post.author.username }}">
+                    <span>@{{ post.author.username }} {{ post.author.get_blue_tick_html() | safe }}</span>
+                </a>
+            </div>
+            <div class="clip-caption">
+                <p>{{ post.content | process_tags | safe }}</p>
+            </div>
+        </div>
+
+        <div class="clip-actions">
+            <form action="{{ url_for('like_post', post_id=post.id) }}" method="POST" class="clip-action-form">
+                <button type="submit" class="clip-action-button" title="Beğen">
+                    <i class="fas fa-heart"></i>
+                    <span>{{ post.likes|length }}</span>
+                </button>
+            </form>
+            <a href="{{ url_for('post_detail', post_id=post.id) }}" class="clip-action-button" title="Yorumlar">
+                <i class="fas fa-comment-dots"></i>
+                <span>{{ post.comments|length }}</span>
+            </a>
+            <form action="{{ url_for('lift_post', post_id=post.id) }}" method="POST" class="clip-action-form">
+                <button type="submit" class="clip-action-button" title="Lift Et">
+                    <i class="fas fa-retweet"></i>
+                    <span>{{ post.lifts|length }}</span>
+                </button>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="no-content-message">
+        <p>Henüz gösterilecek video yok.</p>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const clipsContainer = document.getElementById('clips-container');
+        if (!clipsContainer) return;
+
+        const videos = document.querySelectorAll('.clip-video');
+
+        const observerOptions = {
+            root: clipsContainer,
+            rootMargin: '0px',
+            threshold: 0.8 // Videonun %80'i görününce çalış
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const video = entry.target;
+                if (entry.isIntersecting) {
+                    // Video görünür alana girdi, oynat
+                    video.play().catch(error => {
+                        console.log("Otomatik oynatma engellendi, kullanıcı etkileşimi bekleniyor.", error);
+                        // Kullanıcı sayfaya dokunana kadar bekleyebiliriz.
+                        video.muted = true;
+                        video.play();
+                    });
+                } else {
+                    // Video görünür alandan çıktı, durdur ve başa sar
+                    video.pause();
+                    video.currentTime = 0;
+                }
+            });
+        }, observerOptions);
+
+        videos.forEach(video => {
+            observer.observe(video);
+            // Sesi aç/kapat işlevi
+            video.addEventListener('click', () => {
+                video.muted = !video.muted;
+            });
+        });
+    });
+</script>
+{% endblock %}

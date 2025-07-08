@@ -1,0 +1,63 @@
+{% extends "admin/admin_base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<style>
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+    .stat-card {
+        background-color: var(--bg-light);
+        padding: 25px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    .stat-icon {
+        font-size: 2.5rem;
+        color: var(--accent-primary);
+    }
+    .stat-info .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: var(--text-light);
+    }
+    .stat-info .stat-label {
+        font-size: 1rem;
+        color: var(--text-muted);
+    }
+</style>
+
+<div class="content-header">
+    <h1>Dashboard</h1>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-users"></i></div>
+        <div class="stat-info">
+            <div class="stat-number">{{ stats.users }}</div>
+            <div class="stat-label">Toplam Kullanıcı</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
+        <div class="stat-info">
+            <div class="stat-number">{{ stats.posts }}</div>
+            <div class="stat-label">Toplam Gönderi</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-comments"></i></div>
+        <div class="stat-info">
+            <div class="stat-number">{{ stats.communities }}</div>
+            <div class="stat-label">Toplam Topluluk</div>
+        </div>
+    </div>
+</div>
+{% endblock %}

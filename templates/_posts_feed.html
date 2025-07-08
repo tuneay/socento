@@ -1,0 +1,75 @@
+{% for post in posts %}
+<div class="instagram-post-card card-custom" data-post-id="{{ post.id }}">
+    <div class="post-header">
+        <a href="{{ url_for('profile', username=post.author.username) }}">
+            <img src="{{ url_for('static', filename='uploads/profile_pics/' + post.author.profile_image) }}" alt="Profil Resmi" class="post-author-img">
+        </a>
+        <div class="post-author-info">
+            <a href="{{ url_for('profile', username=post.author.username) }}" class="post-author-username">
+                @{{ post.author.username }}
+                {{ post.author.get_blue_tick_html() | safe }}
+            </a>
+            <span class="post-date">{{ post.date_posted.strftime('%d %B %Y') }}</span>
+        </div>
+    </div>
+
+    {% if post.image_file %}
+    <div class="post-media-wrapper">
+        <a href="{{ url_for('post_detail', post_id=post.id) }}">
+            <img src="{{ url_for('static', filename='uploads/post_media/' + post.image_file) }}" alt="{{ post.title or 'Gönderi Resmi' }}" class="post-media-content">
+        </a>
+    </div>
+    {% elif post.video_file %}
+    <div class="post-media-wrapper">
+        <video controls class="post-media-content">
+            <source src="{{ url_for('static', filename='uploads/post_media/' + post.video_file) }}" type="video/mp4">
+            Tarayıcınız video etiketini desteklemiyor.
+        </video>
+    </div>
+    {% endif %}
+
+    <div class="post-content-area">
+        {% if post.content %}<p class="post-content-text">{{ post.content | process_tags | safe }}</p>{% endif %}
+    </div>
+
+    <div class="post-actions">
+        <button class="action-icon action-button like-button {% if post.is_liked_by_current_user %}liked{% endif %}" data-action="like" title="Beğen">
+            <i class="{% if post.is_liked_by_current_user %}fas{% else %}far{% endif %} fa-heart"></i>
+        </button>
+        <span class="like-count">{{ post.likes|length }} Beğeni</span>
+        
+        <style>
+            .btn-primary-commentitem:hover{
+                color: white;
+            }
+        </style>
+       <button class="btn-primary-commentitem"
+        style="background-color: transparent; border: none; padding: 0; cursor: pointer; font-size: larger;"
+       > <a href="{{ url_for('post_detail', post_id=post.id) }}" class="action-wrapper" title="Yorumlar">
+            <i class="far fa-comment"></i>
+        </a></button>
+        <span class="comment-count">{{ post.comments|length }} Yorum</span>
+
+        <button class="action-button lift-button action-icon {% if post.is_lifted_by_current_user %}lifted{% endif %}" data-action="lift" title="Tekrar Paylaş (Lift)">
+            <i class="fas fa-retweet"></i>
+        </button>
+        <span class="lift-count">{{ post.lifts|length }} Lift</span>
+    </div>
+</div>
+
+{% else %}
+    {# Eğer döngüye girecek hiç 'post' yoksa bu blok çalışır #}
+    <div class="no-posts-message" style="text-align: center; padding: 50px 20px; margin: 20px; background-color: #2a2a3a; border-radius: 12px; color: #a9a9b3;">
+        <i class="fas fa-camera-retro" style="font-size: 3em; margin-bottom: 15px;"></i>
+        <h4 style="color: #ffffff; margin-bottom: 5px;">Buralarda Henüz Bir Şey Yok</h4>
+        <p>Bu akışta gösterilecek herhangi bir gönderi bulunamadı.</p>
+    </div>
+
+{% endfor %}
+
+{% if pagination and pagination.has_next %}
+<a class="load-more-link" href="{{ url_for('load_feed', feed_type='posts', page=pagination.next_num) }}"></a>
+<div class="feed-loader" style="display: none; padding: 40px;">
+    <i class="fas fa-spinner fa-spin"></i>
+</div>
+{% endif %}

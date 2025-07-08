@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socento | Sosyal Ağlar, Yeniden Tasarlandı</title>
+    <meta name="description" content="Gürültüyü geride bırakın, anlamı keşfedin. Socento, yapay zeka ile daha akıllı, daha sakin ve daha size özel bir sosyal evren sunar.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💎</text></svg>">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-main: #000000;
+            --bg-soft: #111111;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A1A1A6;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.3);
+
+            --accent-yellow: #FFD04F;
+            --accent-coral: #FF6F61;
+            --accent-gradient: linear-gradient(90deg, var(--accent-yellow) 0%, var(--accent-coral) 100%);
+            --btn-text-color: #3D1D00;
+
+            --space-section-y: 160px;
+            --space-xl: 64px; --space-lg: 32px; --space-md: 16px; --space-sm: 8px;
+            
+            --transition-smooth: 600ms cubic-bezier(0.2, 0.8, 0.2, 1);
+            --transition-fast: 300ms ease;
+        }
+
+        body.light-mode {
+            --bg-main: #FFFFFF;
+            --bg-soft: #F7F7F7;
+            --text-primary: #000000;
+            --text-secondary: #5A5A5F;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.05);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg-main); color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            overflow-x: hidden; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+            transition: background-color var(--transition-fast), color var(--transition-fast);
+        }
+        
+        #aurora-background {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            background: radial-gradient(circle at 10% 20%, var(--accent-yellow), transparent 35%),
+                        radial-gradient(circle at 80% 70%, var(--accent-coral), transparent 35%);
+            filter: blur(120px); opacity: 0.15;
+            animation: aurora-flow 25s infinite alternate ease-in-out;
+        }
+        @keyframes aurora-flow {
+            from { transform: scale(1) rotate(0deg); }
+            to { transform: scale(1.5) rotate(90deg); }
+        }
+
+        .container { width: 100%; max-width: 1080px; margin: 0 auto; padding: 0 var(--space-lg); }
+        .section { padding: var(--space-section-y) 0; }
+
+        .reveal { opacity: 0; transform: translateY(var(--space-lg)); transition: opacity 1.2s var(--transition-smooth), transform 1.2s var(--transition-smooth); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        
+        .main-nav { position: fixed; top: 0; left: 0; width: 100%; padding: var(--space-md) 0; z-index: 1000; transition: background-color 0.3s ease, backdrop-filter 0.3s ease; }
+        .main-nav.scrolled { background-color: rgba(0,0,0,0.5); backdrop-filter: blur(16px); }
+        body.light-mode .main-nav.scrolled { background-color: rgba(255,255,255,0.7); }
+        .nav-content { display: flex; justify-content: space-between; align-items: center; }
+        .nav-logo { font-weight: 700; font-size: 20px; text-decoration: none; color: var(--text-primary); }
+        .nav-right { display: flex; align-items: center; gap: var(--space-md); }
+        .nav-links { display: flex; align-items: center; gap: var(--space-lg); list-style: none; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; transition: color 0.3s ease; font-weight: 500; }
+        .nav-links a:hover { color: var(--text-primary); }
+        
+        .theme-toggle { display: flex; background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: var(--space-sm); border-radius: 99px; }
+        .theme-toggle:hover { color: var(--text-primary); }
+        .theme-toggle svg { width: 18px; }
+        .theme-toggle .icon-sun { display: none; }
+        body.light-mode .icon-sun { display: block; }
+        body.light-mode .icon-moon { display: none; }
+
+        .btn {
+            background-image: var(--accent-gradient); background-size: 200% 100%; background-position: 0% 50%;
+            color: var(--btn-text-color); padding: 14px 28px;
+            border-radius: 99px; text-decoration: none; font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.4s ease, background-position 0.4s ease;
+            display: inline-block; border: none; cursor: pointer;
+        }
+        .btn:hover { transform: scale(1.05) translateY(-2px); box-shadow: 0 10px 30px rgba(255, 111, 97, 0.3); background-position: 100% 50%; }
+        .btn:active { transform: scale(0.98) translateY(0); }
+
+        .hero { min-height: 100vh; display: flex; align-items: center; text-align: center; }
+        .hero-content { max-width: 850px; margin: 0 auto; }
+        .hero h1 { font-size: clamp(3.2rem, 8vw, 6.5rem); font-weight: 700; letter-spacing: -0.05em; line-height: 1.05; }
+        .hero h1 .word { display: inline-block; white-space: pre; opacity: 0; transform: translateY(30px); animation: word-reveal 1s var(--transition-smooth) forwards; animation-delay: var(--delay); }
+        @keyframes word-reveal { to { opacity: 1; transform: translateY(0); } }
+        .hero .highlight { background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: clamp(1.1rem, 5vw, 1.25rem); color: var(--text-secondary); max-width: 600px; margin: var(--space-lg) auto var(--space-xl); line-height: 1.6; }
+        
+        .trust-bar span { font-weight: 600; color: var(--text-secondary); font-size: 0.9rem; letter-spacing: 0.05em; text-align: center; width: 100%; }
+        .trust-bar .logo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--space-xl); align-items: center; margin-top: var(--space-lg); filter: grayscale(1); opacity: 0.6; }
+        .trust-bar .logo { text-align: center; font-size: 1.5rem; font-weight: 700; color: var(--text-secondary); }
+        
+        .story-features { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xxl); position: relative; }
+        .story-sticky-visual { height: 100vh; position: sticky; top: 0; display: flex; justify-content: center; align-items: center; }
+        .story-visual-mockup { width: 90%; max-width: 450px; aspect-ratio: 10 / 16; background-color: var(--bg-soft); border-radius: 32px; border: 1px solid var(--border-color); box-shadow: 0 30px 60px var(--shadow-color); padding: var(--space-md); transition: background-color var(--transition-fast); }
+        .story-visual-screen { width: 100%; height: 100%; background-color: var(--bg-main); border-radius: 20px; overflow: hidden; position: relative; transition: background-color var(--transition-fast); }
+        
+        .mockup-content { position: absolute; width: 100%; height: 100%; padding: var(--space-lg); opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+        .mockup-content.active { opacity: 1; transform: translateY(0); }
+        .mockup-content .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-coral); margin-bottom: var(--space-md); }
+        .mockup-content h4 { font-size: 1.5rem; margin-bottom: var(--space-sm); color: var(--text-primary); }
+        .mockup-content p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; }
+
+        .story-feature-item { min-height: 85vh; display: flex; flex-direction: column; justify-content: center; transition: opacity 0.4s ease; }
+        .story-feature-item:not(.is-in-view) { opacity: 0.4; }
+        .kicker { font-weight: 600; font-size: 0.9rem; color: var(--accent-coral); margin-bottom: var(--space-md); text-transform: uppercase; letter-spacing: 0.05em; }
+        .story-feature-item h3 { font-size: clamp(2rem, 4.5vw, 3.2rem); font-weight: 600; letter-spacing: -0.035em; line-height: 1.2; margin-bottom: var(--space-lg); }
+        .story-feature-item p { color: var(--text-secondary); font-size: 1.1rem; line-height: 1.7; max-width: 450px; }
+
+        .offer-card { text-align: center; max-width: 700px; margin: 0 auto; }
+        .offer-card .kicker { font-size: 1rem; }
+        .offer-card h2 { font-size: clamp(3rem, 6vw, 4.5rem); font-weight: 700; letter-spacing: -0.04em; }
+        .offer-card p { color: var(--text-secondary); font-size: 1.25rem; margin: var(--space-md) 0 var(--space-xl); }
+
+        .site-footer { padding: var(--space-xl) 0; border-top: 1px solid var(--border-color); text-align: center; }
+        .copyright { color: var(--text-secondary); font-size: 0.9rem; }
+        
+        /* GÜNCELLENDİ: Mobil Navigasyon Stilleri */
+        .nav-toggle { display: none; }
+        .mobile-nav-panel { display: none; }
+
+        /* --- RESPONSIVE TASARIM --- */
+        @media (max-width: 768px) {
+            :root {
+                --space-section-y: 100px;
+            }
+
+            .nav-links, .nav-right .btn { display: none; }
+            .nav-toggle {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                background: none;
+                border: none;
+                cursor: pointer;
+                z-index: 1001;
+            }
+            .nav-toggle .bar {
+                width: 24px; height: 2px;
+                background-color: var(--text-primary);
+                border-radius: 2px;
+                transition: transform 0.3s ease, opacity 0.3s ease;
+            }
+            .nav-open .bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+            .nav-open .bar:nth-child(2) { opacity: 0; }
+            .nav-open .bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+            .mobile-nav-panel {
+                display: flex; flex-direction: column; justify-content: center; align-items: center; gap: var(--space-xl);
+                position: fixed; top: 0; right: 0;
+                width: 100%; height: 100%;
+                background-color: var(--bg-main);
+                transform: translateX(100%);
+                transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+                z-index: 1000;
+            }
+            .nav-open .mobile-nav-panel {
+                transform: translateX(0);
+            }
+            .mobile-nav-panel a {
+                font-size: 2rem;
+                font-weight: 600;
+                color: var(--text-primary);
+                text-decoration: none;
+            }
+
+            .story-features { grid-template-columns: 1fr; }
+            .story-sticky-visual {
+                grid-row: 1;
+                position: relative;
+                height: auto;
+                padding-bottom: var(--space-xl);
+            }
+            .story-text-content { padding-top: 0; }
+            .story-feature-item { min-height: auto; padding: var(--space-xl) 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="aurora-background"></div>
+
+    <nav class="main-nav">
+        <div class="container">
+            <div class="nav-content">
+                <a href="#hero" class="nav-logo">Socento</a>
+                <div class="nav-right">
+                    <div class="nav-links">
+                        <a href="#features">Vizyon</a>
+                        <a href="#offer">Davetiye</a>
+                    </div>
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Temayı Değiştir">
+                        <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                        <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                    </button>
+                    <a href="#offer" class="btn">Katılın</a>
+                    <button class="nav-toggle" id="nav-toggle" aria-label="Menüyü aç">
+                        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="mobile-nav-panel" id="mobile-nav-panel">
+        <a href="#features">Vizyon</a>
+        <a href="#offer">Davetiye</a>
+        <a href="#offer" class="btn" style="font-size: 1.5rem; margin-top: var(--space-lg);">Katılın</a>
+    </div>
+
+
+    <main>
+        <section id="hero" class="hero section">
+            <div class="container">
+                <div class="hero-content reveal">
+                    <h1 id="hero-headline">Daha Az Kaydır. <br><span class="highlight">Daha Fazla Anlam.</span></h1>
+                    <p>Socento, dikkat ekonomisini reddeder. Amacımız, sizi ekranda tutmak değil, potansiyelinizi açığa çıkarmaktır. Yapay zeka ile daha derin bağlar ve daha parlak fikirler için tasarlandı.</p>
+                    <a href="#offer" class="btn">Öncüler Arasına Katılın</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="trust-bar section">
+            <div class="container">
+                <div class="trust-content reveal">
+                    <span>VİZYONUMUZU PAYLAŞANLAR</span>
+                    <div class="logo-grid">
+                        <div class="logo">FAST COMPANY</div>
+                        <div class="logo">FORBES</div>
+                        <div class="logo">AIGA</div>
+                        <div class="logo">WIRED</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="features" class="story-features container">
+            <div class="story-sticky-visual">
+                <div class="story-visual-mockup">
+                    <div class="story-visual-screen"><br><br><br>
+                        <div id="mockup-ai" class="mockup-content active"><div class="dot"></div><h4>Yapay Zeka Kürasyonu</h4><p>Sizin için en anlamlı içerik ve bağlantılar, KNA tarafından özenle seçilir.</p></div>
+                        <div id="mockup-flow" class="mockup-content"><div class="dot" style="background: var(--accent-yellow);"></div><h4>Odaklanmış Akış</h4><p>Reklam ve dikkat tuzaklarından arındırılmış, sadece size özel bir ilham kaynağı.</p></div>
+                        <div id="mockup-privacy" class="mockup-content"><div class="dot"></div><h4>Veri Kontrol Merkezi</h4><p>Dijital kimliğinizin sahibi sizsiniz. Tüm izinler parmaklarınızın ucunda.</p></div>
+                    </div>
+                </div>
+            </div>
+            <div class="story-text-content">
+                <div class="story-feature-item" data-feature="ai">
+                    <div class="kicker">Yapay Zeka Kürasyonu</div>
+                    <h3>Asistanınız değil, yoldaşınız.</h3>
+                    <p>Kişisel Nöral Ağınız (KNA), zevklerinizi öğrenmekle kalmaz, aynı zamanda sizi entelektüel olarak zorlar. Ufkunuzu genişletir, varsayımlarınıza meydan okur ve sizi en iyi halinize ulaştıracak insanlarla tanıştırır.</p>
+                </div>
+                <div class="story-feature-item" data-feature="flow">
+                    <div class="kicker">Odaklanmış Akış</div>
+                    <h3>Dijital huzur.</h3>
+                    <p>Sonsuz kaydırmanın yarattığı zihinsel yorgunluğa bir son. Socento, daha az ama daha öz içerik sunar. Akışınız, ilham almak ve yaratmak için tasarlanmış sakin bir sığınaktır.</p>
+                </div>
+                <div class="story-feature-item" data-feature="privacy">
+                    <div class="kicker">Mutlak Gizlilik</div>
+                    <h3>Sizin veriniz, sizin kararınız.</h3>
+                    <p>Burada verileriniz bir ürün değil, size ait bir mülktür. Gizlilik bir seçenek değil, sistemin temelidir. Kontrol her zaman, şeffaf bir şekilde sizde kalır.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="offer" class="section">
+            <div class="container">
+                <div class="offer-card reveal">
+                    <div class="kicker">Bu Bir Davetiye</div>
+                    <h2>Gelecek Burada. <br>Ve Ücretsiz.</h2>
+                    <p>Bu yeni standardı inşa ederken bize katılan ilk öncülere, en kapsamlı planımız olan Infinity'i ömür boyu hediye ediyoruz. Çünkü en iyi gelecek, birlikte inşa edilendir.</p>
+                    <a href="#" class="btn" style="padding: 18px 36px; font-size: 1.1rem;">Davetiyenizi Alın</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p class="copyright">&copy; 2025 Socento. Düşünmek için tasarlandı.</p>
+        </div>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- NAVİGASYON ---
+        const nav = document.querySelector('.main-nav');
+        const navToggle = document.getElementById('nav-toggle');
+        const mobileNavPanel = document.getElementById('mobile-nav-panel');
+
+        if (nav) {
+            window.addEventListener('scroll', () => {
+                nav.classList.toggle('scrolled', window.scrollY > 20);
+            });
+        }
+        if (navToggle && mobileNavPanel) {
+            navToggle.addEventListener('click', () => {
+                document.body.classList.toggle('nav-open');
+            });
+            // Menü linklerine tıklanınca menüyü kapat
+            mobileNavPanel.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    document.body.classList.remove('nav-open');
+                });
+            });
+        }
+
+        // --- GİRİŞ ANİMASYONU ---
+        const heroHeadline = document.getElementById('hero-headline');
+        if (heroHeadline) {
+            const originalHTML = heroHeadline.innerHTML;
+            heroHeadline.innerHTML = '';
+            const parts = originalHTML.split(/(<[^>]+>)/g).filter(Boolean);
+            let charIndex = 0;
+
+            parts.forEach(part => {
+                if (part.startsWith('<')) {
+                    heroHeadline.innerHTML += part;
+                } else {
+                    const words = part.split(' ');
+                    words.forEach((word, wordIndex) => {
+                        if (word.length > 0) {
+                            const wordSpan = document.createElement('span');
+                            wordSpan.className = 'word';
+                            word.split('').forEach(char => {
+                                const charSpan = document.createElement('span');
+                                charSpan.className = 'animated-char';
+                                charSpan.textContent = char;
+                                charSpan.style.setProperty('--delay', `${charIndex * 40}ms`);
+                                wordSpan.appendChild(charSpan);
+                                charIndex++;
+                            });
+                            heroHeadline.appendChild(wordSpan);
+                            if (wordIndex < words.length - 1) {
+                                heroHeadline.appendChild(document.createTextNode(' '));
+                            }
+                        }
+                    });
+                }
+            });
+        }
+        
+        // --- KAYDIRMA İLE BELİRME ---
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+        
+        // --- HİKAYE ANLATIMLI ÖZELLİKLER ---
+        const featureItems = document.querySelectorAll('.story-feature-item');
+        const mockupContents = document.querySelectorAll('.mockup-content');
+        
+        if (featureItems.length > 0 && mockupContents.length > 0 && window.innerWidth > 768) {
+            const featureObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const featureItem = entry.target;
+                    featureItem.classList.toggle('is-in-view', entry.isIntersecting);
+
+                    if (entry.isIntersecting) {
+                        const featureId = featureItem.dataset.feature;
+                        mockupContents.forEach(content => {
+                            content.classList.toggle('active', content.id === `mockup-${featureId}`);
+                        });
+                    }
+                });
+            }, { rootMargin: "-50% 0px -50% 0px" });
+            featureItems.forEach(item => featureObserver.observe(item));
+        }
+
+        // --- TEMA DEĞİŞTİRİCİ ---
+        const themeToggle = document.getElementById('theme-toggle');
+        if(themeToggle) {
+            const lsTheme = localStorage.getItem('theme');
+            if (lsTheme === 'light-mode') {
+                document.body.classList.add('light-mode');
+            }
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('light-mode');
+                let theme = document.body.classList.contains('light-mode') ? 'light-mode' : 'dark-mode';
+                localStorage.setItem('theme', theme);
+            });
+        }
+    });
+    </script>
+</body>
+</html>

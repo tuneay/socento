@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - Socento Echoes{% endblock %}
+
+{% block content %}
+<div class="page-container" style="margin-top: 30px;">
+    <h1 class="gradient-text" style="margin-bottom: 20px;">Echoes Konu Başlığı: "{{ topic_name }}"</h1>
+
+    {% if echoes %}
+    <div class="echoes-list"> {# Echoes'a özel liste sınıfı #}
+        {% for echo_post in echoes %}
+        <div class="echo-card card-custom">
+            <div class="echo-header">
+                <img src="{{ url_for('static', filename='uploads/profile_pics/' + echo_post.author.profile_image) }}"
+                    alt="Profil Resmi" class="echo-author-img">
+                <div class="echo-author-info">
+                    <a href="{{ url_for('profile', username=echo_post.author.username) }}" class="echo-author-username">
+                        @{{ echo_post.author.username }}
+                        {{ echo_post.author.get_blue_tick_html() | safe }}
+                    </a>
+                    <span class="echo-date">{{ echo_post.date_posted.strftime('%d %B %Y') }}</span>
+                </div>
+            </div>
+
+            <div class="echo-content-area">
+                {% if echo_post.title %}<h3 class="echo-title">{{ echo_post.title }}</h3>{% endif %}
+                <p class="echo-content-text">{{ echo_post.content | process_tags | safe }}</p>
+                {% if echo_post.echo_topic %}
+                <a href="{{ url_for('echoes_topic', topic=echo_post.echo_topic) }}" class="echo-topic-badge">
+                    -{{ echo_post.echo_topic }}
+                </a>
+                {% endif %}
+            </div>
+
+            <div class="echo-actions">
+                {% if current_user.is_authenticated %}
+                <form action="{{ url_for('rise_echo', echo_id=echo_post.id) }}" method="POST" class="echo-action-form">
+                    <button type="submit"
+                        class="action-icon rise-button {% if echo_post.id in user_risen_ids %}risen{% endif %}"
+                        title="{% if echo_post.id in user_risen_ids %}Rise Geri Al{% else %}Rise Et{% endif %}">
+                        <i
+                            class="{% if echo_post.id in user_risen_ids %}fas{% else %}far{% endif %} fa-arrow-alt-circle-up"></i>
+                    </button>
+                </form>
+                <span class="rise-count">{{ echo_post.rises }} Rise</span>
+
+                <form action="{{ url_for('fade_echo', echo_id=echo_post.id) }}" method="POST" class="echo-action-form">
+                    <button type="submit"
+                        class="action-icon fade-button {% if echo_post.id in user_faded_ids %}faded{% endif %}"
+                        title="{% if echo_post.id in user_faded_ids %}Fade Geri Al{% else %}Fade Et{% endif %}">
+                        <i
+                            class="{% if echo_post.id in user_faded_ids %}fas{% else %}far{% endif %} fa-arrow-alt-circle-down"></i>
+                    </button>
+                </form>
+                <span class="fade-count">{{ echo_post.fades }} Fade</span>
+                {% endif %}
+
+                <a href="{{ url_for('echo_detail', echo_id=echo_post.id) }}" class="action-icon echo-comment-button"
+                    title="Yorumlar">
+                    <i class="far fa-comment"></i>
+                    <span class="comment-count">{{ echo_post.comments|length }} Yorum</span>
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-content-message card-custom">
+        <p>"{% if query %}{{ query }}{% else %}Boş{% endif %}" konu başlığı ile eşleşen Echo gönderisi bulunamadı.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

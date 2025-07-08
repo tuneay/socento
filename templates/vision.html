@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yaratıcının Vizyonu | Socento</title>
+    <meta name="description"
+        content="Socento'nun ruhunu, felsefesini ve geleceğe dair notlarını keşfedin.">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💎</text></svg>">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #000000;
+            --bg-soft: #111111;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A1A1A6;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.3);
+
+            --accent-yellow: #FFD04F;
+            --accent-coral: #FF6F61;
+            --accent-gradient: linear-gradient(90deg, var(--accent-yellow) 0%, var(--accent-coral) 100%);
+            --btn-text-color: #3D1D00;
+
+            --space-section-y: 120px; /* Bu sayfada dikey boşlukları biraz azalttım */
+            --space-xl: 64px;
+            --space-lg: 32px;
+            --space-md: 16px;
+            --space-sm: 8px;
+
+            --transition-smooth: 600ms cubic-bezier(0.2, 0.8, 0.2, 1);
+            --transition-fast: 300ms ease;
+        }
+
+        body.light-mode {
+            --bg-main: #FFFFFF;
+            --bg-soft: #F7F7F7;
+            --text-primary: #000000;
+            --text-secondary: #5A5A5F;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.05);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: background-color var(--transition-fast), color var(--transition-fast);
+        }
+
+        #aurora-background {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            background: radial-gradient(circle at 10% 20%, var(--accent-yellow), transparent 35%),
+                        radial-gradient(circle at 80% 70%, var(--accent-coral), transparent 35%);
+            filter: blur(120px); opacity: 0.15;
+            animation: aurora-flow 25s infinite alternate ease-in-out;
+        }
+
+        @keyframes aurora-flow {
+            from { transform: scale(1) rotate(0deg); }
+            to { transform: scale(1.5) rotate(90deg); }
+        }
+
+        .container { width: 100%; max-width: 1080px; margin: 0 auto; padding: 0 var(--space-lg); }
+        .section { padding: var(--space-section-y) 0; }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(var(--space-lg));
+            transition: opacity 1.2s var(--transition-smooth), transform 1.2s var(--transition-smooth);
+        }
+
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* NAVİGASYON (Değişiklik yok) */
+        .main-nav { position: fixed; top: 0; left: 0; width: 100%; padding: var(--space-md) 0; z-index: 1000; transition: background-color 0.3s ease, backdrop-filter 0.3s ease; }
+        .main-nav.scrolled { background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(16px); }
+        body.light-mode .main-nav.scrolled { background-color: rgba(255, 255, 255, 0.7); }
+        .nav-content { display: flex; justify-content: space-between; align-items: center; }
+        .nav-logo { font-weight: 700; font-size: 20px; text-decoration: none; color: var(--text-primary); }
+        .nav-right { display: flex; align-items: center; gap: var(--space-md); }
+        .nav-links { display: flex; align-items: center; gap: var(--space-lg); list-style: none; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; transition: color 0.3s ease; font-weight: 500; }
+        .nav-links a:hover, .nav-links a.active { color: var(--text-primary); }
+        .theme-toggle { display: flex; background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: var(--space-sm); border-radius: 99px; }
+        .theme-toggle:hover { color: var(--text-primary); }
+        .theme-toggle svg { width: 18px; }
+        .theme-toggle .icon-sun { display: none; }
+        body.light-mode .icon-sun { display: block; }
+        body.light-mode .icon-moon { display: none; }
+
+        /* YENİ SAYFA İÇİN STİLLER */
+        .vision-hero {
+            text-align: center;
+            padding-top: 200px;
+            padding-bottom: 100px;
+            min-height: auto;
+        }
+
+        .vision-hero h1 {
+            font-size: clamp(3rem, 7vw, 5.5rem);
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            line-height: 1.1;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: var(--space-md);
+        }
+
+        .vision-hero p {
+            font-size: clamp(1.1rem, 3vw, 1.25rem);
+            color: var(--text-secondary);
+            max-width: 650px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .manifesto-post {
+            max-width: 720px;
+            margin: 0 auto var(--space-xl);
+            padding-bottom: var(--space-xl);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .manifesto-post:last-child {
+            border-bottom: none;
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+            font-size: 0.9rem;
+        }
+        
+        .post-date {
+            color: var(--text-secondary);
+        }
+
+        .kicker {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--accent-coral);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .manifesto-post h2 {
+            font-size: clamp(2rem, 5vw, 2.8rem);
+            font-weight: 600;
+            letter-spacing: -0.035em;
+            line-height: 1.2;
+            margin-bottom: var(--space-lg);
+            color: var(--text-primary);
+        }
+
+        .post-content p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .post-content strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+
+        /* MOBİL STİLLER */
+        .nav-toggle { display: none; }
+        .mobile-nav-panel { display: none; }
+
+        @media (max-width: 768px) {
+            .nav-links, .nav-right .btn { display: none; }
+            .nav-toggle { display: flex; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; z-index: 1001; position: relative; }
+            .nav-toggle .bar { width: 24px; height: 2px; background-color: var(--text-primary); border-radius: 2px; transition: transform 0.3s ease, opacity 0.3s ease; }
+            .nav-open .nav-toggle .bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+            .nav-open .nav-toggle .bar:nth-child(2) { opacity: 0; }
+            .nav-open .nav-toggle .bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+            .mobile-nav-panel { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: var(--space-xl); position: fixed; top: 0; right: 0; width: 100%; height: 100%; background-color: var(--bg-main); transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 1000; }
+            .nav-open .mobile-nav-panel { transform: translateX(0); }
+            .mobile-nav-panel a { font-size: 2rem; font-weight: 600; color: var(--text-primary); text-decoration: none; }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="aurora-background"></div>
+
+    <nav class="main-nav">
+        <div class="container">
+            <div class="nav-content">
+                <a href="https://www.socento.com" class="nav-logo">Socento</a>
+                <div class="nav-right">
+                    <ul class="nav-links">
+                        <li><a href="https://www.socento.com">Ana Sayfa</a></li>
+                        <li><a href="#vision-hero" class="active">Vizyon</a></li>
+                    </ul>
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Temayı Değiştir">
+                        <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                        <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" /><circle cx="12" cy="12" r="5" /></svg>
+                    </button>
+                    <button class="nav-toggle" id="nav-toggle" aria-label="Menüyü aç/kapat">
+                        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="mobile-nav-panel" id="mobile-nav-panel">
+        <a href="https://www.socento.com">Ana Sayfa</a>
+        <a href="#vision-hero">Vizyon</a>
+    </div>
+
+    <main>
+        <section class="vision-hero section">
+            <div class="container reveal">
+                <h1>Yaratıcının Vizyonu</h1>
+                <p>
+                    Burası, Socento'nun ruhunu, felsefesini ve geleceğe dair notlarını bulacağınız bir dijital günce. Kodların arkasındaki "neden"i ve sessizliğin içindeki anlamı burada paylaşıyorum.
+                </p>
+            </div>
+        </section>
+
+        <section id="manifestos" class="section">
+            <div class="container">
+
+                <article class="manifesto-post reveal">
+                    <div class="post-meta">
+                        <span class="kicker">MANIFESTO I</span>
+                        <span class="post-date">Temmuz 2025</span>
+                    </div>
+                    <h2>Dijital Gürültü ve Anlam Arayışı</h2>
+                    <div class="post-content">
+                        <p>
+                            İnternet, bir zamanlar insanlığı birleştirme vaadiydi. Bilgiye anında erişim, coğrafi sınırların ortadan kalktığı küresel bir köy... Ancak bu vaat, yerini sonsuz bir gürültüye bıraktı. "Daha fazla içerik, daha fazla etkileşim, daha fazla bildirim" döngüsü, dikkatimizi bir metaya, zihnimizi ise bir pazar yerine çevirdi.
+                        </p>
+                        <p>
+                            Socento, bu gürültüye bir tepki olarak doğdu. Bir "anti-sosyal medya" platformu değil, aksine <strong>sosyal olmanın gerçek anlamına dönme</strong> çağrısıdır. Bağlantının niceliğini değil, niteliğini önemsiyoruz. Binlerce yüzeysel takipçi yerine, sizinle aynı frekansta titreşen birkaç derin bağın daha değerli olduğuna inanıyoruz.
+                        </p>
+                        <p>
+                            Bu yüzden burada "sonsuz kaydırma" yok. İçerikler, dikkat çekmek için değil, değer kattığı için yükselir. Yapay zekâ, sizi manipüle etmek için değil, sizi entelektüel olarak besleyecek, ufkunuzu genişletecek insan ve düşüncelerle tanıştırmak için var. <strong>Amacımız, daha fazla zamanınızı almak değil, size zamanınızı geri kazandırmaktır.</strong>
+                        </p>
+                    </div>
+                </article>
+                <article class="manifesto-post reveal">
+                    <div class="post-meta">
+                        <span class="kicker">MANIFESTO II</span>
+                        <span class="post-date">Ağustos 2025</span>
+                    </div>
+                    <h2>Algoritmanın Ötesindeki İnsan</h2>
+                    <div class="post-content">
+                        <p>
+                           Platformlar bizi bizden daha iyi tanıdıklarını iddia ediyor. Bize neyi sevmemiz, neyi düşünmemiz, hatta neyi hissetmemiz gerektiğini söyleyen algoritmalar tasarlıyorlar. Bizi, tahmin edilebilir veri setlerine indirgiyorlar. Socento bu denklemi tersine çevirir: <strong>Kontrol, algoritmada değil, insandadır.</strong>
+                        </p>
+                        <p>
+                            "InnerNetwork" ve "Rise & Fade" gibi mekanizmalar, kürasyonu kullanıcıya geri verir. Kendi evreninizi kurarsınız. Dikkatinizi neye vereceğinize siz karar verirsiniz. Bir içeriğin ne kadar yaşayacağına, onunla kurulan bağın derinliği karar verir; sahte etkileşimler değil. Burada, dijital kimliğiniz bir ürün değil, sizin inşa ettiğiniz bir alandır.
+                        </p>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p class="copyright">&copy; 2025 Socento. Düşünmek için tasarlandı.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Gerekli tüm JavaScript kodları ana tasarımla aynıdır
+            const nav = document.querySelector('.main-nav');
+            if (nav) {
+                window.addEventListener('scroll', () => {
+                    nav.classList.toggle('scrolled', window.scrollY > 20);
+                });
+            }
+
+            const navToggle = document.getElementById('nav-toggle');
+            const mobileNavPanel = document.getElementById('mobile-nav-panel');
+            const body = document.body;
+
+            if (navToggle && mobileNavPanel) {
+                navToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    body.classList.toggle('nav-open');
+                });
+                mobileNavPanel.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        body.classList.remove('nav-open');
+                    });
+                });
+                body.addEventListener('click', (e) => {
+                    if (body.classList.contains('nav-open') && !mobileNavPanel.contains(e.target)) {
+                       body.classList.remove('nav-open');
+                    }
+                });
+            }
+
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        revealObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+            document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+            const themeToggle = document.getElementById('theme-toggle');
+            if (themeToggle) {
+                const lsTheme = localStorage.getItem('theme');
+                if (lsTheme === 'light-mode') {
+                    document.body.classList.add('light-mode');
+                }
+                themeToggle.addEventListener('click', () => {
+                    document.body.classList.toggle('light-mode');
+                    let theme = document.body.classList.contains('light-mode') ? 'light-mode' : 'dark-mode';
+                    localStorage.setItem('theme', theme);
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

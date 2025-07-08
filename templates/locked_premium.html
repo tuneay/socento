@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5 text-center">
+    <div class="alert alert-warning">
+        <h3>Bu sayfa sadece premium üyeler içindir.</h3>
+        <p>Premium özelliklere erişmek için planınızı yükseltin.</p>
+        <a href="{{ url_for('upgrade_plan') }}" class="btn btn-primary">Planı Yükselt</a>
+    </div>
+</div>
+{% endblock %}

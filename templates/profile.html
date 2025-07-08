@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+
+{% block title %}{{ user.username }} Profili - Socento Social{% endblock %}
+
+{% block content %}
+<div class="page-container profile-page-container full-width-profile">
+    <div class="profile-header-container">
+        <div class="profile-cover"
+            style="background-image: url('{% if user.cover_image %}{{ url_for('static', filename='uploads/profile_pics/' + user.cover_image) }}{% else %}{{ url_for('static', filename='uploads/profile_pics/default_profile' ~ (range(3)|random + 1) ~ '.jpg') }}{% endif %}');">
+        </div>
+
+        <div class="profile-main-content-area" data-username="{{ user.username }}">
+            <div class="profile-main-image-wrapper">
+                <img src="{% if user.profile_image %}{{ url_for('static', filename='uploads/profile_pics/' + user.profile_image) }}{% else %}{{ url_for('static', filename='uploads/profile_pics/default_profile' ~ (range(3)|random + 1) ~ '.jpg') }}{% endif %}"
+                    alt="Profil Resmi" class="profile-main-image">
+            </div>
+
+            <div class="profile-info-block">
+                <div class="profile-username-wrapper">
+                    <h1 class="gradient-text profile-username">
+                        {{ user.username }}
+                        {% if user.has_badge('Mavi Tik') %}
+                        <i class="fas fa-check-circle blue-tick-icon" title="Doğrulanmış Hesap"></i>
+                        {% endif %}
+                    </h1>
+                </div>
+
+
+                {% if user.bio %}<p class="profile-bio">{{ user.bio }}</p>{% endif %}
+
+                {% if user.role == 'premium' and user.planType %}
+                <div class="premium-plan-info">
+                    <span class="premium-badge"><i class="fas fa-gem"></i> Premium Üye</span>
+                    <span class="plan-type">Plan: <b>{{ PREMIUM_PLANS[user.planType]['name'] }}</b></span>
+                    <span class="plan-expiry">Bitiş: {{ user.planExpiry.strftime('%d.%m.%Y') if user.planExpiry else 'Süresiz' }}</span>
+                </div>
+                {% else %}
+                <!--PREMİUMA GEÇ KISMI <div class="premium-plan-info">
+                    <a href="{{ url_for('upgrade_plan') }}" class="btn btn-sm btn-warning"><button style="padding: 6px; border: none; border-radius: 6px; background-color: aliceblue; color: black; font-weight: bolder;">Premium'a Geç</button></a>
+                </div>-->
+                {% endif %}
+
+                {% if user.expertise_areas %}
+                <div class="profile-expertise-areas">
+                    <span class="expertise-title"><i class="fas fa-lightbulb"></i> Uzmanlık Alanları:</span>
+                    <div class="expertise-tags">
+                        {% for area in user.expertise_areas.split(',') %}
+                        <span class="expertise-tag">{{ area.strip() }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="profile-details-info-group">
+                    {% if user.location %}<span class="detail-item"><i class="fas fa-map-marker-alt"></i> {{
+                        user.location }}</span>{% endif %}
+                    <span class="detail-item"><i class="fas fa-calendar-alt"></i> Katılım: {{
+                        user.date_joined.strftime('%d %B %Y') }}</span>
+                </div>
+
+                <div class="profile-social-links">
+                    {% if user.website_url %}<a href="{{ user.website_url }}" target="_blank" class="social-link"
+                        title="Web Sitesi" rel="noopener noreferrer"><i class="fas fa-globe"></i></a>{% endif %}
+                    {% if user.spotify_url %}<a href="{{ user.spotify_url }}" target="_blank" class="social-link"
+                        title="Spotify" rel="noopener noreferrer"><i class="fab fa-spotify"></i></a>{% endif %}
+                </div>
+            </div>
+
+            <div class="profile-stats-actions-block">
+                <div class="profile-stats-grid">
+                    <div class="stat-item">
+                        <a href="{{ url_for('user_followers', username=user.username) }}" class="stat-link">
+                            <span class="stat-number follower-count">{{ user.get_follower_count() }}</span>
+                            <span class="stat-label">Takipçi</span>
+                        </a>
+                    </div>
+                    <div class="stat-item">
+                        <a href="{{ url_for('user_following', username=user.username) }}" class="stat-link">
+                            <span class="stat-number">{{ user.get_followed_count() }}</span>
+                            <span class="stat-label">Takip Edilen</span>
+                        </a>
+                    </div>
+                    <div class="stat-item">
+                        <a href="#posts-tab-content" class="stat-link"> {# Link düzeltildi #}
+                            <span class="stat-number">{{ posts|length + echo_posts|length }}</span>
+                            <span class="stat-label">Gönderi</span>
+                        </a>
+                    </div>
+                </div>
+
+                {% if user.badges.count() > 0 %}
+                <div class="profile-badges">
+                    {% for badge in user.badges %}
+                    <span class="badge-item" title="{{ badge.description }}">
+                        <i class="{{ badge.icon_class }}"></i> {{ badge.name }}
+                    </span>
+                    {% endfor %}
+                    {% if user.role == 'premium' and user.planType %}
+                    <span class="badge-item" title="{{ PREMIUM_PLANS[user.planType]['name'] }}">
+                        <i class="fa-brands fa-sketch"></i> {{ PREMIUM_PLANS[user.planType]['name'] }}
+                    </span>
+                    {% else %}
+                    <span class="badge-item" title="Standart Üyelik">
+                        <i class="fas fa-user"></i>
+                    </span>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                {% if current_user.is_authenticated %}
+                <div class="profile-actions-bar">
+                    {% if current_user.id == user.id %}
+                    <a href="{{ url_for('edit_profile') }}" class="btn-primary-custom profile-edit-btn">Profili
+                        Düzenle</a>
+                    {% else %}
+                        {% if current_user.is_following(user) %}
+                        <button class="action-button unfollow-button btn-primary-custom profile-unfollow-btn" data-action="unfollow">Takibi Bırak</button>
+                        {% else %}
+                        <button class="action-button follow-button btn-primary-custom profile-follow-btn" data-action="follow">Takip Et</button>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div> 
+        </div> 
+    </div>
+
+    <div class="profile-content-tabs-wrapper">
+        <div class="profile-content-tabs">
+            <div class="profile-tab-item active" data-tab="posts">
+                <i class="fas fa-th"></i> Gönderiler
+            </div>
+            <div class="profile-tab-item" data-tab="echo">
+                <i class="fas fa-feather-alt"></i> Echo (Yazılı Gönderiler)
+            </div>
+            <div class="profile-tab-item" data-tab="lifted">
+                <i class="fas fa-retweet"></i> Lift Edilenler
+            </div>
+            <div class="profile-tab-item" data-tab="tagged">
+                <i class="fas fa-user-tag"></i> Etiketlenenler (Yakında)
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-posts-grid-container active-tab-content" id="posts-tab-content">
+        {% if posts %}
+        <div class="post-grid">
+            {% for post in posts %}
+            <a href="{{ url_for('post_detail', post_id=post.id) }}" class="post-grid-item">
+                {% if post.image_file %}
+                <img src="{{ url_for('static', filename='uploads/post_media/' + post.image_file) }}"
+                    alt="{{ post.title or 'Gönderi Resmi' }}">
+                {% elif post.video_file %}
+                <video src="{{ url_for('static', filename='uploads/post_media/' + post.video_file) }}" muted
+                    playsinline></video>
+                <div class="video-overlay"><i class="fas fa-play-circle"></i></div>
+                {% endif %}
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-posts-message">
+            <p>Bu kullanıcının henüz hiç medya gönderisi yok.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="profile-posts-grid-container" id="echo-tab-content" style="display: none;">
+        {% if echo_posts %}
+        <div class="post-grid">
+            {% for post in echo_posts %}
+            <a href="{{ url_for('post_detail', post_id=post.id) }}" class="post-grid-item">
+                <div class="text-post-placeholder text-post-grid-item">
+                    <h3 class="gradient-text" style="font-size: 1.1em; margin-bottom: 5px;">{{ post.title or '' }}</h3>
+                    <p>{{ post.content[:100] }}{% if post.content|length > 100 %}...{% endif %}</p>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-posts-message">
+            <p>Bu kullanıcının henüz hiç yazılı gönderisi (Echo) yok.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="profile-posts-grid-container" id="lifted-tab-content" style="display: none;">
+        {% if lifted_videos or lifted_posts %}
+        <div class="post-grid">
+            {% for post in lifted_videos %}
+            <a href="{{ url_for('post_detail', post_id=post.id) }}" class="post-grid-item">
+                <video src="{{ url_for('static', filename='uploads/post_media/' + post.video_file) }}" muted
+                    playsinline></video>
+                <div class="video-overlay"><i class="fas fa-play-circle"></i></div>
+            </a>
+            {% endfor %}
+            {% for post in lifted_posts %}
+            <a href="{{ url_for('post_detail', post_id=post.id) }}" class="post-grid-item">
+                {% if post.image_file %}
+                <img src="{{ url_for('static', filename='uploads/post_media/' + post.image_file) }}"
+                    alt="{{ post.title or 'Gönderi Resmi' }}">
+                {% elif post.video_file %}
+                <video src="{{ url_for('static', filename='uploads/post_media/' + post.video_file) }}" muted
+                    playsinline></video>
+                <div class="video-overlay"><i class="fas fa-play-circle"></i></div>
+                {% endif %}
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-posts-message">
+            <p>Bu kullanıcı henüz hiç gönderi Lift etmemiş.</p>
+        </div>
+        {% endif %}
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tabs = document.querySelectorAll('.profile-tab-item');
+            const contents = document.querySelectorAll('.profile-posts-grid-container');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function () {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+
+                    contents.forEach(c => {
+                        // Sadece profil gönderi gridlerini gizle/göster
+                        if(c.id.endsWith('-tab-content')) {
+                            c.style.display = 'none';
+                        }
+                    });
+                    
+                    const targetTabContentId = this.dataset.tab + '-tab-content';
+                    const targetContent = document.getElementById(targetTabContentId);
+                    if(targetContent) {
+                        targetContent.style.display = 'block';
+                    }
+                });
+            });
+        });
+    </script>
+
+</div>
+{% endblock %}

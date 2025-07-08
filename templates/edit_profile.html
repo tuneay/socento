@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - Socento Social{% endblock %}
+
+{% block content %}
+
+<div class="page-container"
+    style="display: flex; justify-content: center; align-items: flex-start; min-height: calc(100vh - 100px);">
+    <div class="card-custom" style="max-width: 600px;">
+        <h2 class="gradient-text" style="text-align: center; margin-bottom: 25px;">Profilini Düzenle</h2>
+      
+        <form method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="username" class="form-label">Kullanıcı Adı (Değiştirilemez)</label>
+                <input type="text" class="form-input" id="username" name="username" value="{{ user.username }}" readonly
+                    style="cursor: not-allowed; opacity: 0.7;">
+            </div>
+            <div class="form-group">
+                <label for="email" class="form-label">E-posta (Değiştirilemez)</label>
+                <input type="email" class="form-input" id="email" name="email" value="{{ user.email }}" readonly
+                    style="cursor: not-allowed; opacity: 0.7;">
+            </div>
+            <div class="form-group">
+                <label for="bio" class="form-label">Biyografi</label>
+                <textarea class="form-input" id="bio" name="bio" rows="5">{{ user.bio or '' }}</textarea>
+            </div>
+
+            <hr style="border-color: var(--border-color-light); margin: 30px 0;">
+
+            <h3 class="gradient-text" style="margin-bottom: 20px;">Profilini Zenginleştir</h3>
+
+            <div id="profildetails" class="form-group">
+                <label for="location" class="form-label"><i class="fas fa-map-marker-alt"></i> Konum
+                    (Şehir/Ülke)</label>
+                <input type="text" class="form-input" id="location" name="location" value="{{ user.location or '' }}"
+                    placeholder="İstanbul, Türkiye">
+            </div>
+
+            <div class="form-group">
+                <label for="expertise_areas" class="form-label"><i class="fa-solid fa-dragon"></i> Siz?</label>
+                <input type="text" class="form-input" id="expertise_areas" name="expertise_areas"
+                    value="{{ user.expertise_areas or '' }}"
+                    placeholder="Python, Web Geliştirme, Yapay Zeka (Virgülle ayırınız)">
+                <small class="input-help-text">Birden fazla uzmanlık alanını virgülle ayırarak giriniz.</small>
+            </div>
+
+            <hr style="border-color: var(--border-color-light); margin: 30px 0;">
+
+            <h3 class="gradient-text" style="margin-bottom: 20px;">Linkler</h3>
+
+            <div class="form-group">
+                <label for="website_url" class="form-label"><i class="fas fa-globe"></i> Web Sitesi URL</label>
+                <input type="url" class="form-input" id="website_url" name="website_url"
+                    value="{{ user.website_url or '' }}" placeholder="https://www.orneksite.com">
+            </div>
+
+            <div class="form-group">
+                <label for="spotify_url" class="form-label"><i class="fab fa-spotify"></i> Spotify Listesi/Profil
+                    URL</label>
+                <input type="url" class="form-input" id="spotify_url" name="spotify_url"
+                    value="{{ user.spotify_url or '' }}" placeholder="https://open.spotify.com/playlist/ORkullanici">
+                <small class="input-help-text">Favori Spotify listenizin veya profilinizin linki.</small>
+            </div>
+
+            <hr style="border-color: var(--border-color-light); margin: 30px 0;">
+
+            <div class="form-group">
+                <label class="form-label" style="margin-bottom: 15px;">Profil Resmi</label>
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                    <img src="{{ url_for('static', filename='uploads/profile_pics/' + user.profile_image) }}"
+                        alt="Profil Resmi"
+                        style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gradient-primary);">
+                    <input type="file" class="form-input" id="profile_image" name="profile_image"
+                        accept="image/png, image/jpeg, image/gif" style="flex-grow: 1; padding: 10px; height: auto;">
+                </div>
+                <small class="input-help-text">Sadece JPG, JPEG, PNG veya GIF formatında dosyalar yüklenebilir.</small>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" style="margin-bottom: 15px;">Kapak Resmi (Duvar Kağıdı)</label>
+                <div style="margin-bottom: 15px;">
+                    <img src="{{ url_for('static', filename='uploads/profile_pics/' + user.cover_image) }}"
+                        alt="Kapak Resmi"
+                        style="width: 100%; height: 150px; object-fit: cover; border-radius: var(--border-radius-sm); border: 1px solid var(--border-color-light);">
+                </div>
+                <input type="file" class="form-input" id="cover_image" name="cover_image"
+                    accept="image/png, image/jpeg, image/gif" style="padding: 10px; height: auto;">
+                <small class="input-help-text">Sadece JPG, JPEG, PNG veya GIF formatında dosyalar yüklenebilir.</small>
+            </div>
+
+            <div class="form-group" style="margin-top: 35px;">
+                <button type="submit" class="btn-primary-custom">Kaydet</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

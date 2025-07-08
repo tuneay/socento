@@ -1,0 +1,290 @@
+{% extends "base.html" %}
+
+{% block title %}Echoes Forumu - Socento{% endblock %}
+
+{% block content %}
+<div class="main-content-flex-wrapper">
+    {# YENİ SOL SİDEBAR BAŞLANGICI - Echoes'a özel trendler #}
+    {% if current_user.is_authenticated %}
+    <div class="left-sidebar">
+        {# Tema Değiştirme Butonu #}
+        <div class="sidebar-card theme-toggle-card">
+            <button id="theme-toggle" class="btn-primary-custom btn-small full-width-btn" title="Temayı Değiştir">
+                <i class="fas fa-sun"></i> / <i class="fas fa-moon"></i> Temayı Değiştir
+            </button>
+        </div>
+
+        {# Echoes Trend Konu Başlıkları #}
+        <div class="sidebar-card">
+            <h3 class="sidebar-title gradient-text"><i class="fa-solid fa-fire"></i> Trend Echoes Konuları</h3>
+            {% if trending_topics %}
+            <ul class="sidebar-list">
+                {% for topic, score in trending_topics %}
+                <li>
+                    <a href="{{ url_for('echoes_topic', topic=topic) }}">
+                        -{{ topic }} <span class="hashtag-count">({{ score | int }} Puan)</span>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="sidebar-no-content">Henüz trend konu yok.</p>
+            {% endif %}
+        </div>
+
+        {# Yeni Echo Oluşturma Hızlı Bağlantısı #}
+        <div class="sidebar-card">
+            <h3 class="sidebar-title gradient-text"><i class="fa-solid fa-pen-to-square"></i> Yeni Echo</h3>
+            <p class="sidebar-no-content">Aklındakileri sadece yazıyla paylaş!</p>
+            <a href="{{ url_for('new_post', post_type='echo') }}" class="btn-primary-custom btn-small full-width-btn">
+                <i class="fas fa-plus"></i> Echo Oluştur
+            </a>
+        </div>
+
+    </div>
+    {% endif %}
+    {# SOL SİDEBAR SONU #}
+
+    <div class="page-container feed-page-container">
+        <h1 class="echohash" style="margin-bottom: 25px; text-align: center;">Echoes Forum Akışı</h1>
+
+        <div id="echoes-container"> {# Echo'ların yükleneceği div #}
+            {% if echoes_posts %}
+            {% for echo_post in echoes_posts %}
+            <div class="echo-card card-custom">
+                <div class="echo-header">
+                    <img src="{{ url_for('static', filename='uploads/profile_pics/' + echo_post.author.profile_image) }}"
+                        alt="Profil Resmi" class="echo-author-img">
+                    <div class="echo-author-info">
+                        <a href="{{ url_for('profile', username=echo_post.author.username) }}"
+                            class="echo-author-username">
+                            @{{ echo_post.author.username }}
+                            {{ echo_post.author.get_blue_tick_html() | safe }}
+                        </a>
+                        <span class="echo-date">{{ echo_post.date_posted.strftime('%d %B %Y') }}</span>
+                    </div>
+                </div>
+
+                <div class="echo-content-area">
+                    {% if echo_post.title %}<h3 class="echo-title">{{ echo_post.title }}</h3>{% endif %}
+                    <p class="echo-content-text">{{ echo_post.content | process_tags | safe }}</p>
+                    {% if echo_post.echo_topic %}
+                    <a href="{{ url_for('echoes_topic', topic=echo_post.echo_topic) }}" class="echo-topic-badge">
+                        -{{ echo_post.echo_topic }}
+                    </a>
+                    {% endif %}
+                </div>
+
+                <div class="echo-actions">
+                    {% if current_user.is_authenticated %}
+                    <form action="{{ url_for('rise_echo', echo_id=echo_post.id) }}" method="POST"
+                        class="echo-action-form">
+                        <button type="submit"
+                            class="action-icon rise-button {% if user_risen %}risen{% else %}not-risen{% endif %}"
+                            title="{% if user_risen %}Rise Geri Al{% else %}Rise Et{% endif %}">
+                            <i class="{% if user_risen %}fas{% else %}far{% endif %} fa-arrow-alt-circle-up"></i>
+                        </button>
+                    </form>
+                    <span class="rise-count">{{ echo_post.rises }} Rise</span>
+
+                    <form action="{{ url_for('fade_echo', echo_id=echo_post.id) }}" method="POST"
+                        class="echo-action-form">
+                        <button type="submit"
+                            class="action-icon fade-button {% if user_faded %}faded{% else %}not-faded{% endif %}"
+                            title="{% if user_faded %}Fade Geri Al{% else %}Fade Et{% endif %}">
+                            <i class="{% if user_faded %}fas{% else %}far{% endif %} fa-arrow-alt-circle-down"></i>
+                        </button>
+                    </form>
+                    <span class="fade-count">{{ echo_post.fades }} Fade</span>
+                    {% endif %}
+
+                    <a href="{{ url_for('echo_detail', echo_id=echo_post.id) }}" class="action-icon echo-comment-button"
+                        title="Yorumlar">
+                        <i class="far fa-comment"></i>
+                        <span class="comment-count">{{ echo_post.comments|length }} Yorum</span>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="no-content-message card-custom">
+                <p>Henüz hiç Echo gönderisi yok. İlk Echo'nuzu oluşturmak ister misiniz?</p>
+                <p style="margin-top: 10px;"><a href="{{ url_for('new_post', post_type='echo') }}"
+                        style="font-weight: bold;">Hemen bir Echo oluşturun</a>!</p>
+            </div>
+            {% endif %}
+        </div> {# /echoes-container #}
+
+        {# Sonsuz Kaydırma için Yükleme Göstergesi ve Mesaj #}
+        <div id="loading-spinner" style="display: none; text-align: center; margin-top: 20px;">
+            <i class="fas fa-spinner fa-spin fa-2x" style="color: var(--focus-glow-color);"></i>
+        </div>
+        <div id="no-more-echoes" class="no-content-message card-custom" style="display: none; margin-top: 20px;">
+            <p>Gösterilecek daha fazla Echo bulunmuyor.</p>
+        </div>
+    </div>
+
+    {# SAĞ SİDEBAR (Önerilen Kullanıcılar) - Mevcut sağ sidebar kalacak #}
+    {% if current_user.is_authenticated %}
+    <div class="right-sidebar">
+        <div class="current-user-info">
+            <img src="{{ url_for('static', filename='uploads/profile_pics/' + current_user.profile_image) }}"
+                alt="Profil Resmi" class="current-user-img">
+            <a href="{{ url_for('profile', username=current_user.username) }}" class="current-user-username">
+                {{ current_user.username }}
+                {{ current_user.get_blue_tick_html() | safe }}
+            </a>
+            <a href="{{ url_for('logout') }}" class="logout-link">Çıkış Yap</a>
+        </div>
+
+        <div class="suggestions-section">
+            <div class="suggestions-header">
+                <span class="suggestions-title">Sizin İçin Önerilenler</span>
+            </div>
+            <div class="suggestion-list">
+                {# Python'da recommended_users rotadan gelmeli #}
+                {% for rec_user in recommended_users %}
+                {% if current_user.id != rec_user.id and not current_user.is_following(rec_user) %}
+                <div class="suggestion-item">
+                    <img src="{{ url_for('static', filename='uploads/profile_pics/' + rec_user.profile_image) }}"
+                        alt="Profil Resmi" class="suggestion-user-img">
+                    <a href="{{ url_for('profile', username=rec_user.username) }}" class="suggestion-username">
+                        {{ rec_user.username }}
+                        {{ rec_user.get_blue_tick_html() | safe }}
+                    </a>
+                    <a href="{{ url_for('follow_user', username=rec_user.username) }}" class="follow-button">Takip
+                        Et</a>
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% if not recommended_users %}
+                <p style="font-size: 0.9em; color: var(--text-color-muted); text-align: center;">Henüz önerilecek
+                    kullanıcı yok.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="footer-links-sidebar">
+            <a href="https://www.socento.com" target="_blank" rel="noopener noreferrer">Hakkında</a> ·
+            <a href="https://www.updates.socento.com" target="_blank" rel="noopener noreferrer">Yardım</a> ·
+            <a href="{{ url_for('home') }}#privacy-policy">Gizlilik</a> ·
+            <a href="{{ url_for('home') }}#terms-of-service">Koşullar</a>
+            <p class="copyright-text">© 2025 Socento</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    // Sonsuz Kaydırma için JavaScript (Echoes için uyarlanacak)
+    let currentPage = {{ next_page }};
+    let hasMoreEchoes = {{ 'true' if has_next else 'false' }};
+    let isLoading = false;
+    const echoesContainer = document.getElementById('echoes-container');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    const noMoreEchoesMessage = document.getElementById('no-more-echoes');
+
+    function createEchoCard(echo_post) {
+        const contentHtml = echo_post.content || '';
+        const titleHtml = echo_post.title ? `<h3 class="echo-title">${echo_post.title}</h3>` : '';
+        const topicHtml = echo_post.echo_topic ? `<a href="/echoes/topic/${echo_post.echo_topic}" class="echo-topic-badge">-${echo_post.echo_topic}</a>` : '';
+
+        // Rise ve Fade durumlarını kontrol etmek için
+        // Bu bilgiyi AJAX ile gelen veriye eklememiz gerekecek
+        const userRisen = echo_post.user_risen_by_current_user ? 'risen' : 'not-risen';
+        const userFaded = echo_post.user_faded_by_current_user ? 'faded' : 'not-faded';
+        const risenIcon = echo_post.user_risen_by_current_user ? 'fas' : 'far';
+        const fadedIcon = echo_post.user_faded_by_current_user ? 'fas' : 'far';
+
+        const card = document.createElement('div');
+        card.className = 'echo-card card-custom';
+        card.innerHTML = `
+                <div class="echo-header">
+                    <img src="${echo_post.author_profile_image}" alt="Profil Resmi" class="echo-author-img">
+                    <div class="echo-author-info">
+                        <a href="/profile/${echo_post.author_username}" class="echo-author-username">
+                            @${echo_post.author_username}
+                            ${echo_post.author_blue_tick_html}
+                        </a>
+                        <span class="echo-date">${echo_post.date_posted}</span>
+                    </div>
+                </div>
+                
+                <div class="echo-content-area">
+                    ${titleHtml}
+                    ${contentHtml ? `<p class="echo-content-text">${contentHtml}</p>` : ''}
+                    ${topicHtml}
+                </div>
+
+                <div class="echo-actions">
+                    <form action="/echo/${echo_post.id}/rise" method="POST" class="echo-action-form">
+                        <button type="submit" class="action-icon rise-button ${userRisen}" title="${echo_post.user_risen_by_current_user ? 'Rise Geri Al' : 'Rise Et'}">
+                            <i class="${risenIcon} fa-arrow-alt-circle-up"></i>
+                        </button>
+                    </form>
+                    <span class="rise-count">${echo_post.rises} Rise</span>
+
+                    <form action="/echo/${echo_post.id}/fade" method="POST" class="echo-action-form">
+                        <button type="submit" class="action-icon fade-button ${userFaded}" title="${echo_post.user_faded_by_current_user ? 'Fade Geri Al' : 'Fade Et'}">
+                            <i class="${fadedIcon} fa-arrow-alt-circle-down"></i>
+                        </button>
+                    </form>
+                    <span class="fade-count">${echo_post.fades} Fade</span>
+                    
+                    <a href="/echo/${echo_post.id}" class="action-icon echo-comment-button" title="Yorumlar">
+                        <i class="far fa-comment"></i>
+                        <span class="comment-count">${echo_post.comments_count} Yorum</span>
+                    </a>
+                </div>
+            `;
+        return card;
+    }
+
+    function loadMoreEchoes() {
+        if (isLoading || !hasMoreEchoes) {
+            return;
+        }
+
+        isLoading = true;
+        loadingSpinner.style.display = 'block';
+
+        fetch(`/load_echoes?page=${currentPage}`) // Yeni AJAX rotası: /load_echoes
+            .then(response => response.json())
+            .then(data => {
+                isLoading = false;
+                loadingSpinner.style.display = 'none';
+
+                if (data.echoes.length > 0) {
+                    data.echoes.forEach(echo_post => {
+                        const echoCard = createEchoCard(echo_post);
+                        echoesContainer.appendChild(echoCard);
+                    });
+                    currentPage = data.next_page;
+                    hasMoreEchoes = data.has_next;
+                } else {
+                    hasMoreEchoes = false;
+                }
+
+                if (!hasMoreEchoes) {
+                    noMoreEchoesMessage.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Error loading echoes:', error);
+                isLoading = false;
+                loadingSpinner.style.display = 'none';
+            });
+    }
+
+    window.addEventListener('scroll', () => {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) {
+            loadMoreEchoes();
+        }
+    });
+
+    // Sayfa ilk yüklendiğinde, eğer içerik azsa ve daha fazla varsa hemen yükleme yap
+    if (hasMoreEchoes && echoesContainer.offsetHeight < window.innerHeight) {
+        loadMoreEchoes();
+    }
+</script>
+{% endblock %}

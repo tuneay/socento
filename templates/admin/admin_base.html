@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Paneli{% endblock %} - Socento</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #111827;
+            --bg-light: #1f2937;
+            --border-color: #374151;
+            --text-light: #f9fafb;
+            --text-muted: #9ca3af;
+            --accent-primary: #FF6F61;
+            --accent-secondary: #FFD04F;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            margin: 0;
+            display: flex;
+        }
+        .admin-sidebar {
+            width: 250px;
+            background-color: var(--bg-light);
+            border-right: 1px solid var(--border-color);
+            height: 100vh;
+            position: fixed;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-header {
+            padding: 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .sidebar-header a {
+            color: var(--text-light);
+            text-decoration: none;
+        }
+        .sidebar-nav {
+            list-style: none;
+            padding: 20px 0;
+            margin: 0;
+            flex-grow: 1;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            border-left: 3px solid transparent;
+            transition: all 0.2s ease;
+        }
+        .sidebar-nav a:hover, .sidebar-nav a.active {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            border-left-color: var(--accent-primary);
+        }
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+        .sidebar-footer a {
+            color: var(--accent-secondary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .admin-main-content {
+            margin-left: 250px;
+            flex-grow: 1;
+            padding: 30px;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .content-header h1 {
+            margin: 0 0 20px 0;
+            font-size: 2rem;
+        }
+        .card {
+            background-color: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        th {
+            background-color: #374151;
+        }
+        tr:hover {
+            background-color: #2b3648;
+        }
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .btn-primary { background-color: var(--accent-primary); color: white; }
+        .btn-primary:hover { background-color: #e55a4c; }
+        .btn-danger { background-color: #dc3545; color: white; }
+        .btn-danger:hover { background-color: #c82333; }
+        .btn-sm { font-size: 0.8rem; padding: 5px 10px; }
+        .action-buttons form { display: inline-block; margin-right: 5px;}
+        .flash-message { padding: 1rem; border-radius: 6px; margin-bottom: 1rem; }
+        .flash-success { background-color: #28a745; color: white; }
+        .flash-danger { background-color: #dc3545; color: white; }
+    </style>
+</head>
+<body>
+    <aside class="admin-sidebar">
+        <div class="sidebar-header">
+            <a href="{{ url_for('admin_dashboard') }}">Admin Paneli</a>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="{{ url_for('admin_dashboard') }}" class="{{ 'active' if 'dashboard' in request.endpoint }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="{{ url_for('admin_posts') }}" class="{{ 'posts' in request.endpoint }}"><i class="fas fa-file-alt"></i> Gönderiler</a></li>
+            <li><a href="{{ url_for('admin_communities') }}" class="{{ 'communities' in request.endpoint }}"><i class="fas fa-users"></i> Topluluklar</a></li>
+            {% if current_user.role == 'super_admin' %}
+                <li><a href="{{ url_for('admin_users') }}" class="{{ 'users' in request.endpoint }}"><i class="fas fa-user-shield"></i> Kullanıcı Yönetimi</a></li>
+            {% endif %}
+        </ul>
+        <div class="sidebar-footer">
+            <a href="{{ url_for('home') }}" target="_blank">Siteyi Görüntüle <i class="fas fa-external-link-alt"></i></a>
+        </div>
+    </aside>
+
+    <main class="admin-main-content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="flash-message flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

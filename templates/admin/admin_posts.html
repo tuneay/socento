@@ -1,0 +1,62 @@
+{% extends "admin/admin_base.html" %}
+
+{% block title %}Gönderileri Yönet{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <h1>Gönderileri Yönet</h1>
+</div>
+
+<div class="card">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Yazar</th>
+                <th>İçerik</th>
+                <th>Tip</th>
+                <th>Tarih</th>
+                <th>Eylemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in posts.items %}
+            <tr>
+                <td>{{ post.id }}</td>
+                <td><a href="{{ url_for('profile', username=post.author.username) }}" target="_blank">@{{ post.author.username }}</a></td>
+                <td>{{ post.content | truncate(80) }}</td>
+                <td><span class="badge">{{ post.post_type }}</span></td>
+                <td>{{ post.date_posted.strftime('%d.%m.%Y %H:%M') }}</td>
+                <td class="action-buttons">
+                    <a href="{{ url_for('admin_edit_post', post_id=post.id) }}" class="btn btn-primary btn-sm">Düzenle</a>
+                    <form action="{{ url_for('admin_delete_post', post_id=post.id) }}" method="POST" onsubmit="return confirm('Bu gönderiyi silmek istediğinizden emin misiniz?');">
+                        <button type="submit" class="btn btn-danger btn-sm">Sil</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="pagination">
+    {% if posts.has_prev %}
+        <a href="{{ url_for('admin_posts', page=posts.prev_num) }}">&laquo; Önceki</a>
+    {% endif %}
+    {% for page_num in posts.iter_pages() %}
+        {% if page_num %}
+            {% if posts.page == page_num %}
+                <a class="active" href="{{ url_for('admin_posts', page=page_num) }}">{{ page_num }}</a>
+            {% else %}
+                <a href="{{ url_for('admin_posts', page=page_num) }}">{{ page_num }}</a>
+            {% endif %}
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor %}
+    {% if posts.has_next %}
+        <a href="{{ url_for('admin_posts', page=posts.next_num) }}">Sonraki &raquo;</a>
+    {% endif %}
+</div>
+<style>.pagination a { color: var(--text-muted); padding: 8px 12px; text-decoration: none; transition: background-color .3s; } .pagination a.active { background-color: var(--accent-primary); color: white; border-radius: 5px;} .pagination a:hover:not(.active) {background-color: var(--border-color); border-radius: 5px;}</style>
+{% endblock %}

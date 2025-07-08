@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - {{ query }} - Socento Social{% endblock %}
+
+{% block content %}
+<div class="page-container" style="margin-top: 30px;">
+    <h1 class="gradient-text" style="margin-bottom: 20px;">Arama Sonuçları: "{{ query }}"</h1>
+
+    {# Kullanıcı Arama Sonuçları #}
+    <div class="search-section" style="margin-bottom: 40px;">
+        <h2 class="gradient-text" style="margin-bottom: 15px;">Kullanıcılar ({{ users|length }})</h2>
+        {% if users %}
+        <div class="users-list">
+            {% for user_result in users %}
+            <div class="user-card card-custom" data-username="{{ user_result.username }}">
+                <img src="{{ url_for('static', filename='uploads/profile_pics/' + user_result.profile_image) }}"
+                    alt="Profil Resmi">
+                <h3>
+                    <a href="{{ url_for('profile', username=user_result.username) }}">
+                        {{ user_result.username }}
+                        {{ user_result.get_blue_tick_html() | safe }}
+                    </a>
+                </h3>
+                <p>{{ user_result.bio[:50] }}{% if user_result.bio|length > 50 %}...{% endif %}</p>
+                {% if current_user.is_authenticated and current_user.id != user_result.id %}
+                <div class="action-buttons">
+                    {% if current_user.is_following(user_result) %}
+                        <button class="action-button unfollow-button btn-primary-custom btn-small profile-unfollow-btn" data-action="unfollow">Takibi Bırak</button>
+                    {% else %}
+                        <button class="action-button follow-button btn-primary-custom btn-small" data-action="follow">Takip Et</button>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-posts-message">
+            <p>"{% if query %}{{ query }}{% else %}Boş{% endif %}" ile eşleşen kullanıcı bulunamadı.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    {# Gönderi Arama Sonuçları #}
+    <div class="search-section">
+        <h2 class="gradient-text" style="margin-bottom: 15px;">Gönderiler ({{ posts|length }})</h2>
+        {% if posts %}
+        {% for post in posts %}
+        <div class="post-card card-custom" data-post-id="{{ post.id }}"> {# Ana karta post id eklendi #}
+            <h3 class="post-title gradient-text">
+                <a href="{{ url_for('post_detail', post_id=post.id) }}">
+                    {{ post.title }}
+                </a>
+            </h3>
+            <p class="post-meta">
+                Yazan: <a href="{{ url_for('profile', username=post.author.username) }}" class="post-author-link">
+                    {{ post.author.username }}
+                    {{ post.author.get_blue_tick_html() | safe }}
+                </a> - Tarih: {{ post.date_posted.strftime('%d %B %Y %H:%M') }}
+            </p>
+            <div class="post-content">
+                <p>{{ post.content[:200] | process_tags | safe }}{% if post.content|length > 200 %}... <a
+                        href="{{ url_for('post_detail', post_id=post.id) }}">Devamını Oku</a>{% endif %}</p>
+            </div>
+            <div class="post-actions">
+                <button class="action-icon action-button like-button {% if post.is_liked_by_current_user %}liked{% endif %}" data-action="like" title="Beğen">
+                    <i class="{% if post.is_liked_by_current_user %}fas{% else %}far{% endif %} fa-heart"></i>
+                </button>
+                <span class="like-count">{{ post.likes|length }} Beğeni</span>
+
+                <button class="action-button lift-button action-icon {% if post.is_lifted_by_current_user %}lifted{% endif %}" data-action="lift" title="Tekrar Paylaş (Lift)">
+                    <i class="fas fa-retweet"></i>
+                </button>
+                <span class="lift-count">{{ post.lifts|length }} Lift</span>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="no-posts-message">
+            <p>"{% if query %}{{ query }}{% else %}Boş{% endif %}" ile eşleşen gönderi bulunamadı.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

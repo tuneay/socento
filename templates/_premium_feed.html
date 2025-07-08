@@ -1,0 +1,81 @@
+
+{% if premium_echoes or premium_clips %}
+    {% for echo in premium_echoes %}
+    <div class="instagram-post-card card-custom" data-post-id="echo-{{ echo.id }}">
+        <div class="post-header">
+            <a href="{{ url_for('profile', username=echo.user.username) }}">
+                <img src="{{ url_for('static', filename='uploads/profile_pics/' + echo.user.profile_image) }}" alt="Profil Resmi" class="post-author-img">
+            </a>
+            <div class="post-author-info">
+                <a href="{{ url_for('profile', username=echo.user.username) }}" class="post-author-username">
+                    @{{ echo.user.username }}
+                </a>
+                <span class="post-date">{{ echo.created_at.strftime('%d %B %Y') }}</span>
+            </div>
+        </div>
+        <div class="post-content-area">
+            <p class="post-content-text">{{ echo.content }}</p>
+        </div>
+        <div class="post-actions">
+            <button class="action-icon action-button like-button {% if echo.is_liked_by_current_user %}liked{% endif %}" data-action="like" title="Beğen">
+                <i class="{% if echo.is_liked_by_current_user %}fas{% else %}far{% endif %} fa-heart"></i>
+            </button>
+            <span class="like-count">0 Beğeni</span>
+            <button class="btn-primary-commentitem" style="background-color: transparent; border: none; padding: 0; cursor: pointer; font-size: larger;">
+                <a href="#" class="action-wrapper" title="Yorumlar">
+                    <i class="far fa-comment"></i>
+                </a>
+            </button>
+            <span class="comment-count">{{ echo.comments|length if echo.comments is defined else 0 }} Yorum</span>
+            <button class="action-button lift-button action-icon {% if echo.is_lifted_by_current_user %}lifted{% endif %}" data-action="lift" title="Tekrar Paylaş (Lift)">
+                <i class="fas fa-retweet"></i>
+            </button>
+            <span class="lift-count">0 Lift</span>
+            <span class="premium-badge" style="margin-left:8px;"><i class="fas fa-gem"></i> Premium Echo</span>
+        </div>
+    </div>
+    {% endfor %}
+    {% for clip in premium_clips %}
+    <div class="instagram-post-card card-custom" data-post-id="clip-{{ clip.id }}">
+        <div class="post-header">
+            <a href="{{ url_for('profile', username=clip.user.username) }}">
+                <img src="{{ url_for('static', filename='uploads/profile_pics/' + clip.user.profile_image) }}" alt="Profil Resmi" class="post-author-img">
+            </a>
+            <div class="post-author-info">
+                <a href="{{ url_for('profile', username=clip.user.username) }}" class="post-author-username">
+                    @{{ clip.user.username }}
+                </a>
+                <span class="post-date">{{ clip.created_at.strftime('%d %B %Y') }}</span>
+            </div>
+        </div>
+        <div class="post-media-wrapper">
+            <video controls class="post-media-content">
+                <source src="{{ clip.video_url }}" type="video/mp4">
+                Tarayıcınız video etiketini desteklemiyor.
+            </video>
+        </div>
+        <div class="post-content-area">
+            {% if clip.description %}<p class="post-content-text">{{ clip.description }}</p>{% endif %}
+        </div>
+        <div class="post-actions">
+            <button class="action-icon action-button like-button {% if clip.is_liked_by_current_user %}liked{% endif %}" data-action="like" title="Beğen">
+                <i class="{% if clip.is_liked_by_current_user %}fas{% else %}far{% endif %} fa-heart"></i>
+            </button>
+            <span class="like-count">0 Beğeni</span>
+            <button class="btn-primary-commentitem" style="background-color: transparent; border: none; padding: 0; cursor: pointer; font-size: larger;">
+                <a href="#" class="action-wrapper" title="Yorumlar">
+                    <i class="far fa-comment"></i>
+                </a>
+            </button>
+            <span class="comment-count">{{ clip.comments|length if clip.comments is defined else 0 }} Yorum</span>
+            <button class="action-button lift-button action-icon {% if clip.is_lifted_by_current_user %}lifted{% endif %}" data-action="lift" title="Tekrar Paylaş (Lift)">
+                <i class="fas fa-retweet"></i>
+            </button>
+            <span class="lift-count">0 Lift</span>
+            <span class="premium-badge" style="margin-left:8px;"><i class="fas fa-gem"></i> Premium Klip</span>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+<div class="premium-alert">Henüz premium paylaşım yok.</div>
+{% endif %}

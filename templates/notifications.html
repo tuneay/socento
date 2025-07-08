@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - Socento Social{% endblock %}
+
+{% block content %}
+<div class="page-container" style="margin-top: 30px;">
+    <h1 class="gradient-text" style="margin-bottom: 20px;">Bildirimler</h1>
+
+    {% if notifications %}
+    {% for notification in notifications %}
+    <div class="notification-card card-custom {% if not notification.is_read %}unread{% endif %}"
+        style="margin-bottom: 15px; padding: 20px; display: flex; align-items: center; gap: 15px;">
+        <div class="notification-icon" style="font-size: 1.5em; color: var(--gradient-primary);">
+            {% if notification.notification_type == 'follow' %}
+            <i class="fas fa-user-plus"></i>
+            {% elif notification.notification_type == 'like' %}
+            <i class="fas fa-thumbs-up"></i>
+            {% elif notification.notification_type == 'comment' %}
+            <i class="fas fa-comment"></i>
+            {% else %}
+            <i class="fas fa-bell"></i>
+            {% endif %}
+        </div>
+        <div class="notification-content" style="flex-grow: 1;">
+            <p style="margin-bottom: 5px; color: var(--text-color-primary);">
+                {% if notification.sender %}
+                <a href="{{ url_for('profile', username=notification.sender.username) }}"
+                    style="font-weight: 500; color: inherit; text-decoration: none;">{{ notification.sender.username
+                    }}</a>
+                {% else %}
+                Birisi
+                {% endif %}
+                {{ notification.message|replace(notification.sender.username ~ ' ', '') }} {# Kullanıcı adını mesajdan
+                çıkarırız, çünkü zaten link verdik #}
+            </p>
+            <small style="color: var(--text-color-muted);">{{ notification.timestamp.strftime('%d %B %Y %H:%M')
+                }}</small>
+        </div>
+        {% if not notification.is_read %}
+        <span
+            style="width: 10px; height: 10px; background-color: var(--focus-glow-color); border-radius: 50%; display: inline-block;"></span>
+        {% endif %}
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="no-posts-message">
+        <p>Henüz hiç bildiriminiz yok.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

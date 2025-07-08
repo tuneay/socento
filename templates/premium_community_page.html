@@ -1,0 +1,584 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    /* --- 💎 TEMA DEĞİŞKENLERİ (Tunay Tipi Topluluk Sayfası) --- */
+    :root {
+        --bg-primary: #0D1117;
+        --bg-secondary: #161B22;
+        --bg-card: rgba(22, 27, 34, 0.75);
+        --border-color-soft: rgba(255, 255, 255, 0.1);
+        --border-color-hard: #30363d;
+        --text-primary: #F0F6FC;
+        --text-secondary: #8B949E;
+        --premium-purple: #9f5eff;
+        --premium-gold: #FFD700;
+        --premium-gradient: linear-gradient(135deg, var(--premium-purple), var(--premium-gold));
+        --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+        --mouse-x: 50%;
+        --mouse-y: 50%;
+    }
+
+    /* --- Animasyonlar --- */
+    @keyframes fadeIn-up {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes gradient-flow {
+        0% {
+            background-position: 0% 50%
+        }
+
+        50% {
+            background-position: 100% 50%
+        }
+
+        100% {
+            background-position: 0% 50%
+        }
+    }
+
+    /* --- Temel Sayfa Ayarları & Dinamik Arka Plan --- */
+    body {
+        background-color: var(--bg-primary);
+        background-image:
+            radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(159, 94, 255, 0.1), transparent 40%),
+            radial-gradient(circle at calc(100% - var(--mouse-x)) calc(100% - var(--mouse-y)), rgba(255, 215, 0, 0.08), transparent 45%);
+        color: var(--text-primary);
+        font-family: var(--font-main);
+    }
+
+    .container-fluid {
+        width: 100%;
+    }
+
+    /* --- YENİ: Sinematik Hero Alanı --- */
+    .community-hero {
+        width: 100%;
+        height: 40vh;
+        background-size: cover;
+        background-position: center;
+        background-color: var(--bg-secondary);
+        position: relative;
+        display: flex;
+        align-items: flex-end;
+        padding: 2rem;
+        color: #fff;
+    }
+
+    .community-hero::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(13, 17, 23, 1) 0%, rgba(13, 17, 23, 0.8) 20%, transparent 60%);
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: flex-end;
+        gap: 1.5rem;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .hero-avatar {
+        width: 128px;
+        height: 128px;
+        border-radius: 24px;
+        border: 4px solid var(--bg-primary);
+        object-fit: cover;
+        transform: translateY(40%);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .hero-text h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+    }
+
+    .hero-text p {
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        text-shadow: 0 1px 5px rgba(0, 0, 0, 0.7);
+        margin-top: 0.5rem;
+    }
+
+    .hero-actions {
+        margin-left: auto;
+    }
+
+    /* --- YENİ: Ana İçerik ve Yan Panel Düzeni --- */
+    .community-body-layout {
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 6rem 2rem 2rem 2rem;
+        /* Hero alanındaki avatar için üst boşluk */
+    }
+
+    .main-content-feed {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .community-sidebar {
+        position: sticky;
+        top: 90px;
+        align-self: start;
+    }
+
+    /* --- YENİ: Kart Stili (Gönderi, Widget vb.) --- */
+    .content-card {
+        background: var(--bg-card);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border-radius: 18px;
+        border: 1px solid var(--border-color-hard);
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
+        padding: 1.5rem;
+        position: relative;
+        opacity: 0;
+        transition: transform 0.5s var(--ease-out-quint);
+        transform-style: preserve-3d;
+    }
+
+    .content-card.in-view {
+        animation: fadeIn-up 0.8s var(--ease-out-quint) forwards;
+    }
+
+    /* --- Gönderi Oluşturma Alanı --- */
+    .create-post-widget textarea {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        background: var(--bg-secondary);
+        border-color: var(--border-color-hard);
+        color: var(--text-primary);
+        border-radius: 12px;
+        padding: 1rem;
+        width: 100%;
+        resize: none;
+        font-size: 1rem;
+    }
+
+    .create-post-widget .form-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1rem;
+    }
+
+    /* --- Gönderi Kartı --- */
+    .post-card-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .post-card-header img {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+    }
+
+    .post-card-header .author-info a {
+        color: var(--text-primary);
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .post-card-header .author-info span {
+        color: var(--text-secondary);
+        font-size: 0.9em;
+    }
+
+    .post-card-body p {
+        line-height: 1.7;
+    }
+
+    .post-card-body .post-media-content {
+        max-width: 100%;
+        border-radius: 12px;
+        margin-top: 1rem;
+    }
+
+    .post-card-actions {
+        display: flex;
+        gap: 1.5rem;
+        border-top: 1px solid var(--border-color-hard);
+        padding-top: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    .action-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+
+    .action-item:hover,
+    .action-item .liked {
+        color: var(--premium-purple);
+    }
+
+    /* --- Yorum Alanı --- */
+    .premium-comment-box {
+        margin-top: 1rem;
+    }
+
+    .single-comment {
+        padding: 0.75rem;
+        border-radius: 8px;
+        background: var(--bg-secondary);
+        margin-bottom: 0.5rem;
+    }
+
+    /* --- Yan Panel (Sidebar) --- */
+    .sidebar-widget .sidebar-widget-header {
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .sidebar-widget .stats-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin: 1rem 0;
+        text-align: center;
+    }
+
+    .sidebar-widget .stat-item h4 {
+        font-size: 1.5rem;
+    }
+
+    .sidebar-widget .creation-date {
+        font-size: 0.9em;
+        color: var(--text-secondary);
+    }
+
+    .sidebar-widget .rule {
+        padding: 0.5rem;
+        border-radius: 6px;
+        background: var(--bg-secondary);
+        margin-bottom: 0.5rem;
+    }
+
+    /* --- Butonlar --- */
+    .btn-premium {
+        background: var(--premium-gradient);
+        color: var(--bg-primary);
+        font-weight: 600;
+        border: none;
+        border-radius: 8px;
+        padding: 0.6rem 1.2rem;
+        cursor: pointer;
+        transition: all 0.3s var(--ease-out-quint);
+    }
+
+    .btn-premium:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(159, 94, 255, 0.3);
+    }
+
+    .btn-premium.joined {
+        background: var(--bg-secondary);
+        color: var(--text-secondary);
+        border: 1px solid var(--border-color-hard);
+        cursor: default;
+    }
+
+    /* --- Mobil Uyum --- */
+    @media(max-width: 992px) {
+        .community-body-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .community-sidebar {
+            position: static;
+        }
+    }
+
+    @media(max-width: 768px) {
+        .hero-avatar {
+            width: 80px;
+            height: 80px;
+        }
+
+        .hero-text h1 {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<div class="container-fluid">
+    <header class="community-hero"
+        style="background-image: url({{ url_for('static', filename='uploads/profile_pics/' ~ community.cover_image) if community.cover_image else '' }});">
+        <div class="hero-content">
+            <img src="{{ url_for('static', filename='uploads/profile_pics/' ~ community.cover_image) if community.cover_image else url_for('static', filename='uploads/profile_pics/PremiumSoce.png') }}"
+                alt="{{ community.name }}" class="hero-avatar">
+            <div class="hero-text">
+                <h1>{{ community.name }}</h1>
+                <p>{{ community.members|length if community.members else '1' }} Üye</p>
+            </div>
+            <div class="hero-actions">
+                {% if is_member %}
+                <button class="btn-premium joined"><i class="fas fa-check"></i> Üyesiniz</button>
+                {% else %}
+                <form method="post" action="{{ url_for('join_premium_community', community_id=community.id) }}"
+                    style="margin:0;">
+                    <button type="submit" class="btn-premium">Topluluğa Katıl</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main class="community-body-layout">
+        <div class="main-content-feed">
+            {% if is_member %}
+            <div class="content-card create-post-widget">
+                <form method="post" action="{{ url_for('new_premium_community_post', community_id=community.id) }}"
+                    enctype="multipart/form-data">
+                    <textarea name="content" class="form-control" rows="3" maxlength="500"
+                        placeholder="{{ community.name }} Topluluğunda bir fikir paylaş, {{ current_user.username }}..." required></textarea>
+                    <style>
+                        .form-control {
+                            background: var(--bg-secondary);
+                            border: 1px solid var(--border-color-hard);
+                            color: var(--text-primary);
+                            border-radius: 12px;
+                            padding: 0.75rem;
+                            font-size: 1rem;
+                            width: 100%;
+                        }
+                    </style>
+                    <div class="form-actions">
+                        <style>
+                            .btn-resimup {
+                                background: var(--bg-secondary);
+                                color: white;
+                                border: 1px solid white;
+                                border-radius: 8px;
+                                padding: 0.6rem 1.2rem;
+                                cursor: pointer;
+                                display: inline-flex;
+                                align-items: center;
+                                gap: 0.5rem;
+                                transition: all 0.3s ease-out;
+                            }
+                            .btn-resimup:hover {
+                                background: var(--border-color-hard);
+                                color: var(--text-primary);
+                                transform: translateY(-2px);
+                                box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+                            }
+                        </style>
+                        <label for="media_file" class="btn-resimup"><i class="fas fa-upload"></i> Medya Yükle</label>
+                        <span id="file-name" class="file-name"></span>
+
+                        <input type="file" id="media_file" name="media_file" accept="image/*,video/*" hidden>
+                        <button type="submit" class="btn-resimup"><i class="fas fa-paper-plane"></i> Paylaş</button>
+                    </div>
+                </form>
+            </div>
+
+            {% endif %}
+
+            {% if posts %}
+            {% for post in posts %}
+            <article class="content-card post-card" data-post-id="{{ post.id }}">
+                <header class="post-card-header">
+                    <img src="{{ url_for('static', filename='uploads/profile_pics/' + post.user.profile_image) }}"
+                        alt="{{ post.user.username }}">
+                    <div class="author-info">
+                        <a href="{{ url_for('profile', username=post.user.username) }}">@{{ post.user.username }}</a>
+                        <span>{{ post.created_at.strftime('%d %B %Y, %H:%M') }}</span>
+                    </div>
+                </header>
+                <div class="post-card-body">
+                    {% if post.content %}<p>{{ post.content|safe }}</p>{% endif %}
+                    {% if post.image_file %}<img
+                        src="{{ url_for('static', filename='uploads/post_media/' + post.image_file) }}"
+                        alt="Gönderi Resmi" class="post-media-content">
+                    {% elif post.video_file %}<video controls class="post-media-content">
+                        <source src="{{ url_for('static', filename='uploads/post_media/' + post.video_file) }}"
+                            type="video/mp4">
+                    </video>{% endif %}
+                </div>
+                <footer class="post-card-actions">
+                    <div class="action-item like-button" data-action="premium-like"><i
+                            class="fa-heart {% if post.is_liked_by_current_user %}fas liked{% else %}far{% endif %}"></i><span
+                            class="like-count">{{ post.likes|length }}</span></div>
+                    <div class="action-item comment-button" data-action="premium-comment"><i
+                            class="far fa-comment"></i><span class="comment-count">{{ post.comments|length }}</span>
+                    </div>
+                </footer>
+                <div class="premium-comment-box" id="comment-box-{{ post.id }}" style="display:none;">
+                    <div class="comment-list">
+                        {% for comment in post.comments %}
+                        <div class="single-comment"><b>@{{ comment.user.username }}</b>: {{ comment.content }}</div>
+                        {% endfor %}
+                    </div>
+                    <form class="comment-form" style="display:flex; gap:0.5rem; margin-top:1rem;">
+                        <input type="text" class="form-control" placeholder="Ne düşünüyorsun? {{ current_user.username
+                        }}..." name="content" required>
+                        <button type="submit" class="btn-resimup">Gönder</button>
+                    </form>
+                </div>
+            </article>
+            {% endfor %}
+            {% else %}
+            <div class="content-card empty-feed-alert">
+                <h4>Bu toplulukta henüz bir gönderi yok.</h4>
+                <p>İlk gönderiyi paylaşarak etkileşimi başlatan sen ol!</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <aside class="community-sidebar">
+            <div class="content-card sidebar-widget">
+                <div class="sidebar-widget-header">Topluluk Hakkında</div>
+                <div class="sidebar-widget-body">
+                    <p class="community-description">{{ community.description|default('Topluluk açıklaması bulunmuyor.')
+                        }}</p>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <h4>{{ community.members|length if community.members else '1' }}</h4>
+                            <p>Üye</p>
+                        </div>
+                        <div class="stat-item">
+                            <h4>{{ community.category|default('Genel') }}</h4>
+                            <p>Kategori</p>
+                        </div>
+                    </div>
+                    <p class="creation-date"><i class="fas fa-birthday-cake"></i> {{ community.created_at.strftime('%d
+                        %B %Y') }}</p>
+                </div>
+            </div><br>
+            <div class="content-card sidebar-widget">
+                <div class="sidebar-widget-header">Topluluk Kuralları</div>
+                <div class="sidebar-widget-body">
+                    <div class="rule">1. Saygılı ve yapıcı olun.</div>
+                    <div class="rule">2. Reklam ve spam yasaktır.</div>
+                    <div class="rule">3. Konu dışı paylaşımlardan kaçının.</div>
+                </div>
+            </div>
+        </aside>
+    </main>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Fare Takip Script'i
+        const cardElements = document.querySelectorAll('.content-card');
+        const updateMousePosition = (e) => {
+            const xPos = (e.clientX / window.innerWidth * 100).toFixed(2);
+            const yPos = (e.clientY / window.innerHeight * 100).toFixed(2);
+            document.documentElement.style.setProperty('--mouse-x', `${xPos}%`);
+            document.documentElement.style.setProperty('--mouse-y', `${yPos}%`);
+        };
+        window.addEventListener('mousemove', updateMousePosition);
+
+        // Animasyonlar için Intersection Observer
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.content-card').forEach(el => { observer.observe(el); });
+
+        // Like Butonu
+        document.querySelectorAll('.like-button[data-action="premium-like"]').forEach(btn => {
+            btn.addEventListener('click', async function (e) {
+                e.preventDefault();
+                const postId = btn.closest('.post-card').dataset.postId;
+                const res = await fetch(`/premium_community_post/${postId}/like`, { method: 'POST' });
+                const data = await res.json();
+                if (data.success) {
+                    btn.querySelector('i').classList.toggle('fas', data.liked);
+                    btn.querySelector('i').classList.toggle('far', !data.liked);
+                    btn.querySelector('i').classList.toggle('liked', data.liked);
+                    btn.querySelector('.like-count').textContent = data.count;
+                }
+            });
+        });
+
+        // Yorumları Aç/Kapat
+        document.querySelectorAll('.comment-button[data-action="premium-comment"]').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                const postCard = btn.closest('.post-card');
+                const commentBox = postCard.querySelector('.premium-comment-box');
+                commentBox.style.display = (commentBox.style.display === 'none' || commentBox.style.display === '') ? 'block' : 'none';
+            });
+        });
+
+        // Yorum Gönderme
+        document.querySelectorAll('.comment-form').forEach(form => {
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const postCard = form.closest('.post-card');
+                const postId = postCard.dataset.postId;
+                const input = form.querySelector('input[type="text"]');
+                const content = input.value;
+                if (!content.trim()) return;
+
+                const res = await fetch(`/premium_community_post/${postId}/comment`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    const commentList = postCard.querySelector('.comment-list');
+                    const newComment = document.createElement('div');
+                    newComment.className = 'single-comment';
+                    newComment.innerHTML = `<b>@${data.comment.user}</b>: ${data.comment.content}`;
+                    commentList.append(newComment); // Yeni yorumu sona ekle
+                    input.value = '';
+                    // Yorum sayısını güncelle
+                    const countSpan = postCard.querySelector('.comment-count');
+                    countSpan.textContent = parseInt(countSpan.textContent) + 1;
+                }
+            });
+        });
+    });
+    const mediaInput = document.getElementById('media_file');
+    const fileNameDisplay = document.getElementById('file-name');
+
+    mediaInput.addEventListener('change', function () {
+        if (this.files.length > 0) {
+            fileNameDisplay.textContent = this.files[0].name;
+        } else {
+            fileNameDisplay.textContent = 'Henüz dosya seçilmedi';
+        }
+    });
+
+</script>
+{% endblock %}

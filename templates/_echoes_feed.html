@@ -1,0 +1,103 @@
+{% for echo_post in echoes_posts %}
+<div class="echo-card card-custom" data-post-id="{{ echo_post.id }}">
+    <div class="echo-header">
+        <a href="{{ url_for('profile', username=echo_post.author.username) }}">
+            <img src="{{ url_for('static', filename='uploads/profile_pics/' + echo_post.author.profile_image) }}"
+                 alt="Profil Resmi" class="echo-author-img">
+        </a>
+        <div class="echo-author-info">
+            <a href="{{ url_for('profile', username=echo_post.author.username) }}" class="echo-author-username">
+                @{{ echo_post.author.username }} {{ echo_post.author.get_blue_tick_html() | safe }}
+            </a>
+            <style>
+            .echo-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .echo-author-info {
+                display: flex;
+                align-items: center;
+                flex: 1;
+            }
+            .echo-date {
+                margin-left: 12px;
+                white-space: nowrap;
+            }
+            .criticalScore {
+                font-weight: bold;
+                padding: 5px;
+                border-radius: 8px;
+                font-size: 1.1em;
+                margin-left: 8px;
+                background: linear-gradient(135deg, #FFD04F, #FF6F61);
+                box-shadow: 0 1px 4px rgba(60, 60, 60, 0.06);
+                color: #22223b;
+                margin-right: 16px;
+            }
+            </style>
+            <span class="echo-date">{{ echo_post.date_posted.strftime('%d %B %Y') }}
+                {% if echo_post.trend_score > 10 %}
+                    <span class="criticalScore" style="color: white;"> {{ echo_post.trend_score }} <i class="fas fa-arrow-up"></i></span>
+                {% else %}
+                    <span class="criticalScore" style="color: white;"> {{ echo_post.trend_score }} <i class="fas fa-arrow-down"></i></span>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+        <div class="echo-content-area">
+        <a href="{{ url_for('echo_detail', echo_id=echo_post.id) }}" class="echo-content-link">
+            {% if echo_post.title %}
+                <h3 class="echo-title" style="font-size:1.18em; font-weight:700; margin-bottom:4px; color:white; letter-spacing:-0.5px;">{{ echo_post.title }}</h3>
+            {% endif %}
+            <p class="echo-content-text">{{ echo_post.content | process_tags | safe }}</p>
+        </a>
+        {% if echo_post.echo_topic %}
+        <a href="{{ url_for('echoes_topic', topic=echo_post.echo_topic) }}" class="echo-topic-badge">-{{ echo_post.echo_topic }}</a>
+        {% endif %}
+    </div>
+
+    <div class="echo-actions">
+        
+        <button class="action-icon rise-button action-button {% if echo_post.is_risen_by_current_user %}risen{% endif %}"
+            data-action="rise" title="Rise">
+            <i
+                class="{% if echo_post.is_risen_by_current_user %}fas{% else %}far{% endif %} fa-arrow-alt-circle-up"></i>
+        </button>
+        <span class="rise-count">{{ echo_post.rises }}</span>
+
+        <button class="action-icon fade-button action-button {% if echo_post.is_faded_by_current_user %}faded{% endif %}"
+            data-action="fade" title="Fade">
+            <i
+                class="{% if echo_post.is_faded_by_current_user %}fas{% else %}far{% endif %} fa-arrow-alt-circle-down"></i>
+        </button>
+        <span class="fade-count">{{ echo_post.fades }}</span>
+
+        <a href="{{ url_for('echo_detail', echo_id=echo_post.id) }}" class="action-icon echo-comment-button"
+            title="Yorumlar" style="background: linear-gradient(135deg, #FFD04F, #FF6F61); color: #22223b; border-radius: 6px; padding: 3px 8px; font-weight: 500; margin-left: 8px; display: inline-flex; align-items: center; box-shadow: 0 1px 2px rgba(60,60,60,0.04); font-size: 0.95em;">
+            <i class="far fa-comment" style="margin-right: 4px; color: white; font-size: 1em;"></i>
+            <span class="comment-count" style="color: white;">{{ echo_post.comments|length }}</span>
+        </a>
+    </div>
+</div>
+
+{% else %}
+    {# Eğer döngüye girecek hiç 'echo_post' yoksa bu blok çalışır #}
+    <div class="no-posts-message" style="text-align: center; padding: 50px 20px; margin: 20px; background-color: #2a2a3a; border-radius: 12px; color: #a9a9b3;">
+        <i class="fas fa-ghost" style="font-size: 3em; margin-bottom: 15px;"></i>
+        <h4 style="color: #ffffff; margin-bottom: 5px;">Görünüşe göre buralar sessiz...</h4>
+        <p>Bu akışta henüz hiç gönderi paylaşılmamış.</p>
+    </div>
+
+{% endfor %}
+
+
+{% if pagination and pagination.has_next %}
+<a class="load-more-link" href="{{ url_for('load_feed', feed_type='echoes', page=pagination.next_num) }}"></a>
+<div class="feed-loader" style="display: none; padding: 40px;">
+    <i class="fas fa-spinner fa-spin"></i>
+</div>
+
+{% else %}
+    
+{% endif %}

@@ -1,0 +1,176 @@
+/* Topluluklar ve topluluk akışı için ana kart tabanlı premium tema */
+
+.community-page-container {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+}
+
+.community-header-card {
+    border-radius: 1.5rem;
+    background: #fff;
+    box-shadow: 0 4px 24px 0 rgba(79,140,255,0.08), 0 1.5px 8px 0 rgba(111,79,255,0.06);
+    margin-bottom: 2rem;
+}
+
+.community-icon {
+    width: 56px;
+    height: 56px;
+    font-size: 2rem;
+    background: linear-gradient(135deg, #4f8cff 0%, #6f4fff 100%);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.community-card {
+    border-radius: 1.25rem;
+    background: #fff;
+    box-shadow: 0 4px 24px 0 rgba(79,140,255,0.08), 0 1.5px 8px 0 rgba(111,79,255,0.06);
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+.community-card:hover {
+    box-shadow: 0 8px 32px 0 rgba(79,140,255,0.15), 0 1.5px 8px 0 rgba(111,79,255,0.10);
+    transform: translateY(-2px) scale(1.01);
+}
+
+.community-link {
+    color: #23272f;
+    font-weight: 600;
+    font-size: 1.15rem;
+    transition: color 0.15s;
+}
+.community-link:hover {
+    color: #4f8cff;
+    text-decoration: underline;
+}
+
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #4f8cff 0%, #6f4fff 100%) !important;
+    color: #fff !important;
+}
+.bg-gradient-secondary {
+    background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%) !important;
+    color: #3b3b3b !important;
+}
+
+/* Topluluk akışı gönderi kartı */
+.community-post-card {
+    border-radius: 1.25rem;
+    background: #fff;
+    box-shadow: 0 2px 12px 0 rgba(79,140,255,0.07), 0 1.5px 8px 0 rgba(111,79,255,0.05);
+    margin-bottom: 2rem;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+.community-post-card:hover {
+    box-shadow: 0 8px 32px 0 rgba(79,140,255,0.13), 0 1.5px 8px 0 rgba(111,79,255,0.08);
+    transform: translateY(-2px) scale(1.01);
+}
+
+.community-post-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+.community-post-author-img {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e0e7ff;
+    margin-right: 0.75rem;
+}
+.community-post-author-username {
+    font-weight: 600;
+    color: #23272f;
+    text-decoration: none;
+    transition: color 0.15s;
+}
+.community-post-author-username:hover {
+    color: #4f8cff;
+}
+.community-post-date {
+    color: #8a94a6;
+    font-size: 0.95rem;
+    margin-left: 0.5rem;
+}
+
+.community-post-content {
+    font-size: 1.15rem;
+    margin-bottom: 0.75rem;
+}
+
+.community-post-media {
+    max-height: 420px;
+    object-fit: cover;
+    border-radius: 0.75rem;
+    margin-bottom: 0.75rem;
+    width: 100%;
+}
+
+.community-post-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+.community-post-action-btn {
+    border: none;
+    background: none;
+    color: #4f8cff;
+    font-size: 1.1rem;
+    padding: 0.35rem 1.1rem;
+    border-radius: 2rem;
+    transition: background 0.15s, color 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.community-post-action-btn.lifted, .community-post-action-btn.lifted:focus {
+    color: #6f4fff;
+    background: #e0e7ff;
+}
+.community-post-action-btn.liked, .community-post-action-btn.liked:focus {
+    color: #ff4f8c;
+    background: #ffe0ef;
+}
+.community-post-action-btn:hover {
+    background: #f3f6ff;
+    color: #6f4fff;
+}
+
+.community-post-action-count {
+    font-size: 1.05rem;
+    color: #6f4fff;
+    margin-left: 0.25rem;
+}
+
+/* Premium badge */
+.community-premium-badge {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: linear-gradient(90deg, #ffe066 0%, #ffd700 100%);
+    color: #23272f;
+    font-weight: 600;
+    border-radius: 1rem;
+    padding: 0.25rem 0.9rem;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 8px 0 rgba(255,224,102,0.13);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .community-header-card, .community-card, .community-post-card {
+        border-radius: 1rem;
+    }
+    .community-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+    .community-post-author-img {
+        width: 36px;
+        height: 36px;
+    }
+}

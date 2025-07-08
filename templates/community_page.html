@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block title %}{{ community.name }} - Topluluk{% endblock %}
+
+{% block content %}
+<div class="community-page-container">
+    <div class="community-header-card card-custom" style="display:flex;align-items:center;gap:20px;">
+        {% if community.cover_image %}
+        <img src="{{ url_for('static', filename='uploads/profile_pics/' + community.cover_image) }}" alt="{{ community.name }}" style="width:80px;height:80px;object-fit:cover;border-radius:50%;">
+        {% else %}
+        <div class="community-icon" style="width:80px;height:80px;"><i class="fas fa-users"></i></div>
+        {% endif %}
+        <div>
+            <h2 class="gradient-text" style="margin-bottom:5px;">{{ community.name }}</h2>
+            <div style="color:var(--text-color-secondary);margin-bottom:8px;">{{ community.description }}</div>
+            <div style="font-size:0.95em;">Kategori: {{ community.category or 'Genel' }} | Üye: {{ community.members|length }}</div>
+            {% if is_member %}
+                <a href="{{ url_for('leave_community', community_id=community.id) }}" class="btn-primary-custom btn-small" style="margin-top:8px;background:#e74c3c;">Topluluktan Ayrıl</a>
+            {% else %}
+                <a href="{{ url_for('join_community', community_id=community.id) }}" class="btn-primary-custom btn-small" style="margin-top:8px;">Katıl</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="community-posts-section">
+        <h3 class="gradient-text" style="margin-bottom:15px;">Topluluk Akışı</h3>
+        {% if posts %}
+        <div class="community-posts-list">
+            {% for post in posts %}
+            <div class="community-post-card card-custom" style="margin-bottom:18px;" data-community-post-id="{{ post.id }}">
+                <div class="community-post-header" style="display:flex;align-items:center;gap:10px;">
+                    <a href="{{ url_for('profile', username=post.user.username) }}">
+                        <img src="{{ url_for('static', filename='uploads/profile_pics/' + post.user.profile_image) }}" alt="{{ post.user.username }}" class="community-post-author-img" style="width:36px;height:36px;border-radius:50%;object-fit:cover;">
+                    </a>
+                    <a href="{{ url_for('profile', username=post.user.username) }}" class="community-post-author-username">@{{ post.user.username }}</a>
+                    <span class="community-post-date" style="font-size:0.9em;color:var(--text-color-secondary);">{{ post.created_at.strftime('%d %B %Y %H:%M') }}</span>
+                    <button class="community-comment-btn" data-post-id="{{ post.id }}" style="margin-left:auto;background:none;border:none;cursor:pointer;font-size:1.2em;color:var(--text-color-secondary);" title="Yorumlar"><i class="far fa-comment"></i></button>
+                </div>
+                {% if post.image_file %}
+                <div class="community-post-media"><img src="{{ url_for('static', filename='uploads/post_media/' + post.image_file) }}" style="max-width:100%;border-radius:10px;"></div>
+                <div class="community-post-content" style="margin:10px 0;">{{ post.content }}</div>
+                {% elif post.video_file %}
+                <div class="community-post-media"><video src="{{ url_for('static', filename='uploads/post_media/' + post.video_file) }}" controls style="max-width:100%;border-radius:10px;"></video></div>
+                <div class="community-post-content" style="margin:10px 0;">{{ post.content }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Yorum Modalı -->
+        <div id="communityCommentModal" class="community-comment-modal" style="display:none;">
+            <div class="community-comment-modal-content card-custom">
+                <button id="closeCommunityCommentModal" class="community-comment-modal-close" title="Kapat"><i class="fas fa-xmark"></i></button>
+                <div id="communityCommentModalBody"></div>
+            </div>
+        </div>
+        <style>
+        .community-comment-modal {
+            position: fixed;
+            top: 0; right: 0;
+            width: 420px;
+            max-width: 100vw;
+            height: 100vh;
+            background: rgba(30,32,38,0.10);
+            z-index: 9999;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-end;
+            transition: background 0.2s;
+        }
+        .community-comment-modal-content {
+            margin: 32px 24px 0 0;
+            width: 370px;
+            max-width: 95vw;
+            background: #fff;
+            border-radius: 1.25rem;
+            box-shadow: 0 8px 32px 0 rgba(79,140,255,0.15), 0 1.5px 8px 0 rgba(111,79,255,0.10);
+            padding: 24px 18px 18px 18px;
+            position: relative;
+            animation: slideInRight 0.35s cubic-bezier(.4,0,.2,1);
+        }
+        @keyframes slideInRight {
+            from { transform: translateX(100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .community-comment-modal-close {
+            position: absolute;
+            top: 12px; right: 12px;
+            background: none;
+            border: none;
+            font-size: 1.3em;
+            color: #888;
+            cursor: pointer;
+            transition: color 0.18s;
+        }
+        .community-comment-modal-close:hover { color: #e74c3c; }
+        </style>
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('communityCommentModal');
+            const modalBody = document.getElementById('communityCommentModalBody');
+            const closeBtn = document.getElementById('closeCommunityCommentModal');
+            document.querySelectorAll('.community-comment-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const postId = this.dataset.postId;
+                    fetch(`/community_post_comments/${postId}`)
+                        .then(res => res.text())
+                        .then(html => {
+                            modalBody.innerHTML = html;
+                            modal.style.display = 'flex';
+                        });
+                });
+            });
+            closeBtn.addEventListener('click', function() {
+                modal.style.display = 'none';
+                modalBody.innerHTML = '';
+            });
+            window.addEventListener('click', function(e) {
+                if(e.target === modal) {
+                    modal.style.display = 'none';
+                    modalBody.innerHTML = '';
+                }
+            });
+        });
+        </script>
+    </div>
+     {% if is_member %}
+        <form method="POST" action="{{ url_for('community_post', community_id=community.id) }}" enctype="multipart/form-data" class="card-custom" style="margin-bottom:20px;">
+            <div class="form-group">
+                Metin Yüklemek İçin:
+                <textarea class="form-input" name="content" rows="3" placeholder="Toplulukla bir şey paylaş..." required></textarea>
+            </div>
+            <div class="form-group">
+                Resim Yüklemek İçin:
+                <input type="file" class="form-input" name="image_file" accept="image/*">
+                <br><br>
+                Video Yüklemek İçin:
+                <input type="file" class="form-input" name="video_file" accept="video/*">
+            </div>
+            <button type="submit" class="btn-primary-custom btn-small">Paylaş</button>
+        </form>
+        {% endif %}
+</div>
+{% endblock %}

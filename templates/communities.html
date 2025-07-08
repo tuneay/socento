@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Topluluklar - Socento Social{% endblock %}
+
+{% block content %}
+<div class="page-container" style="margin-top: 30px;">
+    <h1 class="gradient-text" style="margin-bottom: 20px;">Topluluklar</h1>
+    <a href="{{ url_for('create_community') }}" class="btn-primary-custom" style="margin-bottom: 20px;">+ Yeni Topluluk Oluştur</a>
+    {% if communities %}
+    <div class="community-list">
+        {% for community in communities %}
+        <div class="community-card card-custom">
+            <a href="{{ url_for('community_page', community_id=community.id) }}" class="community-link">
+                {% if community.cover_image %}
+                <img src="{{ url_for('static', filename='uploads/profile_pics/' + community.cover_image) }}" alt="{{ community.name }}" class="community-icon" style="width:56px;height:56px;object-fit:cover;border-radius:50%;">
+                {% else %}
+                <div class="community-icon"><i class="fas fa-users"></i></div>
+                {% endif %} <br>
+                <span
+                    
+                ><span style="font-size:1.2em;font-weight:600;">{{ community.name }}</span></span>
+            </a>
+            <div class="community-card-desc">{{ community.description[:100] }}{% if community.description|length > 100 %}...{% endif %}</div>
+            <div class="community-card-meta">
+                <span>Kategori: {{ community.category or 'Genel' }}</span> |
+                <span>Üye: {{ community.members|length }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-posts-message card-custom">
+        <p>Henüz hiç topluluk yok. İlk topluluğu sen oluştur!</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

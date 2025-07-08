@@ -1,0 +1,268 @@
+:root {
+    --c-bg-primary: #111827;
+    --c-bg-secondary: #1f2937;
+    --c-border: #334155;
+    --c-text-primary: #fff;
+    --c-text-secondary: #cbd5e1;
+    --c-accent-gradient: linear-gradient(135deg, #FFD04F, #FF6F61);
+    --c-accent-color: #FF6F61;
+    --c-accent-text: #111827;
+    --radius-l: 16px;
+    --radius-m: 12px;
+}
+
+/* Ana Tema */
+body.premium-theme {
+    background-color: var(--c-bg-primary);
+    color: var(--c-text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Konteyner */
+.premium-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 1rem;
+}
+
+/* Başlık */
+.premium-header {
+    background: var(--c-bg-secondary);
+    padding: 1.5rem;
+    border-radius: var(--radius-l);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    margin-bottom: 2rem;
+    text-align: center;
+}
+.premium-header h2 {
+    font-size: 1.8rem;
+    background: var(--c-accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+.premium-header p {
+    font-size: 0.95rem;
+    color: var(--c-text-secondary);
+    margin-top: 0.5rem;
+}
+
+/* Form */
+.premium-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.premium-form .form-control {
+    background-color: var(--c-bg-primary);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-m);
+    padding: 0.8rem 1rem;
+    color: var(--c-text-primary);
+}
+.premium-form .form-control:focus {
+    border-color: var(--c-accent-color);
+    outline: none;
+    background-color: #1f2937;
+}
+.premium-btn {
+    background: var(--c-accent-gradient);
+    border: none;
+    padding: 0.75rem 1.2rem;
+    color: white;
+    font-weight: bold;
+    border-radius: var(--radius-m);
+    text-align: center;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.4s ease;
+}
+.premium-btn:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(255deg, #FFD04F, #FF6F61);
+    cursor: pointer;
+}
+.premium-action-bar {
+    margin-top: 0;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+/* Paylaşım Kartı Stilleri */
+.instagram-post-card.card-custom {
+    background-color: var(--c-bg-secondary);
+    border: 1px solid var(--c-border);
+    border-radius: 3px;
+    margin: 10px;
+    overflow: hidden;
+}
+.post-header {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    gap: 1rem;
+}
+.post-author-img {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.post-author-info {
+    flex-grow: 1;
+}
+.post-author-username {
+    font-weight: 600;
+    color: var(--c-text-primary);
+    text-decoration: none;
+}
+.post-date {
+    font-size: 0.85rem;
+    color: var(--c-text-secondary);
+}
+.post-content-area {
+}
+.post-media-content {
+    width: 100%;
+    display: block;
+}
+.post-footer {
+    padding: 0.5rem 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.premium-badge {
+    display: inline-block;
+}
+
+/* Genel Elementler */
+.premium-alert {
+    background-color: rgba(0,0,0,0.2);
+    padding: 1rem;
+    border-radius: var(--radius-m);
+    text-align: center;
+    color: var(--c-text-secondary);
+}
+.content-divider {
+    border: none;
+    height: 1px;
+    background-color: var(--c-border);
+    margin: 2rem 0;
+}
+
+/* İÇERİK OLUŞTURMA PANELİ VE BUTONU (MODAL GÖRÜNÜM) */
+/* ================================================== */
+.creation-trigger {
+    top: 90px;
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    background: var(--c-accent-gradient);
+    color: var(--c-accent-text);
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    cursor: pointer;
+    z-index: 1000;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.creation-trigger:hover {
+    transform: scale(1.1) rotate(90deg);
+}
+
+.creation-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(10, 10, 20, 0.6);
+    backdrop-filter: blur(8px);
+    z-index: 1001;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* DEĞİŞİKLİK: 'center' yerine 'flex-start' kullanıldı */
+    padding: 1rem;
+    padding-top: 20vh; /* İsteğe Bağlı: Üstten biraz daha fazla boşluk bırakmak için */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.creation-overlay.is-active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.creation-panel {
+    width: 100%;
+    max-width: 600px;
+    background-color: var(--c-bg-secondary);
+    border-radius: var(--radius-l);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    transform: scale(0.95);
+    opacity: 0;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+.creation-overlay.is-active .creation-panel {
+
+    transform: scale(1);
+    top: 0px;
+    opacity: 1;
+}
+.tab-headers {
+    display: flex;
+    gap: 5px;
+    flex-shrink: 0; /* Başlıkların küçülmesini engelle */
+}
+.tab-header-item {
+    flex: 1;
+    padding: 0.9rem 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: var(--c-bg-secondary);
+    color: var(--c-text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 0.95rem;
+    border-radius: var(--radius-m) var(--radius-m) 0 0;
+    transition: background 0.3s ease, color 0.3s ease;
+    position: relative;
+    bottom: -1px;
+}
+.tab-header-item.active {
+    background: var(--c-accent-gradient);
+    color: var(--c-accent-text);
+}
+.tab-header-item:not(.active):hover {
+    background-color: var(--c-border);
+    color: var(--c-text-primary);
+}
+.tab-content-container {
+    padding: 1.5rem 1.2rem;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+.tab-content {
+    display: none;
+}
+.tab-content.active {
+    display: block;
+}
+.tab-content-title {
+    margin-bottom: 1rem;
+}

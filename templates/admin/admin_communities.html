@@ -1,0 +1,69 @@
+{% extends "admin/admin_base.html" %}
+
+{% block title %}Toplulukları Yönet{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <h1>Toplulukları Yönet</h1>
+</div>
+
+<div class="card">
+    <h3>Standart Topluluklar ({{ communities|length }})</h3>
+    <hr>
+    <table>
+        <thead><tr><th>ID</th><th>İsim</th><th>Oluşturan</th><th>Üye Sayısı</th><th>Eylemler</th></tr></thead>
+        <tbody>
+            {% for c in communities %}
+            <tr>
+                <td>{{ c.id }}</td><td>{{ c.name }}</td><td>@{{ c.creator.username }}</td><td>{{ c.members|length }}</td>
+                <td class="action-buttons">
+                    <form action="{{ url_for('admin_delete_community', com_type='community', com_id=c.id) }}" method="POST" onsubmit="return confirm('Bu topluluğu silmek istediğinizden emin misiniz?');">
+                        <button type="submit" class="btn btn-danger btn-sm">Sil</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Premium Topluluklar ({{ premium_communities|length }})</h3>
+    <hr>
+    <table>
+        <thead><tr><th>ID</th><th>İsim</th><th>Oluşturan</th><th>Üye Sayısı</th><th>Eylemler</th></tr></thead>
+        <tbody>
+            {% for c in premium_communities %}
+            <tr>
+                <td>{{ c.id }}</td><td>{{ c.name }}</td><td>@{{ c.creator.username }}</td><td>{{ c.members|length }}</td>
+                <td class="action-buttons">
+                    <form action="{{ url_for('admin_delete_community', com_type='premium', com_id=c.id) }}" method="POST" onsubmit="return confirm('Bu topluluğu silmek istediğinizden emin misiniz?');">
+                        <button type="submit" class="btn btn-danger btn-sm">Sil</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Infinity Ağları ({{ infinity_networks|length }})</h3>
+    <hr>
+    <table>
+        <thead><tr><th>ID</th><th>İsim</th><th>Oluşturan</th><th>Üye Sayısı</th><th>Eylemler</th></tr></thead>
+        <tbody>
+            {% for c in infinity_networks %}
+            <tr>
+                <td>{{ c.id }}</td><td>{{ c.name }}</td><td>@{{ c.owner.username }}</td><td>{{ c.members|length }}</td>
+                 <td class="action-buttons">
+                    <form action="{{ url_for('admin_delete_community', com_type='infinity', com_id=c.id) }}" method="POST" onsubmit="return confirm('Bu ağı silmek istediğinizden emin misiniz?');">
+                        <button type="submit" class="btn btn-danger btn-sm">Sil</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

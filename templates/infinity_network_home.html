@@ -1,0 +1,676 @@
+{% extends 'base.html' %}
+{% block title %}Ağ Yönetimi - Socento{% endblock %}
+{% block content %}
+<style>
+  /* --- 💎 TEMA DEĞİŞKENLERİ (Nihai Sürüm) --- */
+  :root {
+    --bg-primary: #05070D;
+    --bg-secondary: #0E141F;
+    --text-primary: #f8fafc;
+    --text-secondary: #a1aab8;
+    --text-tertiary: #495366;
+    --dynamic-grad-start: #38bdf8;
+    --dynamic-grad-mid: #818cf8;
+    --dynamic-grad-end: #c084fc;
+    --dynamic-glow: rgba(129, 140, 248, 0.2);
+    --dynamic-border: rgba(129, 140, 248, 0.3);
+    --premium-gradient: linear-gradient(135deg, var(--dynamic-grad-start), var(--dynamic-grad-mid), var(--dynamic-grad-end));
+    --border-gradient: linear-gradient(135deg, var(--dynamic-grad-mid), var(--dynamic-grad-start));
+    --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* --- Gelişmiş "Aurora" Arka Plan Animasyonu --- */
+  @keyframes aurora-flow {
+    0% {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0.2;
+    }
+
+    50% {
+      transform: translate(-50%, -50%) scale(1.5);
+      opacity: 0.1;
+    }
+
+    100% {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0.2;
+    }
+  }
+
+  @keyframes title-underline {
+    from {
+      width: 0%;
+    }
+
+    to {
+      width: 50%;
+    }
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-main);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  body::before,
+  body::after {
+    content: '';
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 150vw;
+    height: 150vh;
+    max-width: 1200px;
+    max-height: 1200px;
+    background: radial-gradient(circle, var(--dynamic-grad-start) 0%, transparent 60%);
+    border-radius: 50%;
+    animation: aurora-flow 20s linear infinite;
+    z-index: -1;
+  }
+
+  body::after {
+    background: radial-gradient(circle, var(--dynamic-grad-end) 0%, transparent 60%);
+    animation-delay: -10s;
+    animation-duration: 25s;
+  }
+
+  .container {
+    max-width: 1024px;
+    position: relative;
+    z-index: 1;
+    padding: 0 1rem;
+  }
+
+  /* --- ÜST NAVİGASYON (DÜZELTİLMİŞ KONUM) --- */
+  .management-nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 3rem;
+    padding: 0.5rem;
+    background: rgba(14, 20, 31, 0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    position: sticky;
+    top: 80px;
+    /* ANA SİTE NAVBARDAN AŞAĞIDA DURMASI İÇİN DEĞER ARTIRILDI */
+    z-index: 100;
+  }
+
+  .nav-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.75rem 1.4rem;
+    border-radius: 50px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: all 0.5s var(--ease-out-quint);
+  }
+
+  .nav-button:hover {
+    color: var(--text-primary);
+  }
+
+  .nav-button.active {
+    color: #fff;
+    background: var(--premium-gradient);
+    transform: scale(1.05);
+    box-shadow: 0 5px 20px -5px var(--dynamic-glow);
+  }
+
+  /* --- PANEL GEÇİŞLERİ --- */
+  #infinity-panels {
+    position: relative;
+  }
+
+  .infinity-panel {
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.4s var(--ease-out-quint), transform 0.4s var(--ease-out-quint), max-height 0.6s var(--ease-out-quint);
+    pointer-events: none;
+    max-height: 0;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .infinity-panel.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    max-height: 10000px;
+  }
+
+  /* --- KART TASARIMI --- */
+  .content-card {
+    background: rgba(14, 20, 31, 0.7);
+    backdrop-filter: blur(32px);
+    -webkit-backdrop-filter: blur(32px);
+    border-radius: 28px;
+    padding: 2.5rem 3rem;
+    margin-bottom: 2rem;
+    position: relative;
+    box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.4);
+  }
+
+  .content-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 28px;
+    padding: 1px;
+    background: var(--border-gradient);
+    opacity: 0.5;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    transition: opacity 0.5s var(--ease-out-quint);
+  }
+
+  .content-card:hover::before {
+    opacity: 1;
+  }
+
+  .card-title {
+    font-size: 2.3rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    margin-bottom: 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+    background: var(--premium-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .infinity-panel.active .card-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    height: 3px;
+    background: var(--premium-gradient);
+    border-radius: 3px;
+    animation: title-underline 0.8s var(--ease-out-quint) forwards;
+  }
+
+  /* --- DİĞER STİLLER --- */
+  .form-control:focus {
+    outline: none;
+    border-color: var(--dynamic-border);
+    box-shadow: 0 0 0 4px var(--dynamic-glow);
+  }
+
+  .btn-premium:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px var(--dynamic-glow);
+  }
+
+  .post-card,
+  .blog-list-item,
+  .stat-card,
+  .member-card {
+    transition: all 0.5s var(--ease-out-quint);
+    will-change: transform, box-shadow;
+  }
+
+  .post-card:hover,
+  .blog-list-item:hover,
+  .stat-card:hover,
+  .member-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    border-color: var(--dynamic-border);
+  }
+
+  /* --- RESPONSIVE TASARIM (MOBİL UYUMLULUK) --- */
+  @media (max-width: 768px) {
+    .container {
+      padding: 0 0.75rem;
+    }
+
+    .management-nav {
+      gap: 0.25rem;
+      padding: 0.4rem;
+      /* Mobil'de navigasyon daha kompakt */
+    }
+
+    .nav-button {
+      padding: 0.7rem;
+      width: 48px;
+      /* İkonlar için sabit genişlik */
+      height: 48px;
+      justify-content: center;
+    }
+
+    .nav-button span {
+      display: none;
+      /* Mobil'de yazıları gizle */
+    }
+
+    .content-card {
+      padding: 1.5rem;
+      border-radius: 20px;
+    }
+
+    .card-title {
+      font-size: 1.8rem;
+    }
+
+    .page-header h2 {
+      font-size: 2.5rem;
+    }
+
+    .page-header p {
+      font-size: 1rem;
+    }
+  }
+
+  /* Diğer stiller (özetle, değişmedi) */
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group label {
+    display: block;
+    color: var(--text-secondary);
+    margin-bottom: .75rem;
+    font-size: .9rem;
+    font-weight: 500;
+  }
+
+  .form-control {
+    width: 100%;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--text-tertiary);
+    color: var(--text-primary);
+    padding: 16px 20px;
+    border-radius: 14px;
+    transition: all .4s var(--ease-out-quint);
+    font-size: 1rem;
+  }
+
+  .btn-premium {
+    background: var(--premium-gradient);
+    border: none;
+    color: #fff;
+    padding: 14px 32px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all .4s var(--ease-out-quint);
+    box-shadow: 0 4px 15px var(--dynamic-glow);
+  }
+
+  .btn-premium:active {
+    transform: scale(.98)
+  }
+
+  .post-card,
+  .blog-list-item,
+  .stat-card,
+  .member-card {
+    background: linear-gradient(145deg, #181f33, #0E141F);
+    border: 1px solid #293145;
+    border-radius: 24px;
+  }
+
+  .post-card {
+    padding: 1.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .post-header {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    padding: 0 0 1.25rem 0
+  }
+
+  .post-header img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 3px solid #333c54
+  }
+
+  .post-author {
+    font-weight: 600;
+    color: var(--text-primary);
+    text-decoration: none
+  }
+
+  .post-timestamp {
+    color: var(--text-secondary);
+    font-size: .9em;
+    margin-left: .5em
+  }
+
+  .post-content {
+    line-height: 1.7
+  }
+
+  .post-media img,
+  .post-media video {
+    max-width: 100%;
+    border-radius: 18px;
+    margin-top: 1rem
+  }
+
+  .blog-list-item {
+    padding: 1.25rem 1.75rem;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem
+  }
+
+  .blog-list-item .icon {
+    font-size: 1.2rem;
+    color: var(--dynamic-grad-mid)
+  }
+
+  .blog-list-item .title {
+    font-weight: 500;
+    color: var(--text-primary);
+    flex-grow: 1
+  }
+
+  .blog-list-item .date {
+    font-size: .9rem;
+    color: var(--text-secondary)
+  }
+
+  .stats-grid,
+  .member-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.5rem
+  }
+
+  .stat-card,
+  .member-card {
+    padding: 1.75rem;
+    text-decoration: none
+  }
+
+  .stat-card i {
+    font-size: 1.5rem;
+    background: var(--premium-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: .75rem
+  }
+
+  .stat-card .label {
+    color: var(--text-secondary);
+    font-size: .9rem
+  }
+
+  .stat-card .value {
+    font-size: 1.5rem;
+    font-weight: 600
+  }
+
+  .member-card {
+    padding: 1.5rem;
+    align-items: center;
+    text-align: center;
+    gap: .75rem
+  }
+
+  .member-card img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid #4a5568;
+    transition: border-color .4s var(--ease-out-quint)
+  }
+
+  .member-card:hover img {
+    border-color: var(--dynamic-grad-end)
+  }
+
+  .member-card .username {
+    font-weight: 600;
+    color: var(--text-primary)
+  }
+
+  .member-card .role {
+    font-size: .8rem;
+    font-weight: 500
+  }
+
+  .role.founder {
+    color: #f59e0b
+  }
+
+  .role.moderator {
+    color: var(--dynamic-grad-end)
+  }
+
+  .empty-state {
+    border: none;
+    background: rgba(14, 20, 31, .6);
+    border-radius: 24px;
+    padding: 3rem;
+    text-align: center
+  }
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<div data-theme-color="{{ network.theme_color | default('#818cf8') }}">
+  <main class="container mt-5">
+    <div class="management-nav">
+      <button class="nav-button active" data-panel="feed" title="Ağ Akışı"><i class="fas fa-home"></i>
+        <span>Akış</span></button>
+      <button class="nav-button" data-panel="analytics" title="Ağ Analizleri"><i class="fas fa-chart-pie"></i>
+        <span>Analiz</span></button>
+      <button class="nav-button" data-panel="post" title="Gönderi Oluştur"><i class="fas fa-plus-circle"></i>
+        <span>Gönderi</span></button>
+      <button class="nav-button" data-panel="blog" title="Blog Yönetimi"><i class="fas fa-book"></i>
+        <span>Blog</span></button>
+      <button class="nav-button" data-panel="invite" title="Üye Davet Et"><i class="fas fa-paper-plane"></i>
+        <span>Davet</span></button>
+      <button class="nav-button" data-panel="members" title="Ağ Üyeleri"><i class="fas fa-users"></i>
+        <span>Üyeler</span></button>
+    </div>
+
+    <div id="infinity-panels">
+      <div id="panel-feed" class="infinity-panel active">
+        {% if network %}<header class="page-header">
+          <h2>{{ network.name }}</h2>
+          <p>{{ network.description }}</p>
+        </header>
+        <div class="content-card">
+          <h3 class="card-title" style="font-size: 1.6rem;"><i class="fas fa-book-reader"></i>Yayınlanmış Yazılar</h3>{%
+          for blog in network.blogs|sort(attribute='created_at', reverse=True) %}<a
+            href="{{ url_for('view_blog_post', blog_slug=blog.slug) }}" class="blog-list-item"><i
+              class="fas fa-file-alt icon"></i><span class="title">{{ blog.title }}</span><span class="date">{{
+              blog.created_at.strftime('%d %b %Y') }}</span></a>{% else %}<p
+            style="color:var(--text-secondary); text-align:center; padding: 1rem 0;">Henüz yayınlanmış bir blog yazısı
+            yok.</p>{% endfor %}
+        </div>{% for post in posts %}<article class="post-card">
+          <div class="post-header"><a href="{{ url_for('profile', username=post.user.username) }}"><img
+                src="{{ url_for('static', filename='uploads/profile_pics/' + post.user.profile_image) }}"></a>
+            <div><a href="{{ url_for('profile', username=post.user.username) }}" class="post-author">{{
+                post.user.username }}</a><span class="post-timestamp">{{ post.created_at.strftime('%d.%m.%Y %H:%M')
+                }}</span></div>
+          </div>{% if post.content %}<div class="post-content">{{ post.content }}</div>{% endif %}{% if post.image_file
+          %}<div class="post-media"><img
+              src="{{ url_for('static', filename='uploads/post_media/' + post.image_file) }}"></div>{% elif
+          post.video_file %}<div class="post-media"><video
+              src="{{ url_for('static', filename='uploads/post_media/' + post.video_file) }}" controls></video></div>{%
+          endif %}
+        </article>{% else %}<div class="empty-state"><i class="fas fa-stream"
+            style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--text-secondary);"></i>
+          <h4>Akışta Henüz Bir Şey Yok</h4>
+          <p>İlk gönderiyi paylaşarak bu ağı canlandır.</p>
+        </div>{% endfor %}{% else %}<div class="empty-state"><i class="fas fa-ghost"></i>
+          <h4>Ağ Bulunamadı</h4>
+          <p>Görünüşe göre bu ağ mevcut değil veya erişim izniniz yok.</p>
+        </div>{% endif %}
+      </div>
+
+      <div id="panel-analytics" class="infinity-panel">
+        <div class="content-card">
+          <h5 class="card-title"><i class="fas fa-chart-pie"></i>Ağ Analizleri</h5>
+          <div class="stats-grid">
+            <div class="stat-card"><i class="fas fa-signature"></i> <span class="label">Ağ İsmi</span><span
+                class="value"> {{ network.name }}</span></div>
+            <div class="stat-card"><i class="fas fa-calendar-alt"></i> <span class="label">Kuruluş</span><span
+                class="value"> {{ network.created_at.strftime('%d.%m.%Y') }}</span></div>
+            <div class="stat-card"><i class="fas fa-users"></i> <span class="label">Üyeler</span><span class="value"> {{
+                members|length }}</span></div>
+            <div class="stat-card"><i class="fas fa-user-shield"></i> <span class="label">Moderatörler</span><span
+                class="value"> {{ moderators|length }}</span></div>
+            <div class="stat-card"><i class="fas fa-clone"></i> <span class="label">Gönderiler</span><span
+                class="value"> {{ posts|length }}</span></div>
+            <div class="stat-card"><i class="fas fa-palette"></i> <span class="label">Tema</span><span class="value"> {{
+                network.theme_color }}</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="panel-post" class="infinity-panel">
+        <div class="content-card">
+          <h5 class="card-title"><i class="fas fa-plus-circle"></i>Yeni Gönderi</h5>
+          <form method="POST" action="{{ url_for('infinity_network_new_post', slug=network.slug) }}"
+            enctype="multipart/form-data">
+            <div class="form-group"><label for="post-form-content">İçerik</label><textarea id="post-form-content"
+                name="content" class="form-control" placeholder="Ağda paylaşmak için bir şeyler yaz..."></textarea>
+            </div>
+            <div class="form-group"><label for="post-form-media">Medya Ekle</label><input id="post-form-media"
+                name="media_file" type="file" class="form-control"></div>
+            <div style="display:flex; justify-content:flex-end; margin-top:1.5rem;"><button type="submit"
+                class="btn-premium"><i class="fas fa-upload" style="margin-right:8px;"></i>Yayınla</button></div>
+          </form>
+        </div>
+      </div>
+
+      <div id="panel-blog" class="infinity-panel">
+        <div class="content-card">
+          <h5 class="card-title"><i class="fas fa-book"></i>Blog Yönetimi</h5>{% if network.user_id == current_user.id
+          %}<form method="POST" action="{{ url_for('create_blog_post', slug=network.slug) }}">
+            <div class="form-group"><label for="blog-form-title">Başlık</label><input type="text" id="blog-form-title"
+                name="title" class="form-control" placeholder="Blog yazınız için ilgi çekici bir başlık" required></div>
+            <div class="form-group"><label for="blog-form-content">İçerik</label><textarea id="blog-form-content"
+                name="content" class="form-control" placeholder="Düşüncelerinizi buraya yazın..."
+                style="min-height:200px;" required></textarea></div><button type="submit" class="btn-premium"
+              style="margin-top:1rem;"><i class="fas fa-paper-plane" style="margin-right:8px;"></i>Yazıyı
+              Yayınla</button>
+          </form>{% endif %}
+        </div>
+      </div>
+
+      <div id="panel-invite" class="infinity-panel">
+        <div class="content-card">
+          <h5 class="card-title"><i class="fas fa-paper-plane"></i>Üye Davet Et</h5>{% if latest_invite %}<div
+            class="form-group"><label>Aktif Tek Kullanımlık Davet Linkin</label>
+            <div style="display:flex; gap:0.75rem;"><input type="text" class="form-control"
+                value="{{ url_for('join_network', code=latest_invite.code, _external=True) }}" readonly><button
+                type="button" class="btn-premium"
+                onclick="navigator.clipboard.writeText(this.previousElementSibling.value); this.innerHTML='<i class=\'fas fa-check\'></i>'; setTimeout(() => this.innerHTML='<i class=\'fas fa-copy\'></i>', 2000);"
+                style="padding: 14px 18px;"><i class="fas fa-copy"></i></button></div><small
+              style="color:var(--text-secondary); font-size: 0.85em; margin-top: 0.75rem; display: block;">Bu link tek
+              kullanımlıktır ve bir kişi katıldığında geçersiz olur.</small>
+          </div>
+          <hr style="border: 0; height: 1px; background: var(--text-tertiary); opacity: 0.5; margin: 2.5rem 0;">{% endif
+          %}<form method="post" action="{{ url_for('generate_network_invite_code', slug=network.slug) }}"
+            style="text-align: center;"><button type="submit" class="btn-premium"><i class="fas fa-plus-circle"
+                style="margin-right:8px;"></i>Yeni Davet Kodu Oluştur</button></form>
+        </div>
+      </div>
+
+      <div id="panel-members" class="infinity-panel">
+        <div class="content-card">
+          <h5 class="card-title"><i class="fas fa-users"></i>Ağ Üyeleri ({{ members|length }})</h5>
+          <div class="member-grid">{% for member in members %}<a
+              href="{{ url_for('profile', username=member.user.username) }}" class="member-card"><img
+                src="{{ url_for('static', filename='uploads/profile_pics/' + member.user.profile_image) }}">
+              <div><span class="username">@{{ member.user.username }}</span>{% if network.user_id == member.user.id
+                %}<span class="role founder">KURUCU</span>{% elif member.is_moderator %}<span
+                  class="role moderator">Moderatör</span>{% endif %}</div>
+            </a>{% endfor %}</div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const themeColorContainer = document.querySelector('[data-theme-color]');
+    if (!themeColorContainer) return;
+
+    // --- Renk Manipülasyon Fonksiyonları ---
+    const hexToRgb = (hex) => { let r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex); return r ? { r: parseInt(r[1], 16), g: parseInt(r[2], 16), b: parseInt(r[3], 16) } : null; };
+    const rgbToHsl = (r, g, b) => { r /= 255; g /= 255; b /= 255; let max = Math.max(r, g, b), min = Math.min(r, g, b); let h, s, l = (max + min) / 2; if (max === min) { h = s = 0; } else { let d = max - min; s = l > 0.5 ? d / (2 - max - min) : d / (max + min); switch (max) { case r: h = (g - b) / d + (g < b ? 6 : 0); break; case g: h = (b - r) / d + 2; break; case b: h = (r - g) / d + 4; break; } h /= 6; } return { h: h * 360, s: s * 100, l: l * 100 }; };
+    const hslToRgbStr = (h, s, l) => { s /= 100; l /= 100; let c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs((h / 60) % 2 - 1)), m = l - c / 2, r = 0, g = 0, b = 0; if (0 <= h && h < 60) { r = c; g = x; b = 0; } else if (60 <= h && h < 120) { r = x; g = c; b = 0; } else if (120 <= h && h < 180) { r = 0; g = c; b = x; } else if (180 <= h && h < 240) { r = 0; g = x; b = c; } else if (240 <= h && h < 300) { r = x; g = 0; b = c; } else if (300 <= h && h < 360) { r = c; g = 0; b = x; } r = Math.round((r + m) * 255); g = Math.round((g + m) * 255); b = Math.round((b + m) * 255); return `rgb(${r}, ${g}, ${b})`; };
+
+    // --- Dinamik Tema Oluşturucu ---
+    const generateTheme = (baseHex) => {
+      const baseRgb = hexToRgb(baseHex); if (!baseRgb) return;
+      const baseHsl = rgbToHsl(baseRgb.r, baseRgb.g, baseRgb.b);
+      const grad1Hsl = { h: (baseHsl.h + 25) % 360, s: Math.min(90, baseHsl.s + 10), l: Math.min(60, baseHsl.l + 5) };
+      const grad2Hsl = { h: baseHsl.h, s: Math.min(95, baseHsl.s + 15), l: Math.min(65, baseHsl.l + 10) };
+      const grad3Hsl = { h: (baseHsl.h - 25 + 360) % 360, s: Math.min(90, baseHsl.s + 10), l: Math.min(60, baseHsl.l + 5) };
+      const glowRgbStr = hslToRgbStr(grad2Hsl.h, grad2Hsl.s, grad2Hsl.l).replace('rgb', 'rgba').replace(')', ', 0.25)');
+      const borderRgbStr = hslToRgbStr(grad2Hsl.h, grad2Hsl.s, grad2Hsl.l).replace('rgb', 'rgba').replace(')', ', 0.4)');
+      const root = document.documentElement;
+      root.style.setProperty('--dynamic-grad-start', hslToRgbStr(grad1Hsl.h, grad1Hsl.s, grad1Hsl.l));
+      root.style.setProperty('--dynamic-grad-mid', hslToRgbStr(grad2Hsl.h, grad2Hsl.s, grad2Hsl.l));
+      root.style.setProperty('--dynamic-grad-end', hslToRgbStr(grad3Hsl.h, grad3Hsl.s, grad3Hsl.l));
+      root.style.setProperty('--dynamic-glow', glowRgbStr);
+      root.style.setProperty('--dynamic-border', borderRgbStr);
+    };
+
+    // --- Sayfa Yüklendiğinde Tema ve Panel Mantığını Çalıştır ---
+    const themeColor = themeColorContainer.dataset.themeColor;
+    if (themeColor) generateTheme(themeColor);
+
+    const navContainer = document.querySelector('.management-nav');
+    const navBtns = document.querySelectorAll('.nav-button');
+    let activePanel = document.querySelector('.infinity-panel.active');
+    let activeBtn = document.querySelector('.nav-button.active');
+
+    const showPanel = (panelId) => {
+      const targetPanel = document.getElementById(panelId);
+      const targetBtn = navContainer.querySelector(`[data-panel="${panelId.replace('panel-', '')}"]`);
+      if (!targetPanel || targetPanel === activePanel) return;
+      if (activePanel) activePanel.classList.remove('active');
+      if (activeBtn) activeBtn.classList.remove('active');
+      targetPanel.classList.add('active');
+      targetBtn.classList.add('active');
+      activePanel = targetPanel;
+      activeBtn = targetBtn;
+    };
+
+    navBtns.forEach(btn => {
+      btn.addEventListener('click', () => { showPanel('panel-' + btn.dataset.panel); });
+    });
+  });
+</script>
+{% endblock %}

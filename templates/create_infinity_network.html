@@ -1,0 +1,421 @@
+{% extends 'base.html' %}
+{% block title %}Kendi Ağını Oluştur - Infinity{% endblock %}
+{% block content %}
+
+<style>
+  :root {
+    --bg-primary: #0A0C10;
+    /* Daha koyu bir ana arka plan */
+    --bg-secondary: #101419;
+    --border-color-soft: rgba(255, 255, 255, 0.1);
+    --border-color-hard: rgba(255, 255, 255, 0.25);
+    --text-primary: #F0F6FC;
+    --text-secondary: #8B949E;
+
+    --accent-glow-1: rgba(88, 101, 242, 0.4);
+    --accent-glow-2: rgba(79, 70, 229, 0.45);
+    --accent-primary: #5865F2;
+    --accent-secondary: #4F46E5;
+
+    --premium-gold: #FFC056;
+    --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  /* --- 🌟 ANİMASYONLAR --- */
+  @keyframes animate-glow {
+    0% {
+      background-position: 0% 50%;
+    }
+
+    50% {
+      background-position: 100% 50%;
+    }
+
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  @keyframes animate-stars {
+    from {
+      background-position: 0 0;
+    }
+
+    to {
+      background-position: 0 -10000px;
+    }
+  }
+
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes rotate-icon {
+    0% {
+      transform: rotate(0deg) scale(1);
+    }
+
+    50% {
+      transform: rotate(180deg) scale(1.1);
+    }
+
+    100% {
+      transform: rotate(360deg) scale(1);
+    }
+  }
+
+
+  /* --- 🌌 ÇOK KATMANLI PARALLAX ARKA PLAN --- */
+  body {
+    background-color: var(--bg-primary);
+    /* Katmanlar:
+          1. Ana Nebula/Glow efekti (en altta)
+          2. Yakın yıldızlar (yavaş hareket)
+          3. Orta mesafedeki yıldızlar (orta hızda hareket)
+          4. Uzak yıldızlar (hızlı hareket)
+        */
+    background-image:
+      /* 1. Nebula */
+      radial-gradient(circle at 15% 25%, var(--accent-glow-1), transparent 40%),
+      radial-gradient(circle at 85% 75%, var(--accent-glow-2), transparent 40%),
+      /* 2. Yakın Yıldızlar */
+      radial-gradient(1px 1px at 20% 30%, white, transparent),
+      radial-gradient(1px 1px at 80% 60%, white, transparent),
+      /* 3. Orta Yıldızlar */
+      radial-gradient(1px 1px at 40% 70%, rgba(255, 255, 255, 0.7), transparent),
+      radial-gradient(1px 1px at 90% 10%, rgba(255, 255, 255, 0.7), transparent),
+      /* 4. Uzak Yıldızlar (Toz) */
+      radial-gradient(1px 1px at 50% 50%, rgba(255, 255, 255, 0.4), transparent),
+      radial-gradient(1px 1px at 10% 90%, rgba(255, 255, 255, 0.4), transparent);
+
+    background-repeat: no-repeat, no-repeat, repeat, repeat, repeat, repeat, repeat, repeat;
+    background-size: 200% 200%, 200% 200%, 200px 200px, 300px 300px, 400px 400px, 500px 500px, 600px 600px, 700px 700px;
+    background-attachment: fixed;
+    font-family: var(--font-main);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+
+    /* Animasyonların birleştirilmesi */
+    animation:
+      animate-glow 30s ease-in-out infinite,
+      animate-stars 200s linear infinite;
+  }
+
+  .premium-container {
+    padding: 4rem 1rem;
+  }
+
+  /* --- ANA BAŞLIK --- */
+  .premium-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    animation: fade-in-up 1s ease-out forwards;
+  }
+
+  .premium-header h2 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+  }
+
+  .premium-header .premium-icon {
+    color: var(--premium-gold);
+    filter: drop-shadow(0 0 20px var(--premium-gold));
+    animation: rotate-icon 15s linear infinite;
+    /* Sürekli dönen ikon */
+  }
+
+  .premium-header p {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    max-width: 650px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* --- 🌠 İNTERAKTİF 3D KART --- */
+  .form-card-wrapper {
+    perspective: 2000px;
+    /* 3D efekt için perspektif */
+  }
+
+  .form-card {
+    position: relative;
+    background: rgba(16, 20, 25, 0.6);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid var(--border-color-soft);
+    border-radius: 28px;
+    padding: 3rem 3.5rem;
+    max-width: 600px;
+    margin: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    animation: fade-in-up 1s ease-out 0.3s forwards;
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.6s ease;
+    will-change: transform;
+  }
+
+  /* FAREYİ TAKİP EDEN IŞIK EFEKTİ (JS ile kontrol edilir) */
+  .form-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: inherit;
+    background: radial-gradient(350px circle at var(--mouse-x) var(--mouse-y),
+        rgba(139, 92, 246, 0.15),
+        transparent 80%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    z-index: 0;
+  }
+
+  .form-card:hover::before {
+    opacity: 1;
+  }
+
+  .form-card>* {
+    /* Tüm iç elemanları ışığın üstünde tutar */
+    position: relative;
+    z-index: 1;
+  }
+
+  /* --- GELİŞMİŞ FORM ALANLARI --- */
+  .premium-form .form-group {
+    margin-bottom: 2rem;
+    position: relative;
+    /* Animasyonlu alt çizgi için */
+  }
+
+  .premium-form .form-group::after {
+    /* Animasyonlu alt çizgi */
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+    width: 100%;
+    height: 2px;
+    background: var(--accent-primary);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  .premium-form .form-group:focus-within::after {
+    transform: scaleX(1);
+  }
+
+  .premium-form label {
+    display: block;
+    margin-bottom: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+  }
+
+  .premium-form .form-group:focus-within label {
+    color: var(--accent-primary);
+  }
+
+  .premium-form .form-control {
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color-hard);
+    border-radius: 12px;
+    padding: 15px 18px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+
+  .premium-form .form-control:focus {
+    outline: none;
+    border-color: transparent;
+    /* Çizgiyle değiştirildi */
+    box-shadow: none;
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+
+  /* ... Diğer form elemanları (textarea, color) aynı kalabilir ... */
+  .premium-form textarea.form-control {
+    resize: vertical;
+    min-height: 90px;
+  }
+
+  .premium-form input[type="color"] {
+    height: 48px;
+    border-radius: 12px;
+    cursor: pointer;
+    border: 1px solid var(--border-color-hard);
+    background: transparent;
+  }
+
+  .premium-form input[type="color"]::-webkit-color-swatch {
+    border: 4px solid var(--bg-secondary);
+    border-radius: 10px;
+  }
+
+  .premium-form input[type="color"]::-moz-color-swatch {
+    border: 4px solid var(--bg-secondary);
+    border-radius: 10px;
+  }
+
+  /* --- SON NESİL BUTON --- */
+  .premium-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 16px 20px;
+    background-image: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    border: none;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-decoration: none;
+    border-radius: 14px;
+    margin-top: 1rem;
+    box-shadow: 0 8px 25px -8px var(--accent-primary);
+    transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+    transform: translateZ(0);
+    /* GPU hızlandırma için */
+  }
+
+  .premium-btn .btn-icon {
+    transition: transform 0.3s ease;
+  }
+
+  .premium-btn:hover {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 14px 40px -10px var(--accent-secondary);
+  }
+
+  .premium-btn:hover .btn-icon {
+    transform: rotate(90deg);
+  }
+
+  .premium-btn:active {
+    transform: translateY(-1px) scale(1);
+  }
+</style>
+<!--
+<link rel="stylesheet" href="{{ url_for('static', filename='css/inner_network.css') }}">
+-->
+<script>document.body.classList.add('premium-theme');</script>
+
+<script>
+  const card = document.getElementById('interactive-card');
+  const cardWrapper = document.querySelector('.form-card-wrapper');
+
+  card.addEventListener('mousemove', (e) => {
+    // Kartın boyut ve pozisyon bilgilerini al
+    const rect = card.getBoundingClientRect();
+
+    // Fare pozisyonunu kartın sol üst köşesine göre hesapla
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    // Hesaplanan değerleri CSS değişkenleri olarak ayarla
+    card.style.setProperty('--mouse-x', `${x}px`);
+    card.style.setProperty('--mouse-y', `${y}px`);
+
+    // 3D Tilt efekti için
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = (y - centerY) / 20; // 20 değeri hassasiyeti ayarlar
+    const rotateY = (centerX - x) / 20;
+
+    card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+  });
+
+  // Fare karttan ayrıldığında efekti sıfırla
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = 'rotateX(0deg) rotateY(0deg)';
+  });
+</script>
+
+<div class="container premium-container">
+  <div class="premium-header">
+    <h2><i class="fas fa-gem premium-icon"></i> Infinity Ağını Oluştur</h2>
+    <p>Kendi Infinity ağının ismini, açıklamasını ve tema rengini belirle. Ağını kurduktan sonra, üyeler/moderatörler
+      ekleyebilir ve gönderi paylaşabilirsin.</p>
+  </div>
+
+  <div class="form-card">
+    <form class="premium-form" method="post" action="{{ url_for('create_network') }}">
+      <div class="form-group">
+        <label for="network_name">Ağ İsmi</label>
+        <input type="text" id="network_name" name="name" class="form-control" placeholder="Örn: Kripto Analistleri"
+          required maxlength="40">
+      </div>
+
+      <div class="form-group">
+        <label for="network_desc">Açıklama</label>
+        <textarea id="network_desc" name="description" class="form-control" placeholder="Bu ağda neler konuşulacak?"
+          rows="2" maxlength="200" required></textarea>
+      </div>
+      <style>
+        /* Renk seçici özel stil - .form-control uygulanmıyor */
+        .premium-form input[type="color"] {
+          width: 100%;
+          height: 48px;
+          border-radius: 12px;
+          cursor: pointer;
+          border: 1px solid var(--border-color-hard);
+          background-color: transparent;
+          padding: 0;
+          appearance: none;
+          /* önemli: tarayıcı varsayılanını sıfırlar */
+          -webkit-appearance: none;
+        }
+
+        /* Renk kutusu görünümü */
+        .premium-form input[type="color"]::-webkit-color-swatch-wrapper {
+          padding: 0;
+          border-radius: 12px;
+        }
+
+        .premium-form input[type="color"]::-webkit-color-swatch {
+          border: none;
+          border-radius: 10px;
+        }
+
+        .premium-form input[type="color"]::-moz-color-swatch {
+          border: none;
+          border-radius: 10px;
+        }
+      </style>
+      <div class="form-group">
+        <label for="theme_color">Tema Rengi</label>
+        <input type="color" id="theme_color" name="theme_color" value="#ffffff" required>
+      </div>
+
+
+      <button type="submit" class="premium-btn"><i class="fas fa-plus"></i> Ağı Oluştur</button>
+    </form>
+  </div>
+</div>
+
+
+{% endblock %}

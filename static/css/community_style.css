@@ -1,0 +1,311 @@
+/* ============================================= */
+/* APPLE VISION & PREMIUM THEME          */
+/* ============================================= */
+
+/* --- Değişkenler: Premium Materyal Paleti --- */
+:root {
+    --bg-main: #111827; /* Daha derin, hafif sıcak bir siyah */
+    --bg-card: #3741517d; /* Kartlar için yumuşak bir arka plan */
+    --border-color: rgba(255, 255, 255, 0.08); /* Çok daha belirsiz kenarlıklar */
+    --text-primary: #E8E8ED; /* Daha yumuşak bir beyaz */
+    --text-secondary: #9A9AA1; /* Daha okunabilir bir gri */
+    
+    /* İMZA RENK TEMASI */
+    --accent-gradient: linear-gradient(135deg, #FFD04F, #FF6F61);
+    --accent-color-primary: #FF6F61;
+    --accent-color-secondary: #FFD04F;
+    
+    --radius-md: 12px; /* Daha yumuşak köşeler */
+    --radius-lg: 18px;
+    --shadow-soft: 0 4px 8px rgba(0,0,0,0.15);
+    --shadow-medium: 0 8px 24px rgba(0,0,0,0.2);
+    
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* --- Ana Sayfa Yapısı --- */
+.community-page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.community-header-bar {
+    background-color: #3741518b; /* Hafif transparan, derinlik hissi */
+    backdrop-filter: blur(12px);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    border-radius: 20px;
+    gap: 20px;
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.community-header-bar .community-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px; /* Apple tarzı "squircle" */
+    object-fit: cover;
+    background: var(--accent-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.community-header-bar .community-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    color: var(--text-primary);
+    margin: 0;
+    flex-grow: 1;
+}
+
+.community-body-layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 32px;
+    padding: 32px 24px;
+    align-items: flex-start;
+}
+
+@media (max-width: 992px) {
+    .community-body-layout { grid-template-columns: 1fr; }
+    .community-sidebar { order: -1; }
+}
+
+/* --- Ana İçerik Akışı (Sol Sütun) --- */
+.main-content-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Gönderi Oluşturma Alanı (UX İyileştirmesi) */
+.create-post-widget {
+    background-color: var(--bg-card);
+    padding: 16px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: var(--shadow-soft);
+}
+.create-post-widget .form-control {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+    transition: var(--transition-smooth);
+}
+.create-post-widget .form-control:focus {
+    border-color: var(--accent-color-primary);
+    background-color: var(--bg-card);
+    box-shadow: 0 0 0 3px rgba(255, 111, 97, 0.2);
+}
+.create-post-widget .form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.create-post-widget .file-input-wrapper {
+    max-width: 150px;
+}
+
+/* Gönderi Kartları (Apple Vision) */
+.post-card {
+    width: 70%;
+    height: auto;
+    background-color: var(--bg-card);
+    /* background-color: var(--bg-card); */
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+   /*  box-shadow: var(--shadow-soft); */
+    border: 1px solid transparent;
+    transition: var(--transition-smooth);
+}
+.post-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-medium);
+    border-color: var(--border-color);
+}
+
+.post-card-header {
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.post-card-header img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+}
+.post-card-header .author-info { display: flex; flex-direction: column; }
+.post-card-header a {
+    font-weight: 500;
+    color: var(--text-primary);
+    text-decoration: none;
+}
+.post-card-header span {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.post-card-body { padding: 0 16px; }
+.post-card-body .post-content-text {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+}
+.post-card-body .post-media-content {
+    width: 100%;
+    border-radius: var(--radius-md);
+    display: block;
+    margin-bottom: 8px;
+}
+
+.post-card-actions {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px;
+    border-top: 1px solid var(--border-color);
+    margin-top: 16px;
+}
+.post-card-actions .action-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: var(--radius-md);
+    transition: var(--transition-smooth);
+}
+.post-card-actions .action-item:hover, .post-card-actions .action-item.liked {
+    color: var(--accent-color-primary);
+    background-color: rgba(255, 111, 97, 0.1);
+}
+.post-card-actions .action-item i { font-size: 1.1rem; }
+
+/* --- Sidebar (Sağ Sütun) --- */
+.community-sidebar {
+    position: sticky;
+    top: 110px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.sidebar-widget {
+    background-color: var(--bg-card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+}
+
+.sidebar-widget-header {
+    padding: 16px;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.sidebar-widget-body { padding: 16px; }
+.sidebar-widget-body .community-description {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+}
+.sidebar-widget-body .stats-grid {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.sidebar-widget-body .stat-item h4 {
+    margin: 0 0 4px 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.sidebar-widget-body .stat-item p {
+    margin: 0;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+}
+.sidebar-widget-body .creation-date {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    display: flex; align-items: center; gap: 8px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 16px;
+}
+
+.sidebar-widget-body .rules-list .rule {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.95rem;
+}
+.sidebar-widget-body .rules-list .rule:last-child { border-bottom: none; }
+
+/* --- Premium Butonlar --- */
+.btn-premium {
+    padding: 12px 24px;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: var(--transition-smooth);
+}
+.btn-premium.primary {
+    background: var(--accent-gradient);
+    color: white;
+    box-shadow: 0 4px 12px rgba(255, 111, 97, 0.2);
+}
+.btn-premium.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 111, 97, 0.3);
+}
+.btn-premium.joined {
+    background-color: var(--bg-main);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+}
+
+/* Boş içerik uyarısı */
+.empty-feed-alert {
+    background-color: var(--bg-card);
+    color: var(--text-secondary);
+    padding: 3rem;
+    text-align: center;
+    border-radius: var(--radius-lg);
+    border: 1px dashed var(--border-color);
+}

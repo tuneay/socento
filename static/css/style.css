@@ -1,0 +1,3863 @@
+/* socento_social/static/css/style.css */
+html,
+body {
+    overflow-x: hidden;
+}
+
+.mobile-bottom-nav {
+    position: sticky;
+}
+
+
+:root {
+    --primary-bg: #111827;
+    --secondary-bg: #1f2937;
+    --tertiary-bg: #374151;
+    --text-color-primary: #f9fafb;
+    --text-color-secondary: #d1d5db;
+    --text-color-muted: #9ca3af;
+    --border-color-light: rgba(75, 85, 99, 0.5);
+    --border-color-strong: rgba(167, 139, 250, 0.5);
+
+    --gradient-primary: linear-gradient(135deg, #FFD04F, #FF6F61);
+    --gradient-text: linear-gradient(135deg, #FFD04F, #FF6F61);
+
+    --shadow-light: rgba(0, 0, 0, 0.1);
+    --shadow-medium: rgba(0, 0, 0, 0.25);
+    --shadow-strong: rgba(0, 0, 0, 0.4);
+
+    --border-radius-xs: 4px;
+    --border-radius-sm: 8px;
+    --border-radius-md: 12px;
+    --border-radius-lg: 20px;
+    --border-radius-circle: 50%;
+
+    --focus-glow-color: #FDBA74;
+    --like-color: #e74c3c;
+    --unfollow-button-bg: #e74c3c;
+    --unfollow-button-hover: #c0392b;
+
+    --transition-duration: 0.3s;
+    --transition-easing: cubic-bezier(0.25, 0.8, 0.25, 1);
+
+    --tag-color: #3498db;
+    --mention-color: #9b59b6;
+    --expertise-tag-bg: rgba(67, 56, 202, 0.2);
+    --expertise-tag-text: #a78bfa;
+    --info-block-bg: rgba(31, 41, 55, 0.7);
+
+    --spacing-xxs: 4px;
+    --spacing-xs: 8px;
+    --spacing-sm: 12px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    --spacing-xxl: 48px;
+    --spacing-xxxl: 64px;
+}
+
+body.light-theme {
+    --primary-bg: #f9fafb;
+    --secondary-bg: #ffffff;
+    --tertiary-bg: #f3f4f6;
+    --text-color-primary: #1f2937;
+    --text-color-secondary: #374151;
+    --text-color-muted: #6b7280;
+    --border-color-light: #e5e7eb;
+    --border-color-strong: #d1d5db;
+    --shadow-light: rgba(0, 0, 0, 0.04);
+    --shadow-medium: rgba(0, 0, 0, 0.08);
+    --shadow-strong: rgba(0, 0, 0, 0.12);
+    --focus-glow-color: #FF6F61;
+    --tag-color: #2980b9;
+    --mention-color: #8e44ad;
+    --expertise-tag-bg: rgba(99, 102, 241, 0.1);
+    --expertise-tag-text: #4f46e5;
+    --info-block-bg: rgba(255, 255, 255, 0.85);
+    --unfollow-button-bg: #e74c3c;
+    --unfollow-button-hover: #c0392b;
+}
+
+#preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--primary-bg);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.75s var(--transition-easing);
+}
+
+.preloader-icon {
+    font-size: 3.5rem;
+    color: var(--text-color-muted);
+    animation: pulse 2s infinite var(--transition-easing);
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 0.7;
+        transform: scale(0.95);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+}
+
+#preloader.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#main-content {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s 0.3s var(--transition-easing), transform 0.7s 0.3s var(--transition-easing);
+}
+
+body.loaded #main-content {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color-primary);
+    background-color: var(--primary-bg);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background-color var(--transition-duration) var(--transition-easing), color var(--transition-duration) var(--transition-easing);
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--tertiary-bg);
+    border-radius: var(--border-radius-sm);
+    border: 2px solid var(--primary-bg);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-color-muted);
+}
+
+.gradient-text {
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: inline-block;
+}
+
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: var(--spacing-sm) 0;
+    background: rgba(17, 24, 39, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-color-light);
+    flex-shrink: 0;
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.6s var(--transition-easing);
+}
+
+body.light-theme nav {
+    background: rgba(255, 255, 255, 0.8);
+    border-bottom: 1px solid var(--border-color-light);
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+}
+
+.nav-brand {
+    font-size: 22px;
+    font-weight: 800;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-decoration: none;
+    transition: all var(--transition-duration) var(--transition-easing);
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: var(--spacing-lg);
+    margin: 0;
+    padding: 0;
+    align-items: center;
+}
+
+.nav-links li a {
+    color: var(--text-color-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 15px;
+    padding: var(--spacing-xs) var(--spacing-xxs);
+    border-radius: var(--border-radius-xs);
+    transition: color var(--transition-duration) var(--transition-easing), background-color 0.2s ease, transform 0.2s ease;
+}
+
+.nav-links li a:hover {
+    color: var(--text-color-primary);
+    background-color: var(--tertiary-bg);
+    transform: translateY(-1px);
+}
+
+/* Bildirim çanı rozeti */
+.notification-badge {
+    position: relative;
+    margin: 0px;
+    top: -5px;
+    left: -26px;
+    right: -10px;
+    background-color: var(--like-color);
+    color: white;
+    font-size: 0.7em;
+    padding: 2px 6px;
+    border-radius: var(--border-radius-lg);
+    min-width: 18px;
+    text-align: center;
+    line-height: 1.2;
+    box-shadow: 0 1px 3px var(--shadow-medium);
+}
+
+
+/* Navbar'daki Yeni Gönderi ve Auth butonları */
+.navbar-btn {
+    text-decoration: none !important;
+    transition: all 0.2s ease;
+    width: auto;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.85em;
+    border-radius: var(--border-radius-sm);
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /*   gap: var(--spacing-xxs);*/
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.navbar-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 10px var(--shadow-medium);
+    opacity: 0.9;
+}
+
+.navbar-new-post-btn {
+    background: var(--gradient-primary);
+    color: white !important;
+    box-shadow: 0 2px 8px var(--shadow-medium);
+    border: none;
+}
+
+.navbar-new-post-btn:hover {
+    filter: brightness(1.1);
+}
+
+.navbar-auth-btn {
+    background: var(--gradient-primary);
+    color: white !important;
+    box-shadow: 0 2px 8px var(--shadow-medium);
+    border: none;
+}
+
+.navbar-auth-btn.register-btn {
+    background: var(--tertiary-bg);
+    border: 1px solid var(--border-color-light);
+    color: var(--text-color-primary) !important;
+    box-shadow: none;
+}
+
+.navbar-auth-btn.register-btn:hover {
+    background: var(--secondary-bg);
+    box-shadow: 0 2px 8px var(--shadow-medium);
+    transform: translateY(-2px);
+}
+
+/* Mobil menü ikonu (Burger menü) */
+.menu-icon {
+    display: none;
+    /* Varsayılan olarak gizli, medya sorgusu ile açılacak */
+    font-size: 1.6em;
+    color: var(--text-color-secondary);
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: var(--spacing-xs);
+    transition: color var(--transition-duration) var(--transition-easing), transform 0.2s var(--transition-easing);
+}
+
+.menu-icon:hover {
+    color: var(--text-color-primary);
+    transform: scale(1.1);
+}
+
+.search-form {
+    display: flex;
+    align-items: center;
+    margin-left: 40px;
+    margin-right: var(--spacing-lg);
+    max-width: 450px;
+    flex-grow: 1;
+}
+
+.search-input {
+    width: 100%;
+    max-width: 350px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: 1px solid var(--border-color-light);
+    border-radius: var(--border-radius-lg);
+    background-color: var(--tertiary-bg);
+    color: var(--text-color-primary);
+    font-size: 15px;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.search-input:focus {
+    border-color: var(--focus-glow-color);
+    box-shadow: 0 0 0 4px rgba(var(--focus-glow-color), 0.15);
+    background-color: var(--secondary-bg);
+}
+
+.search-button {
+    background: none;
+    border: none;
+    color: var(--text-color-secondary);
+    font-size: 1.1em;
+    padding: var(--spacing-xxs) var(--spacing-xs);
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-left: -35px;
+    position: relative;
+    z-index: 1;
+}
+
+.search-button:hover {
+    color: var(--text-color-primary);
+    transform: scale(1.1);
+}
+
+/* --- Genel İçerik Alanı Stilleri --- */
+.main-content-wrapper {
+    display: flex;
+    flex-grow: 1;
+    padding-top: 70px;
+    /* Navbar'dan sonra boşluk */
+    padding-bottom: var(--spacing-xxl);
+    max-width: 1280px;
+    /* Geniş ekranlar için max genişlik */
+    margin: 0 auto;
+    /* Ortala */
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    gap: var(--spacing-xl);
+    /* Ana bölümler arası boşluk */
+    justify-content: center;
+    /* İçerikleri ortala */
+    align-items: flex-start;
+    /* İçerikler üstten başlasın */
+    flex-wrap: nowrap;
+    /* Varsayılan olarak sarmalamayı engelle */
+}
+
+.page-container {
+    max-width: 1000px;
+    /* Varsayılan içerik genişliği */
+    width: 100%;
+    padding: 0 var(--spacing-lg);
+    /* Yan boşluklar */
+    margin: 0 auto;
+    flex-grow: 1;
+}
+
+/* Profil sayfası için özel override */
+.profile-page-container.full-width-profile {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Sayfa Başlığı ve Alt Başlıklar */
+.page-header {
+    text-align: center;
+    margin-top: var(--spacing-xxl);
+    margin-bottom: var(--spacing-xxl);
+    padding: var(--spacing-lg);
+    flex-shrink: 0;
+    transition: all 0.5s var(--transition-easing);
+    overflow: hidden;
+}
+
+.page-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--text-color-primary);
+    transition: all var(--transition-duration) var(--transition-easing);
+    margin-bottom: var(--spacing-sm);
+}
+
+.page-subtitle {
+    font-size: 1.15rem;
+    color: var(--text-color-secondary);
+    margin-top: var(--spacing-sm);
+}
+
+/* --- Kart Stilleri (Genel) --- */
+.card-custom {
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color-light);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 8px 25px var(--shadow-medium);
+    color: var(--text-color-primary);
+    padding: var(--spacing-xl);
+    margin: var(--spacing-xl) auto;
+    /* Üstte ve altta boşluk, ortala */
+    max-width: 450px;
+    width: 100%;
+    transition: all var(--transition-duration) var(--transition-easing);
+}
+
+/* Form kartları için genel stil (Register, Login, Create Post, Edit Profile) */
+.form-card {
+    /* Yeni sınıf */
+    max-width: 500px;
+    /* Biraz daha geniş */
+    margin-top: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-xl);
+}
+
+/* --- Form ve Input Stilleri --- */
+.form-group {
+    margin-bottom: var(--spacing-md);
+}
+
+.form-label {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    color: var(--text-color-secondary);
+    font-weight: 500;
+    font-size: 0.95em;
+}
+
+.form-input {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--border-color-light);
+    border-radius: var(--border-radius-sm);
+    background-color: var(--tertiary-bg);
+    color: var(--text-color-primary);
+    font-size: 16px;
+    outline: none;
+    transition: all var(--transition-duration) var(--transition-easing);
+}
+
+.form-input:focus {
+    border-color: var(--focus-glow-color);
+    box-shadow: 0 0 0 4px rgba(var(--focus-glow-color), 0.2);
+    background-color: var(--secondary-bg);
+}
+
+.form-input::placeholder {
+    color: var(--text-color-muted);
+    opacity: 0.8;
+}
+
+/* Input yardımcı metni */
+.input-help-text {
+    font-size: 0.85em;
+    color: var(--text-color-muted);
+    margin-top: var(--spacing-xs);
+    display: block;
+    line-height: 1.4;
+}
+
+/* --- Buton Stilleri --- */
+.btn-primary-custom {
+    display: inline-block;
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border: none;
+    border-radius: var(--border-radius-sm);
+    background: var(--gradient-primary);
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: all var(--transition-duration) var(--transition-easing);
+    box-shadow: 0 5px 15px var(--shadow-medium);
+}
+
+.btn-primary-custom:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px var(--shadow-strong);
+    opacity: 0.98;
+    color: white;
+}
+
+.btn-primary-custom:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px var(--shadow-light);
+}
+
+/* Küçük butonlar için ek sınıf */
+.btn-small {
+    padding: var(--spacing-xs) var(--spacing-md);
+    font-size: 0.9em;
+    width: auto;
+}
+
+.post-actions {
+    margin: auto;
+    font-weight: bold;
+    font-size: medium;
+}
+
+.community-icon {
+    border-radius: 10px !important;
+    margin: 10px;
+}
+
+/* --- Link Stilleri (Genel ve Özelleştirilmiş) --- */
+a {
+    color: var(--text-color-primary);
+    text-decoration: none;
+    transition: color var(--transition-duration) var(--transition-easing), filter 0.2s ease, transform 0.2s ease;
+}
+
+a:hover {
+    color: var(--gradient-text);
+    transform: translateY(-1px);
+    text-decoration: none;
+    /* Alt çizgi olmasın */
+}
+
+/* Navbar linkleri için özel hover (daha zarif) */
+.nav-links li a:hover {
+    color: var(--text-color-primary);
+    background-color: var(--tertiary-bg);
+    transform: translateY(-1px);
+    text-decoration: none;
+    filter: none;
+}
+
+/* Hashtag ve Mention Link Stilleri */
+.hashtag-link,
+.mention-link {
+    color: var(--tag-color);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 1px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.mention-link {
+    color: var(--mention-color);
+}
+
+.hashtag-link:hover,
+.mention-link:hover {
+    color: var(--text-color-primary);
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transform: translateY(-1px);
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.4));
+    border-bottom-color: var(--focus-glow-color);
+}
+
+/* --- Flash Mesajları Stilleri --- */
+.flash-messages-container {
+    max-width: 700px;
+    margin: var(--spacing-md) auto var(--spacing-xl) auto;
+    padding: 0 var(--spacing-md);
+    width: 100%;
+    z-index: 99999;
+    position: absolute;
+}
+
+.flash-message {
+    margin-top: var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--border-radius-md);
+    font-size: 0.98em;
+    font-weight: 500;
+    opacity: 0.98;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    animation: fadeIn 0.4s ease-out forwards;
+    border: 1px solid transparent;
+    box-shadow: 0 2px 8px var(--shadow-medium);
+}
+
+.flash-message .close-btn {
+    background: none;
+    border: none;
+    font-size: 1.3em;
+    color: inherit;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    margin-left: var(--spacing-md);
+}
+
+.flash-message .close-btn:hover {
+    opacity: 1;
+}
+
+.flash-message.success {
+    background-color: #28a745;
+    color: white;
+    border-color: #1e7e34;
+}
+
+.flash-message.danger {
+    background-color: #dc3545;
+    color: white;
+    border-color: #bd2130;
+}
+
+.flash-message.info {
+    background-color: #17a2b8;
+    color: white;
+    border-color: #117a8b;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+
+    to {
+        opacity: 0.98;
+        transform: translateY(0);
+    }
+}
+
+/* --- AKIŞ SAYFASI İYİLEŞTİRMELERİ (INSTAGRAM BENZERİ) --- */
+
+.main-content-flex-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-xl);
+    padding: var(--spacing-lg);
+    max-width: 1280px;
+    margin: 70px auto var(--spacing-lg) auto;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    /* Varsayılan olarak sarmalamayı engelle */
+}
+
+.feed-page-container {
+    max-width: 650px !important;
+    width: 100%;
+    /* Mobil'de tam genişlik alabilmesi için */
+    padding: 0 !important;
+    flex-shrink: 0;
+}
+
+.instagram-post-card {
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color-light);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 6px 18px var(--shadow-medium);
+    margin-bottom: var(--spacing-lg);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.instagram-post-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px var(--shadow-strong);
+}
+
+.instagram-post-card .post-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-bottom: 1px solid var(--border-color-light);
+}
+
+.instagram-post-card .post-author-img {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--border-radius-circle);
+    object-fit: cover;
+    border: 2px solid var(--gradient-primary);
+    flex-shrink: 0;
+}
+
+.instagram-post-card .post-author-info {
+    flex-grow: 1;
+}
+
+.instagram-post-card .post-author-username {
+    font-weight: 600;
+    font-size: 1.05em;
+    color: var(--text-color-primary);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: var(--spacing-xxs);
+    transition: color var(--transition-duration) var(--transition-easing), transform 0.2s ease;
+}
+
+.instagram-post-card .post-author-username:hover {
+    color: var(--focus-glow-color);
+    text-decoration: none;
+    transform: translateX(3px);
+}
+
+.instagram-post-card .post-date {
+    font-size: 0.8em;
+    color: var(--text-color-muted);
+    display: block;
+}
+
+.post-media-wrapper {
+    width: 100%;
+    padding-bottom: 100%;
+    /* Kare oran */
+    position: relative;
+    background-color: transparent;
+    border-radius: 10px;
+}
+
+.instagram-post-card img.post-media-content,
+.instagram-post-card video.post-media-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Görüntüyü kutuya sığdırırken kırp */
+    display: block;
+    border-radius: 10px;
+}
+
+.post-content-area {
+    padding: var(--spacing-md);
+    color: var(--text-color-secondary);
+}
+
+.post-content-area .post-title {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: var(--text-color-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.post-content-area .post-content-text {
+    font-size: 0.95em;
+    line-height: 1.6;
+    color: var(--text-color-secondary);
+    white-space: pre-wrap;
+}
+
+.instagram-post-card .post-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md) var(--spacing-md);
+    border-top: 1px solid var(--border-color-light);
+    background-color: var(--secondary-bg);
+}
+
+.instagram-post-card .action-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5em;
+    color: var(--text-color-secondary);
+    transition: color 0.2s ease, transform 0.2s ease;
+    padding: var(--spacing-xs);
+}
+
+.instagram-post-card .action-icon:hover {
+    color: var(--text-color-primary);
+    transform: scale(1.15);
+}
+
+.instagram-post-card .action-icon.like-button i {
+    color: var(--text-color-secondary);
+}
+
+.instagram-post-card .action-icon.like-button.liked i {
+    color: var(--like-color);
+    animation: bounceIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.instagram-post-card .like-count,
+.instagram-post-card .comment-count {
+    font-size: 0.95em;
+    color: var(--text-color-muted);
+    font-weight: 500;
+    margin-left: -5px;
+}
+
+.instagram-post-card .comment-button {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    color: var(--text-color-secondary);
+    transition: color var(--transition-duration) var(--transition-easing), transform 0.2s ease;
+}
+
+.instagram-post-card .comment-button:hover {
+    color: var(--text-color-primary);
+    transform: translateY(-1px);
+}
+
+/* Boş gönderi/mesaj kutusu */
+.no-content-message {
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--text-color-secondary);
+    font-size: 1.1em;
+    margin-top: var(--spacing-lg);
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color-light);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 2px 10px var(--shadow-light);
+}
+
+.no-content-message p {
+    margin-bottom: var(--spacing-sm);
+    line-height: 1.5;
+}
+
+.no-content-message a {
+    font-weight: bold;
+}
+
+/* --- SOL SİDEBAR Stilleri --- */
+.left-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    margin-top: var(--spacing-xxl);
+    position: sticky;
+    top: 80px;
+    align-self: flex-start;
+    padding: var(--spacing-sm);
+    display: flex;
+    /* Masaüstünde varsayılan flex */
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.sidebar-card {
+    margin: 20px;
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color-light);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 2px 10px var(--shadow-light);
+    padding: var(--spacing-md);
+}
+
+.sidebar-title {
+    font-size: 1.1em;
+    font-weight: 600;
+    margin-bottom: var(--spacing-md);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.sidebar-title i {
+    color: var(--gradient-primary);
+}
+
+.sidebar-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.sidebar-list li a {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    color: var(--text-color-secondary);
+    text-decoration: none;
+    font-size: 0.95em;
+    transition: color 0.2s ease, transform 0.2s ease;
+    padding: var(--spacing-xxs);
+    border-radius: var(--border-radius-xs);
+}
+
+.sidebar-list li a:hover {
+    color: var(--text-color-primary);
+    transform: translateX(3px);
+    background-color: var(--tertiary-bg);
+}
+
+.sidebar-list .sidebar-user-img {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--border-radius-circle);
+    object-fit: cover;
+    border: 1px solid var(--border-color-light);
+}
+
+.user-follower-count,
+.hashtag-count {
+    font-size: 0.85em;
+    color: var(--text-color-muted);
+    margin-left: auto;
+    /* Sağa yasla */
+}
+
+.sidebar-no-content {
+    font-size: 0.9em;
+    color: var(--text-color-muted);
+    text-align: center;
+    padding: var(--spacing-sm) 0;
+}
+
+/* Tema Değiştirme Kartı */
+.theme-toggle-card .btn-primary-custom {
+    background: var(--tertiary-bg);
+    color: var(--text-color-primary);
+    border: 1px solid var(--border-color-light);
+    box-shadow: none;
+}
+
+.theme-toggle-card .btn-primary-custom:hover {
+    background: var(--secondary-bg);
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px var(--shadow-medium);
+}
+
+.theme-toggle-card .btn-primary-custom i {
+    font-size: 1.1em;
+}
+
+/* --- SAĞ SİDEBAR (Önerilen Kullanıcılar) Stilleri --- */
+.right-sidebar {
+    width: 300px;
+    /* Daha kompakt */
+    flex-shrink: 0;
+    margin-top: var(--spacing-xxl);
+    position: sticky;
+    top: 80px;
+    align-self: flex-start;
+    padding: var(--spacing-sm);
+    display: flex;
+    /* Masaüstünde varsayılan flex */
+    flex-direction: column;
+}
+
+.current-user-info {
+    display: flex;
+    align-items: center;
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color-light);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    gap: var(--spacing-md);
+    box-shadow: 0 2px 10px var(--shadow-light);
+}
+
+.current-user-img {
+    width: 55px;
+    height: 55px;
+    border-radius: var(--border-radius-circle);
+    object-fit: cover;
+    border: 2px solid var(--gradient-primary);
+    flex-shrink: 0;
+}
+
+.current-user-username {
+    font-weight: 600;
+    color: var(--text-color-primary);
+    flex-grow: 1;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 1.05em;
+    transition: color var(--transition-duration) var(--transition-easing), transform 0.2s ease;
+}
+
+.current-user-username:hover {
+    text-decoration: underline;
+    color: var(--focus-glow-color);
+    transform: translateX(3px);
+}
+
+.logout-link {
+    font-size: 0.85em;
+    color: var(--focus-glow-color);
+    font-weight: 500;
+}
+
+.logout-link:hover {
+    text-decoration: underline;
+}
+
+
+.suggestions-section {
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color-light);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md) var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    box-shadow: 0 2px 10px var(--shadow-light);
+}
+
+.suggestions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.suggestions-title {
+    font-size: 1em;
+    font-weight: 600;
+    color: var(--text-color-muted);
+}
+
+.suggestions-see-all {
+    font-size: 0.9em;
+    font-weight: 500;
+    color: var(--focus-glow-color);
+}
+
+.suggestions-see-all:hover {
+    text-decoration: underline;
+}
+
+.suggestion-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.suggestion-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.suggestion-user-img {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--border-radius-circle);
+    object-fit: cover;
+    border: 1px solid var(--border-color-light);
+}
+
+.suggestion-username {
+    font-weight: 500;
+    color: var(--text-color-primary);
+    flex-grow: 1;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: color var(--transition-duration) var(--transition-easing), transform 0.2s ease;
+}
+
+.suggestion-username:hover {
+    text-decoration: underline;
+    color: var(--focus-glow-color);
+    transform: translateX(3px);
+}
+
+.follow-button {
+    font-size: 0.85em;
+    font-weight: 600;
+    color: var(--focus-glow-color);
+    cursor: pointer;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+}
+
+.follow-button:hover {
+    color: var(--gradient-text);
+    text-decoration: underline;
+}
+
+.footer-links-sidebar {
+    font-size: 0.75em;
+    color: var(--text-color-muted);
+    text-align: left;
+    padding: var(--spacing-sm) 0;
+    line-height: 1.8;
+}
+
+.footer-links-sidebar a {
+    color: inherit;
+    text-decoration: none;
+    margin-right: var(--spacing-xs);
+    white-space: nowrap;
+    transition: color var(--transition-duration) var(--transition-easing);
+}
+
+.footer-links-sidebar a:hover {
+    text-decoration: underline;
+    color: var(--focus-glow-color);
+}
+
+.copyright-text {
+    margin-top: var(--spacing-sm);
+    font-size: 0.85em;
+}
+
+/* --- GÖNDERİ DETAY SAYFASI (POST_DETAIL.HTML) İYİLEŞTİRMELERİ --- */
+
+/* Yeni Layout: Gönderi ve Yorumları Yan Yana Getirmek İçin */
+.post-page-layout {
+    display: flex;
+    gap: var(--spacing-xl);
+    max-width: 1280px;
+    margin: var(--spacing-lg) auto var(--spacing-xxl) auto;
+    padding: 0 var(--spacing-md);
+    align-items: flex-start;
+    flex-wrap: wrap;
+    /* Küçük ekranlarda sarmalamak için */
+    justify-content: center;
+}
+
+/* Gönderi Kartının Kendisi (Layout içinde artık flex-grow alıyor) */
+.post-detail-card {
+    flex: 2;
+    min-width: 380px;
+    max-width: 600px;
+    margin-bottom: 0;
+    padding: 0;
+    position: relative;
+    z-index: 2;
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color-light);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 6px 18px var(--shadow-medium);
+    overflow: hidden;
+}
+
+/* Medya Wrapper (Resim/Video) */
+.post-detail-card .post-media-wrapper {
+    width: 100%;
+    padding-bottom: 100%;
+    /* Kutuya kare oran vererek tam oturmasını sağla */
+    position: relative;
+    max-height: 70vh;
+    /* Ekran yüksekliğinin %70'ini geçmesin */
+    overflow: hidden;
+    display: flex;
+    /* İçindeki medyanın ortalanması için */
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+}
+
+.post-detail-card .post-media-content {
+    position: absolute;
+    /* Wrapper'ın kare oranını kullanmak için absolute */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Resmi kutuyu dolduracak şekilde kırpar */
+    display: block;
+}
+
+.post-detail-card .post-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-bottom: 1px solid var(--border-color-light);
+    background-color: var(--secondary-bg);
+}
+
+.post-detail-card .post-header img.post-author-img {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--border-radius-circle);
+    object-fit: cover;
+    border: 2px solid var(--gradient-primary);
+    flex-shrink: 0;
+}
+
+.post-detail-card .post-author-info {
+    flex-grow: 1;
+}
+
+.post-detail-card .post-author-username {
+    font-weight: 600;
+    font-size: 1.05em;
+    color: var(--text-color-primary);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: var(--spacing-xxs);
+    transition: color var(--transition-duration) var(--transition-easing), transform 0.2s ease;
+}
+
+.post-detail-card .post-author-username:hover {
+    color: var(--focus-glow-color);
+    text-decoration: none;
+    transform: translateX(3px);
+}
+
+.post-detail-card .post-date {
+    font-size: 0.8em;
+    color: var(--text-color-muted);
+    display: block;
+}
+
+.post-detail-card .post-content-area {
+    padding: var(--spacing-md) var(--spacing-lg);
+    background-color: var(--secondary-bg);
+}
+
+.post-detail-card .post-title.gradient-text {
+    font-size: 1.8rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.post-detail-card .post-content-text {
+    font-size: 1em;
+    line-height: 1.6;
+    color: var(--text-color-secondary);
+    white-space: pre-wrap;
+}
+
+.post-detail-card .post-actions {
+    padding: var(--spacing-sm) var(--spacing-lg) var(--spacing-md);
+    border-top: 1px solid var(--border-color-light);
+    background-color: var(--secondary-bg);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+/* Yorumlar Bölümü Stilleri (Yeni düzen için güncellendi) */
+.comments-section {
+    flex: 1;
+    min-width: 350px;
+    max-width: 450px;
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color-light);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 6px 18px var(--shadow-medium);
+    padding: var(--spacing-lg);
+    margin-top: 0;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.comments-title {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    padding: 0;
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+}
+
+.comment-form-card {
+    margin-top: 0;
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-md);
+    max-width: 100%;
+    width: auto;
+    background-color: var(--tertiary-bg);
+    border: 1px solid rgba(75, 85, 99, 0.3);
+    box-shadow: 0 1px 5px var(--shadow-light);
+}
+
+.comment-form-title {
+    text-align: center;
+    margin-bottom: var(--spacing-md);
+    font-size: 1.3em;
+}
+
+.comment-form-card p {
+    font-size: 0.9em;
+    line-height: 1.4;
+    color: var(--text-color-secondary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.comment-form-card .form-group.submit-group {
+    margin-top: var(--spacing-md);
+    text-align: right;
+}
+
+.comment-list {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    overflow-y: auto;
+    max-height: 500px;
+    padding-right: var(--spacing-xs);
+}
+
+.comment-card {
+    background-color: var(--tertiary-bg);
+    border: 1px solid rgba(75, 85, 99, 0.3);
+    border-radius: var(--border-radius-sm);
+    padding: var(--spacing-md);
+    box-shadow: 0 1px 5px var(--shadow-light);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xxs);
+}
+
+.comment-meta {
+    font-size: 0.9em;
+    color: var(--text-color-muted);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: var(--spacing-xxs);
+}
+
+.comment-meta .comment-author-username {
+    font-weight: 500;
+    color: var(--text-color-primary);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: color var(--transition-duration) var(--transition-easing), transform 0.2s ease;
+}
+
+.comment-meta .comment-author-username:hover {
+    text-decoration: underline;
+    color: var(--focus-glow-color);
+    transform: translateX(3px);
+}
+
+.comment-meta .comment-date {
+    margin-left: var(--spacing-sm);
+    font-size: 0.9em;
+    color: var(--text-color-muted);
+}
+
+.comment-meta i.fa-feather {
+    font-size: 0.8em;
+    color: var(--text-color-secondary);
+}
+
+.comment-content-text p {
+    font-size: 0.95em;
+    color: var(--text-color-secondary);
+    line-height: 1.5;
+    margin-bottom: 0;
+    white-space: pre-wrap;
+}
+
+/* --- PROFİL SAYFASI İYİLEŞTİRMELERİ (TAM EKRAN GENİŞLİK VE DÜZEN) --- */
+
+.profile-page-container.full-width-profile {
+    max-width: 100%;
+    padding-top: 60px;
+    padding-bottom: var(--spacing-xxl);
+    margin: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-header-container {
+    border: none;
+    border-radius: 0;
+    box-shadow: 0 5px 15px var(--shadow-medium);
+    margin-bottom: 0;
+    padding-bottom: var(--spacing-xxl);
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-cover {
+    width: 100%;
+    height: 350px;
+    background-size: cover;
+    background-position: center center;
+    position: relative;
+    z-index: 1;
+    border-bottom: none;
+}
+
+.profile-main-content-area {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-xl);
+    position: relative;
+    z-index: 2;
+    margin-top: -180px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 var(--spacing-lg);
+    flex-wrap: wrap;
+    /* Küçük ekranlarda sarmalamak için */
+    justify-content: center;
+}
+
+.profile-main-image-wrapper {
+    flex-shrink: 0;
+    padding-top: 0;
+    position: relative;
+    z-index: 3;
+}
+
+.profile-main-image {
+    width: 200px;
+    height: 200px;
+    border: 6px solid var(--primary-bg);
+    box-shadow: 0 0 0 5px var(--gradient-primary), 0 15px 40px var(--shadow-strong);
+    border-radius: var(--border-radius-circle);
+    object-fit: cover;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-main-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 7px var(--gradient-primary), 0 20px 50px rgba(0, 0, 0, 0.8);
+}
+
+.profile-info-block {
+    flex-grow: 1;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing-lg) var(--spacing-xl);
+    background-color: var(--info-block-bg);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 5px 15px var(--shadow-medium);
+    min-width: 320px;
+    max-width: 550px;
+    box-sizing: border-box;
+    margin-top: 80px;
+}
+
+.profile-username-wrapper {
+    margin-bottom: var(--spacing-md);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.profile-username {
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.profile-bio {
+    font-size: 1.05em;
+    line-height: 1.7;
+    color: var(--text-color-secondary);
+    max-width: 700px;
+    margin-bottom: var(--spacing-xl);
+}
+
+.profile-expertise-areas {
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-lg);
+    padding-bottom: var(--spacing-lg);
+    border-top: 1px solid var(--border-color-light);
+    border-bottom: 1px solid var(--border-color-light);
+    margin-bottom: var(--spacing-lg);
+}
+
+.expertise-title {
+    display: block;
+    font-size: 1.1em;
+    margin-bottom: var(--spacing-sm);
+    font-weight: 600;
+    color: var(--text-color-primary);
+}
+
+.expertise-title i {
+    color: var(--gradient-primary);
+    margin-right: var(--spacing-xxs);
+}
+
+.expertise-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+}
+
+.expertise-tag {
+    background-color: var(--expertise-tag-bg);
+    color: var(--expertise-tag-text);
+    padding: var(--spacing-xxs) var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    font-size: 0.88em;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(75, 85, 99, 0.3);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.expertise-tag:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    opacity: 0.98;
+}
+
+.profile-details-info-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md) var(--spacing-xl);
+    margin-top: var(--spacing-md);
+    font-size: 0.95em;
+    color: var(--text-color-secondary);
+    padding-top: var(--spacing-lg);
+    padding-bottom: var(--spacing-lg);
+    border-top: 1px solid var(--border-color-light);
+    border-bottom: 1px solid var(--border-color-light);
+    margin-bottom: var(--spacing-lg);
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    white-space: nowrap;
+}
+
+.detail-item i {
+    color: var(--focus-glow-color);
+    font-size: 1.2em;
+}
+
+.profile-social-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-lg);
+    padding-bottom: var(--spacing-lg);
+    border-top: 1px solid var(--border-color-light);
+    border-bottom: 1px solid var(--border-color-light);
+    margin-bottom: var(--spacing-lg);
+}
+
+.profile-social-links .social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: var(--border-radius-circle);
+    background-color: var(--tertiary-bg);
+    color: var(--text-color-primary);
+    font-size: 1.6em;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px var(--shadow-light);
+    border: 1px solid rgba(75, 85, 99, 0.3);
+}
+
+.profile-social-links .social-link .fa-globe {
+    color: #4CAF50;
+}
+
+.profile-social-links .social-link .fa-spotify {
+    color: #1DB954;
+}
+
+.profile-social-links .social-link:hover {
+    background: var(--gradient-primary);
+    color: white;
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px var(--shadow-medium);
+}
+
+.profile-social-links .social-link:hover i {
+    color: white;
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.6));
+}
+
+.profile-stats-actions-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex-shrink: 0;
+    min-width: 280px;
+    max-width: 400px;
+    padding: var(--spacing-lg);
+    background-color: var(--info-block-bg);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 5px 15px var(--shadow-medium);
+    box-sizing: border-box;
+    margin-top: 80px;
+}
+
+.profile-stats-grid {
+    display: flex;
+    justify-content: space-around;
+    gap: var(--spacing-md);
+    width: 100%;
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+    margin-bottom: var(--spacing-lg);
+}
+
+.stat-item {
+    text-align: center;
+    flex: 1;
+    padding: var(--spacing-xs);
+}
+
+.stat-link {
+    display: block;
+    text-decoration: none !important;
+    color: inherit;
+    transition: transform 0.2s ease;
+}
+
+.stat-link:hover {
+    transform: translateY(-2px);
+}
+
+.stat-number {
+    font-size: 2.2em;
+    font-weight: 700;
+    color: var(--text-color-primary);
+    display: block;
+    margin-bottom: var(--spacing-xxs);
+}
+
+.stat-label {
+    font-size: 1em;
+    color: var(--text-color-muted);
+    display: block;
+    font-weight: 500;
+}
+
+.profile-badges {
+    margin-top: var(--spacing-md);
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: var(--spacing-sm);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--border-color-light);
+    margin-bottom: var(--spacing-lg);
+    padding-left: 0;
+    padding-right: 0;
+    background-color: transparent;
+    box-shadow: none;
+    border-radius: 0;
+    border-bottom: none;
+}
+
+.badge-item {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.9em;
+    background-color: var(--tertiary-bg);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid rgba(75, 85, 99, 0.3);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-color-secondary);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.badge-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.badge-item i {
+    color: var(--focus-glow-color);
+}
+
+/* Mavi Tik Rozetinin kendi stilini burada belirleyelim. Bu, profil sayfasındaki badge-item'ı etkileyecek. */
+.badge-item[title="Bu kullanıcı özel bir kayıt anahtarı ile doğrulandı."] {
+    background-color: rgba(0, 123, 255, 0.2);
+    border-color: rgba(0, 123, 255, 0.5);
+    color: #007bff;
+}
+
+.badge-item[title="Bu kullanıcı özel bir kayıt anahtarı ile doğrulandı."] i {
+    color: #007bff;
+}
+
+/* Envy Circle rozetinin kendi stili */
+.badge-item[title="Socento'ya yeni katılanlara özel rozet."] {
+    background-color: rgba(0, 188, 212, 0.2);
+    border-color: rgba(0, 188, 212, 0.5);
+    color: #00bcd4;
+}
+
+.badge-item[title="Socento'ya yeni katılanlara özel rozet."] i {
+    color: #00bcd4;
+}
+
+
+.profile-actions-bar {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--border-color-light);
+    padding-bottom: 0;
+}
+
+.profile-edit-btn,
+.profile-follow-btn,
+.profile-unfollow-btn {
+    flex-grow: 1;
+    max-width: 180px;
+    font-size: 0.95em !important;
+    padding: var(--spacing-sm) var(--spacing-xl) !important;
+    border-radius: var(--border-radius-sm);
+}
+
+.profile-unfollow-btn {
+    background: var(--unfollow-button-bg) !important;
+    color: white !important;
+}
+
+.profile-unfollow-btn:hover {
+    background: var(--unfollow-button-hover) !important;
+}
+
+
+/* Sekmeli İçerik Alanı Wrapper (Tam Ekran Profil Sayfası İçin) */
+.profile-content-tabs-wrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin: var(--spacing-xxl) auto 0 auto;
+    background-color: var(--secondary-bg);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 8px 25px var(--shadow-medium);
+    border: 1px solid var(--border-color-light);
+    overflow: hidden;
+}
+
+.profile-content-tabs {
+    display: flex;
+    justify-content: space-around;
+    border-bottom: 1px solid var(--border-color-light);
+    width: 100%;
+    max-width: 100%;
+    padding: 0 var(--spacing-md);
+    background-color: var(--secondary-bg);
+}
+
+.profile-tab-item {
+    flex: 1;
+    text-align: center;
+    padding: var(--spacing-md) var(--spacing-sm);
+    font-size: 1.05em;
+    font-weight: 500;
+    gap: var(--spacing-xs);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color-muted);
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.profile-tab-item:hover {
+    color: var(--text-color-primary);
+    background-color: var(--tertiary-bg);
+}
+
+.profile-tab-item.active {
+    border-bottom-color: var(--gradient-primary);
+}
+
+.profile-tab-item.active i {
+    color: var(--gradient-primary);
+}
+
+.community-post-media {
+    width: 100%;
+    aspect-ratio: 1/1;
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #f5f6fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.community-post-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 10px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* --- FOLLOWERS/FOLLOWING SAYFASI --- */
+.users-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.user-card {
+    padding: var(--spacing-lg);
+    text-align: center;
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color-light);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 5px 15px var(--shadow-medium);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.user-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px var(--shadow-strong);
+}
+
+.user-card img {
+    width: 80px;
+    height: 80px;
+    border-radius: var(--border-radius-circle);
+    object-fit: cover;
+    margin-bottom: var(--spacing-sm);
+    border: 2px solid var(--gradient-primary);
+}
+
+.user-card h3 {
+    font-size: 1.2em;
+    margin-bottom: var(--spacing-xs);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.user-card h3 a {
+    color: inherit;
+    text-decoration: none;
+    transition: color var(--transition-duration) var(--transition-easing), transform 0.2s ease;
+}
+
+.user-card h3 a:hover {
+    color: var(--focus-glow-color);
+    text-decoration: none;
+    transform: translateX(3px);
+}
+
+.user-card p {
+    font-size: 0.95em;
+    color: var(--text-color-muted);
+    margin-bottom: var(--spacing-md);
+    line-height: 1.4;
+}
+
+.user-card .btn-primary-custom {
+    width: auto;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.85em;
+}
+
+/* --- MAVİ TİK İKON STİLLERİ --- */
+
+/* Profildeki büyük ikon için */
+.blue-tick-icon {
+    color: #007bff;
+    font-size: 0.8em;
+    margin-left: var(--spacing-xxs);
+    vertical-align: middle;
+}
+
+/* Inline mavi tik ikonu stili (postlar, yorumlar, önerilenler, mentionlar vb. yerler için) */
+.blue-tick-inline-icon {
+    color: #007bff;
+    font-size: 0.7em;
+    margin-left: 3px;
+    vertical-align: middle;
+}
+
+/* ROZET STİLLERİ GÜNCELLEMESİ (badge-item) */
+.badge-item i {
+    color: var(--focus-glow-color);
+}
+
+/* Mavi Tik Rozetinin kendi stilini burada belirleyelim. Bu, profil sayfasındaki badge-item'ı etkileyecek. */
+.badge-item[title="Bu kullanıcı özel bir kayıt anahtarı ile doğrulandı."] {
+    background-color: rgba(0, 123, 255, 0.2);
+    border-color: rgba(0, 123, 255, 0.5);
+    color: #007bff;
+}
+
+.badge-item[title="Bu kullanıcı özel bir kayıt anahtarı ile doğrulandı."] i {
+    color: #007bff;
+}
+
+/* Envy Circle rozetinin kendi stili */
+.badge-item[title="Socento'ya yeni katılanlara özel rozet."] {
+    background-color: rgba(0, 188, 212, 0.2);
+    border-color: rgba(0, 188, 212, 0.5);
+    color: #00bcd4;
+}
+
+.badge-item[title="Socento'ya yeni katılanlara özel rozet."] i {
+    color: #00bcd4;
+}
+
+
+/* --- RESPONSIVE TASARIM BAŞLANGICI --- */
+
+/* Masaüstü ve Geniş Ekranlar (Min 769px) */
+/* Bu blok, varsayılan masaüstü stillerini açıkça tanımlar
+   ve mobil overrides'larını geçersiz kılar. */
+@media (min-width: 769px) {
+    .nav-links#nav-links-mobile {
+        display: none !important;
+        /* Mobil menüyü tamamen gizle */
+    }
+
+    .menu-icon {
+        display: none !important;
+        /* Mobil menü ikonunu gizle */
+    }
+
+    .nav-links#nav-links-desktop {
+        display: flex !important;
+        /* Masaüstü menüsünü göster */
+    }
+
+    .search-form {
+        display: flex !important;
+        /* Masaüstünde arama çubuğunu göster */
+    }
+
+    .main-content-flex-wrapper {
+        flex-direction: row;
+        /* Yan yana sırala */
+        padding: var(--spacing-lg);
+        /* Masaüstü padding'i geri getir */
+        margin-top: 10px;
+        /* Navbar boşluğunu koru */
+        gap: var(--spacing-xl);
+        /* Sidebarlar arası boşluk */
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    .left-sidebar {
+        display: flex !important;
+        /* Sol sidebar'ı göster */
+        width: 280px;
+        /* Genişliği koru */
+        position: sticky;
+        /* Yapışkan konum */
+        top: 80px;
+    }
+
+    .right-sidebar {
+        display: flex !important;
+        /* Sağ sidebar'ı göster */
+        width: 300px;
+        /* Genişliği koru */
+        position: sticky;
+        /* Yapışkan konum */
+        top: 80px;
+    }
+
+    .feed-page-container {
+        padding: 0 !important;
+        /* Masaüstünde yan boşluklar ana wrapper'dan gelecek */
+        max-width: 650px !important;
+        /* Genişliği koru */
+    }
+
+    /* Profil Sayfası için Masaüstü Ayarları */
+    .profile-main-content-area {
+        flex-wrap: nowrap;
+        /* Saran profil alanı için sarmalamayı engelle */
+    }
+
+    .profile-info-block {
+        text-align: left;
+        /* Profil bilgi bloğunu sola hizala */
+    }
+
+    .profile-username {
+        justify-content: flex-start;
+        /* Profil kullanıcı adını sola hizala */
+    }
+
+    .profile-expertise-areas,
+    .profile-details-info-group,
+    .profile-social-links,
+    .profile-actions-bar {
+        padding-left: 0;
+        /* Soldaki iç dolguyu kaldır */
+        padding-right: 0;
+        /* Sağdaki iç dolguyu kaldır */
+        border-top: 1px solid var(--border-color-light);
+        /* Üst kenarlıkları geri getir */
+        border-bottom: 1px solid var(--border-color-light);
+        /* Alt kenarlıkları geri getir */
+        justify-content: flex-start;
+        /* İçerikleri sola hizala */
+    }
+
+    .profile-expertise-areas .expertise-tags {
+        justify-content: flex-start;
+        /* Etiketleri sola hizala */
+    }
+
+    .profile-details-info-group {
+        flex-direction: row;
+        /* Yatay sırala */
+    }
+
+    .profile-content-tabs {
+        flex-wrap: nowrap;
+        /* Sekmeleri sarmalamayı engelle */
+    }
+
+    .profile-tab-item {
+        border-left: none !important;
+        /* Medya sorgusundaki override'ı kaldır */
+        border-bottom: 3px solid transparent !important;
+        /* Alt kenarlığı geri getir */
+        width: auto !important;
+        /* Navbar boşluğunu koru */
+        gap: var(--spacing-xl);
+        /* Sidebarlar arası boşluk */
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    .left-sidebar {
+        display: flex !important;
+        /* Sol sidebar'ı göster */
+        width: 280px;
+        /* Genişliği koru */
+        position: sticky;
+        /* Yapışkan konum */
+        top: 80px;
+    }
+
+    .right-sidebar {
+        display: flex !important;
+        /* Sağ sidebar'ı göster */
+        width: 300px;
+        /* Genişliği koru */
+        position: sticky;
+        /* Yapışkan konum */
+        top: 80px;
+    }
+
+    .feed-page-container {
+        padding: 0 !important;
+        /* Masaüstünde yan boşluklar ana wrapper'dan gelecek */
+        max-width: 650px !important;
+        /* Genişliği koru */
+    }
+
+    /* Profil Sayfası için Masaüstü Ayarları */
+    .profile-main-content-area {
+        flex-wrap: nowrap;
+        /* Saran profil alanı için sarmalamayı engelle */
+    }
+
+    .profile-info-block {
+        text-align: left;
+        /* Profil bilgi bloğunu sola hizala */
+    }
+
+    .profile-username {
+        justify-content: flex-start;
+        /* Profil kullanıcı adını sola hizala */
+    }
+
+    .profile-expertise-areas,
+    .profile-details-info-group,
+    .profile-social-links,
+    .profile-actions-bar {
+        padding-left: 0;
+        /* Soldaki iç dolguyu kaldır */
+        padding-right: 0;
+        /* Sağdaki iç dolguyu kaldır */
+        border-top: 1px solid var(--border-color-light);
+        /* Üst kenarlıkları geri getir */
+        border-bottom: 1px solid var(--border-color-light);
+        /* Alt kenarlıkları geri getir */
+        justify-content: flex-start;
+        /* İçerikleri sola hizala */
+    }
+
+    .profile-expertise-areas .expertise-tags {
+        justify-content: flex-start;
+        /* Etiketleri sola hizala */
+    }
+
+    .profile-details-info-group {
+        flex-direction: row;
+        /* Yatay sırala */
+    }
+
+    .post-grid img {
+        border-radius: 10px;
+    }
+
+    .post-grid video {
+        border-radius: 10px;
+    }
+
+    /* --- Izgara Kapsayıcısı ve Izgaranın Kendisi --- */
+    .profile-posts-grid-container {
+
+        padding: var(--spacing-md);
+        /* Mobil için varsayılan boşluk */
+    }
+
+    .post-grid {
+        display: grid;
+        /* Mobil için varsayılan olarak 2 sütun daha iyi olabilir,
+       veya 3 sütun kalıp boşluk (gap) azaltılabilir. Biz 3 ile başlayalım. */
+        grid-template-columns: repeat(3, 1fr);
+        gap: 4px;
+        /* Mobil için daha küçük bir boşluk */
+    }
+
+    /* --- Izgara İçindeki Her Bir Eleman (Kare Yapıyı Oluşturan Anahtar) --- */
+    .post-grid-item {
+        position: relative;
+        /* Video overlay gibi iç elemanları konumlandırmak için */
+        display: block;
+        /* a etiketinin düzgün davranması için */
+
+        /* Bu özellik elemanın en/boy oranını 1:1 (kare) yapar. Sihir burada! */
+        aspect-ratio: 1 / 1;
+        overflow: hidden;
+        /* İçerik taşarsa gizle */
+    }
+
+    /* --- Izgara Elemanı İçindeki Resim, Video ve Yazı Alanları --- */
+    .post-grid-item img,
+    .post-grid-item video,
+    .post-grid-item .text-post-placeholder {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        /* Resmi/videoyu oranını bozmadan kareye sığdır ve kırp */
+        transition: transform 0.3s ease;
+    }
+
+    /* Yazı gönderileri için ek stil (varsa) */
+    .post-grid-item .text-post-placeholder {
+        background: hsla(42, 93%, 57%, 1);
+        background: linear-gradient(90deg, hsla(42, 93%, 57%, 1) 0%, hsla(358, 78%, 62%, 1) 100%);
+        background: -moz-linear-gradient(90deg, hsla(42, 93%, 57%, 1) 0%, hsla(358, 78%, 62%, 1) 100%);
+        background: -webkit-linear-gradient(90deg, hsla(42, 93%, 57%, 1) 0%, hsla(358, 78%, 62%, 1) 100%);
+        filter: progid: DXImageTransform.Microsoft.gradient(startColorstr="#F7BA2C", endColorstr="#EA5459", GradientType=1);
+        padding: 12px;
+        display: flex;
+        border-radius: 10px;
+        background-color: rgba(75, 85, 99, 0.3);
+        text-align: center;
+        flex-direction: column;
+        justify-content: center;
+        box-sizing: border-box;
+        /* Padding'in boyutu etkilememesi için */
+    }
+
+    .post-grid-item .text-post-placeholder p {
+        margin: 0;  
+        font-size: 1.1em;
+        color: var(--text-color-secondary);
+        font-weight: bolder;
+    }
+
+
+    /* --- Hover Efektleri --- */
+    .post-grid-item:hover img,
+    .post-grid-item:hover video {
+        transform: scale(1.05);
+        /* Medyayı hafifçe büyüt */
+    }
+
+    /* Videolar için play butonu overlay'i */
+    .post-grid-item .video-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.3);
+        color: white;
+        font-size: 3em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        /* Normalde gizli */
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+        /* Üzerindeki tıklamaları engelleme */
+    }
+
+    .post-grid-item:hover .video-overlay {
+        opacity: 1;
+        /* Hover'da görünür yap */
+    }
+
+    /* Instagram gibi genel bir overlay isterseniz, bu kodu kullanabilirsiniz: */
+    /*
+.post-grid-item .post-overlay-info { ... }
+.post-grid-item:hover .post-overlay-info { opacity: 1; }
+*/
+    .profile-content-tabs {
+        flex-wrap: nowrap;
+        /* Sekmeleri sarmalamayı engelle */
+    }
+
+    .profile-tab-item {
+        border-left: none !important;
+        /* Medya sorgusundaki override'ı kaldır */
+        border-bottom: 3px solid transparent !important;
+        /* Alt kenarlığı geri getir */
+        width: auto !important;
+        /* Genişliği oto yap */
+    }
+
+    .profile-tab-item:nth-last-child(-n + 2) {
+        border-bottom: 3px solid transparent !important;
+        /* Alt kenarlığı geri getir */
+    }
+
+    .profile-posts-grid-container {
+        padding: var(--spacing-lg) var(--spacing-md);
+        /* Masaüstü padding'i geri getir */
+    }
+
+    .post-grid {
+        grid-template-columns: repeat(3, 1fr);
+        /* 3 sütunlu düzeni geri getir */
+    }
+
+    .post-page-layout {
+        flex-wrap: nowrap;
+        /* Yan yana durmasını sağla */
+    }
+
+    .post-detail-card,
+    .comments-section {
+        margin-bottom: 0;
+        /* Kartlar arasına mobil boşluğu kaldır */
+    }
+}
+
+
+/* Mobil Cihazlar (768px ve altı) */
+@media (max-width: 768px) {
+
+    /* Navbar Düzenlemeleri */
+    .nav-container {
+        padding: 0 var(--spacing-sm);
+        /* Daha dar yan boşluklar */
+    }
+
+    .search-form {
+        display: none;
+        /* Arama çubuğunu mobil görünümde gizle */
+    }
+
+    .nav-links#nav-links-desktop {
+        display: none;
+        /* Masaüstü menüsünü gizle */
+    }
+
+    .menu-icon {
+        display: block;
+        /* Mobil menü ikonunu göster */
+    }
+
+    .nav-links#nav-links-mobile {
+
+        flex-direction: column;
+        align-items: stretch;
+        /* Elementleri yatayda doldur */
+        padding: var(--spacing-md) 0;
+        /* base.html'deki inline stil: position: fixed; top: 60px; width: 100%; background: var(--secondary-bg); z-index: 999; */
+        box-shadow: 0 8px 15px var(--shadow-medium);
+        border-bottom-left-radius: var(--border-radius-md);
+        border-bottom-right-radius: var(--border-radius-md);
+    }
+
+    /* #nav-links-mobile'ın varsayılan display'i JS tarafından yönetiliyor. */
+
+    .nav-links#nav-links-mobile li a {
+        padding: var(--spacing-sm) var(--spacing-xl);
+        /* Daha büyük dokunma alanı */
+        justify-content: flex-start;
+        border-bottom: 1px solid var(--border-color-light);
+        /* Menü öğeleri arasına çizgi */
+        border-radius: 0;
+        /* Köşeli olsun */
+    }
+
+    .nav-links#nav-links-mobile li:last-child a {
+        border-bottom: none;
+        /* Son öğede çizgi olmasın */
+    }
+
+    .nav-links#nav-links-mobile li a i {
+        margin-right: var(--spacing-sm);
+        /* İkon ile metin arasına boşluk */
+    }
+
+    /* Ana İçerik Düzenlemesi (home.html için) */
+    .main-content-flex-wrapper {
+        flex-direction: column;
+        /* Dikey olarak sırala */
+        padding: var(--spacing-sm);
+        /* Daha dar yan boşluklar */
+        margin-top: 60px;
+        /* Navbar'dan sonra boşluk (mobil menü kapalıyken) */
+        gap: var(--spacing-lg);
+        /* Bölümler arası boşluk */
+    }
+
+    .left-sidebar,
+    .right-sidebar {
+        display: none;
+        /* Mobil cihazlarda sidebar'ları gizle */
+    }
+
+    .feed-page-container {
+        padding: 0 var(--spacing-sm) !important;
+        /* Akışın yan boşluklarını ayarla */
+        max-width: 100% !important;
+        /* Tam genişlikte olsun */
+    }
+
+    .instagram-post-card {
+        margin-left: 0;
+        margin-right: 0;
+        border-radius: var(--border-radius-sm);
+        /* Daha küçük radius */
+    }
+
+    /* Profil Sayfası Düzenlemeleri */
+    .profile-header-container {
+        padding-bottom: 70px
+            /* Daha az boşluk */
+    }
+
+    .profile-cover {
+        height: 200px;
+        /* Mobil için daha kısa kapak fotoğrafı */
+    }
+
+    .profile-main-content-area {
+        flex-direction: column;
+        /* Dikey sıralama */
+        align-items: center;
+        margin-top: -100px;
+        /* Profil resmini daha yukarı kaydır */
+        padding: 0 var(--spacing-sm);
+        /* Yan boşluklar */
+    }
+
+    .profile-main-image-wrapper {
+        width: 150px;
+        /* Daha küçük profil resmi */
+        height: 150px;
+        margin-bottom: var(--spacing-md);
+    }
+
+    .profile-main-image {
+        width: 150px;
+        height: 150px;
+        border-width: 4px;
+        /* Daha ince kenarlık */
+        box-shadow: 0 0 0 3px var(--gradient-primary), 0 8px 20px var(--shadow-medium);
+    }
+
+    .profile-info-block,
+    .profile-stats-actions-block {
+        width: 100%;
+        max-width: 100%;
+        margin-top: 0;
+        /* İçerik akışını bozmaması için */
+        padding: var(--spacing-md);
+        /* Daha dar boşluklar */
+        text-align: center;
+        /* Ortala */
+    }
+
+    .profile-username {
+        font-size: 2.5rem;
+        /* Daha küçük font */
+        margin-bottom: var(--spacing-sm);
+        justify-content: center;
+        /* Ortala */
+    }
+
+    .profile-bio {
+        font-size: 0.95em;
+        margin-bottom: var(--spacing-md);
+    }
+
+    .profile-expertise-areas,
+    .profile-details-info-group,
+    .profile-social-links,
+    .profile-actions-bar {
+        padding-left: var(--spacing-sm);
+        padding-right: var(--spacing-sm);
+        border-top: none;
+        /* Üst kenarlıkları kaldır */
+        border-bottom: 1px solid var(--border-color-light);
+        /* Aralarına çizgi ekle */
+        margin-bottom: var(--spacing-md);
+        padding-top: var(--spacing-md);
+        padding-bottom: var(--spacing-md);
+        justify-content: center;
+        /* İçerikleri ortala */
+    }
+
+    .profile-expertise-areas .expertise-tags,
+    .profile-details-info-group,
+    .profile-social-links {
+        justify-content: center;
+        /* İçerikleri ortala */
+    }
+
+    .profile-details-info-group {
+        flex-direction: column;
+        /* Dikey sırala */
+    }
+
+    .profile-social-links .social-link {
+        width: 44px;
+        /* Daha küçük butonlar */
+        height: 44px;
+        font-size: 1.4em;
+    }
+
+    .profile-stats-grid {
+        flex-wrap: wrap;
+        /* İstatistikleri sarmala */
+        justify-content: space-around;
+        /* Boşlukları yay */
+        padding: var(--spacing-sm) 0;
+        border-top: none;
+        /* Üst çizgiyi kaldır */
+    }
+
+    .stat-item {
+        flex: auto;
+        /* Esnekliği ayarla */
+        min-width: 100px;
+        /* Minimum genişlik */
+    }
+
+    .stat-number {
+        font-size: 1.8em;
+    }
+
+    .profile-actions-bar {
+        flex-direction: column;
+        /* Dikey sırala */
+        align-items: center;
+    }
+
+    .profile-edit-btn,
+    .profile-follow-btn,
+    .profile-unfollow-btn {
+        width: 80% !important;
+        /* Butonların genişliğini ayarla */
+        max-width: 250px;
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .profile-actions-bar a:last-child {
+        margin-bottom: 0;
+    }
+
+    /* Profil Sekmeleri */
+    .profile-content-tabs-wrapper {
+        margin-top: var(--spacing-lg) auto 0 auto;
+        /* Daha az üst boşluk */
+        border-radius: var(--border-radius-sm);
+        box-shadow: 0 2px 10px var(--shadow-light);
+    }
+
+    .profile-content-tabs {
+        flex-wrap: wrap;
+        /* Sekmeleri sarmala */
+        padding: 0;
+        justify-content: center;
+    }
+
+    .profile-tab-item {
+        flex: auto;
+        /* Sekme öğelerini esnek yap */
+        width: 50%;
+        /* Yan yana iki sekme */
+        font-size: 0.95em;
+        padding: var(--spacing-sm) var(--spacing-xs);
+        border-bottom: 1px solid var(--border-color-light);
+    }
+
+    .profile-tab-item:nth-child(even) {
+        border-left: 1px solid var(--border-color-light);
+        /* İkinci sütun için sol kenarlık */
+    }
+
+    .profile-tab-item:nth-last-child(-n + 2) {
+        /* Son iki öğe için alt kenarlığı kaldır */
+        border-bottom: none;
+    }
+
+    /* Tekli sekmeler için kenarlık düzeltmeleri */
+    @media (max-width: 480px) {
+        .profile-tab-item {
+            width: 100%;
+            /* Çok küçük ekranlarda tek sütun */
+            border-left: none !important;
+        }
+
+        .profile-tab-item:last-child {
+            border-bottom: none;
+        }
+    }
+
+    /* Gönderi Grid Düzenlemesi (Mobil için 2 sütun) */
+    .post-grid {
+        grid-template-columns: repeat(2, 1fr);
+        /* Mobil için 2 sütun */
+        gap: var(--spacing-sm);
+        padding: 0 var(--spacing-xs);
+        /* Daha dar yan boşluklar */
+    }
+
+    .profile-posts-grid-container {
+        padding: var(--spacing-md) 0;
+    }
+
+    /* Post Detail Sayfası (Mobil Düzenleme) */
+    .post-page-layout {
+        flex-direction: column;
+        /* Dikey sırala */
+        padding: var(--spacing-sm);
+    }
+
+    .post-detail-card,
+    .comments-section {
+        width: 100%;
+        min-width: unset;
+        /* Min genişliği kaldır */
+        max-width: 100%;
+        margin-bottom: var(--spacing-lg);
+        /* Her iki kart arasına boşluk */
+    }
+
+    .post-detail-card {
+        padding: 0;
+        /* Karta iç dolgu değil, içerik elementlerine dolgu */
+    }
+
+    .post-detail-card .post-header,
+    .post-detail-card .post-content-area,
+    .post-detail-card .post-actions {
+        padding-left: var(--spacing-md);
+        padding-right: var(--spacing-md);
+    }
+
+    .comments-section {
+        margin-top: 0;
+        /* Üst boşluğu kaldır */
+        padding: var(--spacing-md);
+        /* Daha kompakt iç boşluk */
+    }
+
+    .comments-title {
+        font-size: 1.5rem;
+        /* Daha küçük başlık */
+        margin-bottom: var(--spacing-md);
+    }
+
+    .comment-list {
+        max-height: 400px;
+        /* Mobil için daha küçük kaydırılabilir alan */
+        padding-right: 0;
+        /* İç kaydırma çubuğu için boşluk olmasın */
+    }
+}
+
+/* Küçük Telefonlar (480px ve altı) */
+@media (max-width: 480px) {
+    .nav-brand {
+        font-size: 20px;
+    }
+
+    .nav-links#nav-links-mobile li a {
+        font-size: 14px;
+        padding: var(--spacing-sm) var(--spacing-lg);
+    }
+
+    /* Arama çubuğu zaten 768px altında gizli */
+
+    /* Form kartları için daha kompakt */
+    .card-custom {
+        padding: var(--spacing-lg);
+        margin: var(--spacing-md) auto;
+    }
+
+    /* Profil sayfası başlık fontu */
+    .profile-username {
+        font-size: 2rem;
+    }
+
+    .profile-main-image {
+        width: 120px;
+        height: 120px;
+    }
+
+    .profile-main-content-area {
+        margin-top: -80px;
+    }
+
+    .profile-info-block,
+    .profile-stats-actions-block {
+        padding: var(--spacing-md);
+    }
+
+    .profile-social-links .social-link {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2em;
+    }
+
+    .profile-tab-item {
+        font-size: 0.9em;
+    }
+
+    .post-grid {
+        grid-template-columns: 1fr;
+        /* Çok küçük ekranlarda tek sütun */
+    }
+
+    .instagram-post-card .post-author-img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .instagram-post-card .post-author-username {
+        font-size: 1em;
+    }
+
+    .instagram-post-card .action-icon {
+        font-size: 1.3em;
+    }
+
+    .instagram-post-card .like-count,
+    .instagram-post-card .comment-count {
+        font-size: 0.9em;
+    }
+
+    .post-detail-card .post-title.gradient-text {
+        font-size: 1.5rem;
+    }
+
+    .comments-title {
+        font-size: 1.3rem;
+    }
+
+    .comment-card {
+        padding: var(--spacing-sm);
+    }
+}
+
+/* --- ECHOES FORUM STİLLERİ (YENİ EKLENEN) --- */
+
+.echo-card {
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color-light);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 6px 18px var(--shadow-medium);
+    margin-bottom: var(--spacing-lg);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.echo-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px var(--shadow-strong);
+}
+
+.echo-card .echo-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-bottom: 1px solid var(--border-color-light);
+}
+
+.echo-card .echo-author-img {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--border-radius-circle);
+    object-fit: cover;
+    border: 2px solid var(--gradient-primary);
+    flex-shrink: 0;
+}
+
+.echo-header .echo-author-img {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--border-radius-circle);
+    object-fit: cover;
+    border: 2px solid var(--gradient-primary);
+    flex-shrink: 0;
+}
+
+.echo-card .echo-author-info {
+    flex-grow: 1;
+}
+
+.echo-card .echo-author-username {
+
+    font-weight: 600;
+    font-size: 1.05em;
+    color: var(--text-color-primary);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: var(--spacing-xxs);
+    transition: color var(--transition-duration) var(--transition-easing), transform 0.2s ease;
+}
+
+.echo-card .echo-author-username:hover {
+    color: var(--focus-glow-color);
+    text-decoration: none;
+}
+
+.echo-card .echo-date {
+    font-size: 0.8em;
+    color: var(--text-color-muted);
+    display: block;
+}
+
+.echo-content-area {
+
+    padding: var(--spacing-md);
+    color: var(--text-color-secondary);
+}
+
+.echo-content-area .echo-title {
+    font-size: 1.5em;
+    /* Echo başlığı daha büyük */
+    font-weight: 700;
+    color: var(--text-color-primary);
+    margin-bottom: var(--spacing-xs);
+    line-height: 1.3;
+}
+
+.echo-content-area .echo-content-text {
+    font-size: 1.1em;
+    /* Echo içeriği biraz daha büyük */
+    line-height: 1.7;
+    color: var(--text-color-primary);
+    /* Daha belirgin metin rengi */
+    white-space: pre-wrap;
+    margin-bottom: var(--spacing-md);
+}
+
+.echo-topic-badge {
+    display: inline-block;
+    background-color: var(--tertiary-bg);
+    color: var(--focus-glow-color);
+    /* Canlı renk */
+    padding: var(--spacing-xxs) var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    font-size: 0.9em;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid var(--focus-glow-color);
+}
+
+.echo-topic-badge:hover {
+    background-color: var(--focus-glow-color);
+    color: var(--primary-bg);
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px var(--shadow-medium);
+}
+
+.echo-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md) var(--spacing-md);
+    border-top: 1px solid var(--border-color-light);
+    background-color: var(--secondary-bg);
+}
+
+.echo-actions .action-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5em;
+    color: var(--text-color-secondary);
+    transition: color 0.2s ease, transform 0.2s ease;
+    padding: var(--spacing-xs);
+}
+
+.echo-actions .action-icon:hover {
+    color: var(--text-color-primary);
+    transform: scale(1.15);
+}
+
+.rise-button i {
+    color: var(--text-color-secondary);
+}
+
+.rise-button.risen i {
+    color: #28a745;
+    /* Yeşil */
+    animation: bounceIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.fade-button i {
+    color: var(--text-color-secondary);
+}
+
+.fade-button.faded i {
+    color: #dc3545;
+    /* Kırmızı */
+    animation: bounceIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.rise-count,
+.fade-count {
+    font-size: 0.95em;
+    color: var(--text-color-muted);
+    font-weight: 500;
+    margin-left: -5px;
+}
+
+.echo-comment-button {
+    margin-left: auto;
+    /* Yorum butonunu sağa yasla */
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    color: var(--text-color-secondary);
+    transition: color var(--transition-duration) var(--transition-easing), transform 0.2s ease;
+}
+
+.echo-comment-button:hover {
+    color: var(--text-color-primary);
+    transform: translateY(-1px);
+}
+
+/* Echoes Forum Sol Sidebar Ayarları */
+/* app.py'de Echoes rozet ikon sınıfları: 'fas fa-comment-dots', 'fas fa-volume-up', 'fas fa-wind' */
+.badge-item[title="10 benzersiz Echo konu başlığı açtı."] {
+    background-color: rgba(255, 208, 79, 0.15);
+    /* Sarımsı ton */
+    border-color: rgba(255, 208, 79, 0.4);
+    color: #FFD04F;
+}
+
+.badge-item[title="10 benzersiz Echo konu başlığı açtı."] i {
+    color: #FFD04F;
+}
+
+.badge-item[title="50 benzersiz Echo konu başlığı açtı."] {
+    background-color: rgba(167, 139, 250, 0.15);
+    /* Morumsu ton */
+    border-color: rgba(167, 139, 250, 0.4);
+    color: #A78BFA;
+}
+
+.badge-item[title="50 benzersiz Echo konu başlığı açtı."] i {
+    color: #A78BFA;
+}
+
+.badge-item[title="100 benzersiz Echo konu başlığı açtı."] {
+    background-color: rgba(231, 76, 60, 0.15);
+    /* Kırmızımsı ton */
+    border-color: rgba(231, 76, 60, 0.4);
+    color: #E74C3C;
+}
+
+.badge-item[title="100 benzersiz Echo konu başlığı açtı."] i {
+    color: #E74C3C;
+}
+
+
+/* --- MOBİL HIZLI ERİŞİM BUTONLARI (INSTAGRAM STORY TARZI) --- */
+.mobile-story-actions-container {
+    display: none;
+    /* Varsayılan olarak masaüstünde gizli */
+    width: 100%;
+    padding: var(--spacing-md) var(--spacing-sm);
+    /* İç boşluklar */
+    background-color: var(--secondary-bg);
+    /* Arka plan rengi */
+    border-bottom: 1px solid var(--border-color-light);
+    /* Alt kenarlık */
+    box-shadow: 0 2px 8px var(--shadow-medium);
+    /* Hafif gölge */
+    position: absolute;
+    /* Sayfayı aşağı kaydırırken sabit kalması için */
+    top: 20px;
+    /* Navbar'ın hemen altında */
+    z-index: 900;
+    /* Navbar'dan az, içerikten fazla */
+    overflow-x: auto;
+    /* Yatay kaydırma gerekirse */
+    white-space: nowrap;
+    /* Öğelerin tek satırda kalmasını sağla */
+    -webkit-overflow-scrolling: touch;
+    /* iOS'ta akıcı kaydırma */
+    scrollbar-width: none;
+    /* Firefox'ta scrollbar'ı gizle */
+    -ms-overflow-style: none;
+    /* IE/Edge'de scrollbar'ı gizle */
+}
+
+/* Chrome, Safari, Opera'da scrollbar'ı gizle */
+.mobile-story-actions-container::-webkit-scrollbar {
+    display: none;
+}
+
+.action-circle {
+    display: inline-flex;
+    /* Yan yana sıralama */
+    flex-direction: column;
+    /* İkon ve metni alt alta sırala */
+    align-items: center;
+    text-align: center;
+    margin: 0 var(--spacing-xs);
+    /* Daireler arası boşluk */
+    cursor: pointer;
+    text-decoration: none;
+    flex-shrink: 0;
+    /* Küçülmesini engelle */
+}
+
+.action-circle:first-child {
+    margin-left: 0;
+    /* İlk elementin solunda boşluk olmasın */
+}
+
+.action-circle:last-child {
+    margin-right: 0;
+    /* Son elementin sağında boşluk olmasın */
+}
+
+.action-circle a {
+    text-decoration: none;
+    color: var(--text-color-secondary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    /* İkon ve metin arası boşluk */
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.action-circle a:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+    color: var(--text-color-primary);
+}
+
+.action-circle a i,
+.action-circle a img {
+    width: 55px;
+    /* İkon/Resim boyutu */
+    height: 55px;
+    /* İkon/Resim boyutu */
+    border-radius: var(--border-radius-circle);
+    /* Yuvarlak yap */
+    object-fit: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8em;
+    /* İkon boyutu */
+    background: var(--tertiary-bg);
+    /* Arka plan */
+    color: var(white);
+    /* İkon rengi */
+    border: 2px solid var(--border-color-light);
+    /* Hafif kenarlık */
+    box-shadow: 0 2px 8px var(--shadow-light);
+    transition: all 0.2s ease;
+}
+
+/* Profil resmi için özel stil */
+.action-circle a img {
+    border: 2px solid var(--gradient-primary);
+    /* Profil resmi için farklı kenarlık */
+    box-shadow: 0 2px 8px var(--shadow-medium);
+}
+
+.action-circle a span {
+    font-size: 0.85em;
+    /* Metin boyutu */
+    color: var(--text-color-muted);
+    margin-top: var(--spacing-xxs);
+    white-space: nowrap;
+    /* Metnin tek satırda kalmasını sağla */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 65px;
+    /* Metin için maksimum genişlik */
+}
+
+
+/* --- RESPONSIVE TASARIM BAŞLANGICI --- */
+
+/* Mobil Cihazlar (768px ve altı) */
+@media (max-width: 768px) {
+    /* ... Mevcut 768px altı kurallarınız ... */
+
+    /* Navbar'ın altındaki hızlı erişim butonlarını göster */
+    .mobile-story-actions-container {
+        display: flex;
+        /* Mobil görünümde flex olarak göster */
+    }
+
+    /* main-content-wrapper'ın padding-top değerini ayarla
+       Navbar (60px) + mobile-story-actions-container'ın yüksekliği (yaklaşık 90px) = ~150px
+       Bu sayede içerik, butonların altına kaymayacak.
+    */
+    .main-content-wrapper {
+        padding-top: calc(70px + var(--spacing-md) * 2 + 55px + 0.85em * 1.5);
+        /* Navbar + padding + ikon + yazı yüksekliği */
+        /* Yaklaşık olarak: 70px (nav) + 32px (padding) + 55px (ikon) + ~15px (yazı) = ~172px */
+        /* Daha güvenli bir değer için: */
+        padding-top: 175px;
+    }
+
+    /* Mobil hızlı erişim butonları aktifken alttaki mobil navbarı gizle */
+    .mobile-quick-actions {
+        /* Önceki alttaki sabit butonlar divi */
+        display: none !important;
+        /* Bu kısım tamamen gizli kalmalı */
+    }
+}
+
+/* Küçük Telefonlar (480px ve altı) */
+@media (max-width: 480px) {
+    /* ... Mevcut 480px altı kurallarınız ... */
+
+    .action-circle a i,
+    .action-circle a img {
+        width: 50px;
+        /* Küçük telefonlarda biraz daha küçük */
+        height: 50px;
+        font-size: 1.6em;
+    }
+
+    .action-circle a span {
+        font-size: 0.8em;
+        max-width: 60px;
+    }
+
+    .mobile-story-actions-container {
+        padding: var(--spacing-sm) var(--spacing-xs);
+        /* Daha dar yan boşluklar */
+    }
+}
+
+/* Masaüstü ve Geniş Ekranlar (Min 769px) */
+@media (min-width: 769px) {
+    /* ... Mevcut 769px ve üstü kurallarınız ... */
+
+    .mobile-story-actions-container {
+        display: none !important;
+        /* Masaüstünde kesinlikle gizle */
+    }
+}
+
+/* --- MOBİL HIZLI ERİŞİM BUTONLARI (INSTAGRAM STORY TARZI) --- */
+.mobile-story-actions-container {
+    display: none;
+    /* Varsayılan olarak masaüstünde gizli */
+    width: 100%;
+    padding: var(--spacing-md) var(--spacing-sm);
+    /* İç boşluklar */
+    background-color: var(--secondary-bg);
+    /* Arka plan rengi */
+    border-bottom: 1px solid var(--border-color-light);
+    /* Alt kenarlık */
+    box-shadow: 0 2px 8px var(--shadow-medium);
+    /* Hafif gölge */
+    /* Eski: position: sticky; */
+    /* KALDIRILDI */
+    /* Eski: top: 60px; */
+    /* KALDIRILDI */
+    z-index: 900;
+    /* Navbar'dan az, içerikten fazla */
+    overflow-x: auto;
+    /* Yatay kaydırma gerekirse */
+    white-space: nowrap;
+    /* Öğelerin tek satırda kalmasını sağla */
+    -webkit-overflow-scrolling: touch;
+    /* iOS'ta akıcı kaydırma */
+    scrollbar-width: none;
+    /* Firefox'ta scrollbar'ı gizle */
+    -ms-overflow-style: none;
+    /* IE/Edge'de scrollbar'ı gizle */
+
+    /* YENİ EKLEMELER - ORTALAMA İÇİN */
+    display: flex;
+    /* Varsayılan olarak flex, medya sorgusu ile değişecek */
+    justify-content: center;
+    /* İçerikleri yatayda ortala */
+    align-items: center;
+    /* Dikeyde ortala */
+    gap: var(--spacing-md);
+    /* Butonlar arası boşluk */
+    margin-top: 60px;
+    /* Navbar'ın hemen altına boşluk bırak */
+    box-sizing: border-box;
+    /* Padding dahil genişliği hesapla */
+}
+
+/* Chrome, Safari, Opera'da scrollbar'ı gizle */
+.mobile-story-actions-container::-webkit-scrollbar {
+    display: none;
+}
+
+.action-circle {
+    display: inline-flex;
+    /* Yan yana sıralama */
+    flex-direction: column;
+    /* İkon ve metni alt alta sırala */
+    align-items: center;
+    text-align: center;
+    /* margin: 0 var(--spacing-xs); */
+    /* Bu artık container'daki gap ile yönetiliyor */
+    cursor: pointer;
+    text-decoration: none;
+    flex-shrink: 0;
+    /* Küçülmesini engelle */
+}
+
+/* action-circle:first-child ve :last-child için margin sıfırlaması artık gerekmiyor
+   çünkü container'da justify-content: center ve gap kullanıyoruz.
+   Eğer hala yanlarda boşluk istiyorsanız, mobile-story-actions-container'a yatay padding eklemelisiniz.
+*/
+
+.action-circle a {
+    text-decoration: none;
+    color: var(--text-color-secondary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    /* İkon ve metin arası boşluk */
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.action-circle a:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+    color: var(--text-color-primary);
+}
+
+.action-circle a i,
+.action-circle a img {
+    width: 55px;
+    /* İkon/Resim boyutu */
+    height: 55px;
+    /* İkon/Resim boyutu */
+    border-radius: var(--border-radius-circle);
+    /* Yuvarlak yap */
+    object-fit: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8em;
+    /* İkon boyutu */
+    background: var(--tertiary-bg);
+    /* Arka plan */
+    color: var(white);
+    /* İkon rengi */
+    border: 2px solid var(--border-color-light);
+    /* Hafif kenarlık */
+    box-shadow: 0 2px 8px var(--shadow-light);
+    transition: all 0.2s ease;
+}
+
+/* Profil resmi için özel stil */
+.action-circle a img {
+    border: 2px solid var(--gradient-primary);
+    /* Profil resmi için farklı kenarlık */
+    box-shadow: 0 2px 8px var(--shadow-medium);
+}
+
+.action-circle a span {
+    font-size: 0.85em;
+    /* Metin boyutu */
+    color: var(--text-color-muted);
+    margin-top: var(--spacing-xxs);
+    white-space: nowrap;
+    /* Metnin tek satırda kalmasını sağla */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 65px;
+    /* Metin için maksimum genişlik */
+}
+
+
+/* --- RESPONSIVE TASARIM BAŞLANGICI --- */
+
+/* Mobil Cihazlar (768px ve altı) */
+@media (max-width: 768px) {
+    /* ... Mevcut 768px altı kurallarınız ... */
+
+    /* Navbar'ın altındaki hızlı erişim butonlarını göster */
+    .mobile-story-actions-container {
+        display: flex;
+        /* Mobil görünümde flex olarak göster */
+        /* Kaydırmayla gitmesi için position: relative ve top kaldırıldı, margin-top ile boşluk veriyoruz */
+    }
+
+    /* main-content-wrapper'ın padding-top değerini ayarla
+       Navbar (60px) + mobile-story-actions-container'ın margin-top (60px)
+       Bu sayede içerik, butonların altına kaymayacak ve butonlar üstten doğru konumda başlayacak.
+    */
+    .main-content-wrapper {
+        padding-top: var(--spacing-md);
+        /* İçerik normal akışta başlayacak, yukarıdaki container'ın margin-top'ı etkileyecek */
+        /* Navbar'ın altında kalan mobil-story-actions-container'ın kapladığı alanı kompanse etmek için main-content-wrapper'ın padding-top'ına dikkat edin.
+           Çünkü mobile-story-actions-container artık sticky değil, normal akışta. */
+        /* Eğer mobile-story-actions-container'ın yüksekliği ~90px ise, ana içerik 60px nav + 90px butondan sonra başlamalı. */
+        /* Bunu da .page-container'a padding-top vererek veya .main-content-wrapper'a uygun margin-top vererek yapabiliriz. */
+        /* Şimdilik: mobile-story-actions-container'ın yüksekliğini hesaplayıp main-content-wrapper'a margin-top verelim. */
+    }
+
+    /* main-content-wrapper'ın kendisi de uygun bir üst boşluğa ihtiyaç duyacak */
+    .main-content-wrapper {
+        /* mobile-story-actions-container'ın yüksekliğini dinamik olarak hesaplamak zor
+           Ancak sabit bir değer verebiliriz. Bir önceki padding-top: 175px'i koruyalım veya düzenleyelim.
+           Veya sadece .page-container'a daha fazla üst boşluk ekleyebiliriz.
+        */
+        padding-top: var(--spacing-lg);
+        /* Örneğin, mevcut içeriğin başlangıcından itibaren 24px boşluk */
+    }
+
+    /* Navbar'ın altındaki hızlı erişim butonları normal akışa geçtiği için,
+       sayfanın ana içeriğinin başladığı noktayı ayarlamak kritik.
+       Navbar 60px, mobile-story-actions-container yaklaşık 90px.
+       Yani main-content-wrapper'ın üstten toplam 150px kadar boşluğa ihtiyacı var.
+       En temiz yol, base.html'deki .main-content-wrapper'ın padding-top değerini dinamik olarak ayarlamak veya
+       her sayfanın ilk elemanına margin-top vermek.
+       Şimdilik CSS'ten .main-content-wrapper'ın padding-top'unu ayarlayalım:
+    */
+    body #main-content .main-content-wrapper {
+        padding-top: calc(60px + 55px + 0.85em * 1.5 + var(--spacing-md) * 2 + var(--spacing-lg));
+        /* Navbar Yüksekliği + İkon Yüksekliği + Metin Yüksekliği + Padding + Gap */
+        /* Yaklaşık 60 + 55 + 15 + 32 + 24 = 186px civarı. Daha güvenli bir sabit değer belirleyelim. */
+        padding-top: 20px;
+        /* Sabit bir değer, gerektiğinde ayarlanabilir */
+    }
+}
+
+/* Küçük Telefonlar (480px ve altı) */
+@media (max-width: 480px) {
+    /* ... Mevcut 480px altı kurallarınız ... */
+
+    .mobile-story-actions-container {
+        padding: var(--spacing-sm) var(--spacing-xs);
+        /* Daha dar yan boşluklar */
+    }
+
+    .action-circle a i,
+    .action-circle a img {
+        width: 45px;
+        /* Küçük telefonlarda biraz daha küçük */
+        height: 45px;
+        font-size: 1.5em;
+    }
+
+    .action-circle a span {
+        font-size: 0.75em;
+        max-width: 55px;
+    }
+
+    body #main-content .main-content-wrapper {
+        padding-top: 10px;
+        /* Daha küçük telefonlar için ayar */
+    }
+}
+
+/* Masaüstü ve Geniş Ekranlar (Min 769px) */
+@media (min-width: 769px) {
+    /* ... Mevcut 769px ve üstü kurallarınız ... */
+
+    .mobile-story-actions-container {
+        display: none !important;
+        /* Masaüstünde kesinlikle gizle */
+    }
+
+    /* Masaüstünde ana içerik padding'ini eski haline getir */
+    body #main-content .main-content-wrapper {
+        padding-top: 70px;
+        /* Masaüstü için orijinal padding-top */
+    }
+}
+
+/* --- CLIPS (REELS) SAYFASI STİLLERİ --- */
+.clips-container {
+    width: 100%;
+    height: calc(100vh - 60px);
+    /* Navbar hariç tam ekran */
+    background-color: #000;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    /* Dikey kaydırmada yapışma efekti */
+    position: relative;
+    margin-top: 60px;
+    /* Navbar için boşluk */
+}
+
+.clip-slide {
+    width: 100%;
+    height: 100%;
+    scroll-snap-align: start;
+    /* Her slide'ı kaydırma noktasının başlangıcına yapıştır */
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.clip-video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    /* Videonun tamamını göster, kenarlarda siyahlık olabilir */
+}
+
+.clip-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: var(--spacing-lg);
+    color: #fff;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+    z-index: 10;
+}
+
+.clip-user-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 120px;
+}
+
+.clip-user-info a {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    text-decoration: none;
+    color: #fff;
+    font-weight: 600;
+}
+
+.clip-user-info img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    object-fit: cover;
+}
+
+.clip-caption p {
+    font-size: 0.95em;
+    line-height: 1.4;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.clip-actions {
+    position: absolute;
+    bottom: 100px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    z-index: 11;
+}
+
+.clip-action-button {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.8em;
+    cursor: pointer;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+    transition: transform 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+}
+
+.clip-action-button:hover {
+    transform: scale(1.1);
+}
+
+.clip-action-button span {
+    font-size: 0.5em;
+    /* İkonun yarısı kadar */
+    font-weight: 500;
+}
+
+/* --- LIFT BUTONU STİLLERİ --- */
+.lift-button {
+    color: var(--text-color-secondary);
+}
+
+.lift-button.lifted {
+    color: #17a2b8;
+    /* Lift edildiğinde farklı bir renk (örneğin info rengi) */
+    animation: bounceIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.lift-count {
+    font-size: 0.95em;
+    color: var(--text-color-muted);
+    font-weight: 500;
+}
+
+/* --- YENİ: Dinamik Akış Navigasyonu --- */
+.feed-view-selector {
+    display: flex;
+    justify-content: center;
+    border-bottom: 1px solid var(--border-color-light);
+    margin-bottom: var(--spacing-lg);
+    position: relative;
+}
+
+.feed-selector-btn {
+    background: none;
+    border: none;
+    color: var(--text-color-muted);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 2;
+    position: relative;
+}
+
+.feed-selector-btn:hover {
+    color: var(--text-color-primary);
+}
+
+.feed-selector-btn.active {
+    color: var(--text-color-primary);
+}
+
+.feed-view-selector .active-line {
+    position: absolute;
+    bottom: -1px;
+    height: 3px;
+    background: var(--gradient-primary);
+    border-radius: 3px;
+    transition: left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    z-index: 1;
+}
+
+#feed-container {
+    transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
+    min-height: 50vh;
+    /* Yüklenirken çökmemesi için */
+}
+
+#feed-container.fading-out {
+    opacity: 0;
+    transform: translateY(15px);
+}
+
+.feed-loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--spacing-xxxl);
+    font-size: 2em;
+    color: var(--text-color-muted);
+    width: 100%;
+}
+
+
+/* --- YENİ: Mobil Alt Navigasyon Barı --- */
+.mobile-bottom-nav {
+    display: none;
+    /* Masaüstünde gizli */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 65px;
+    background-color: var(--secondary-bg);
+    border-top: 1px solid var(--border-color-light);
+    box-shadow: 0 -2px 10px var(--shadow-medium);
+    z-index: 1001;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.mobile-bottom-nav .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--text-color-muted);
+    font-size: 0.7em;
+    gap: 4px;
+    transition: color 0.2s ease, transform 0.2s ease;
+    flex-grow: 1;
+    padding-top: 5px;
+    height: 100%;
+}
+
+.mobile-bottom-nav .nav-item:hover {
+    transform: translateY(-2px);
+}
+
+.mobile-bottom-nav .nav-item i {
+    font-size: 1.8em;
+    /* İkonları büyüt */
+}
+
+.mobile-bottom-nav .nav-item.active {
+    color: var(--text-color-primary);
+}
+
+.mobile-bottom-nav .nav-item.active i {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.mobile-bottom-nav .nav-item.new-post-button {
+    position: relative;
+    top: -15px;
+}
+
+.mobile-bottom-nav .nav-item.new-post-button i {
+    font-size: 3.2em;
+    color: white;
+    background: var(--gradient-primary);
+    border-radius: 50%;
+    padding: 10px;
+    box-shadow: 0 5px 15px var(--shadow-medium);
+    border: 3px solid var(--secondary-bg);
+}
+
+.mobile-bottom-nav .nav-item.profile-nav-item img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    transition: border-color 0.2s ease;
+}
+
+.mobile-bottom-nav .nav-item.profile-nav-item.active img,
+.mobile-bottom-nav .nav-item.profile-nav-item:hover img {
+    border-color: var(--focus-glow-color);
+}
+
+/* --- YENİ: Geliştirilmiş Clips Görüntüleyici --- */
+body.clips-active .left-sidebar,
+body.clips-active .right-sidebar,
+body.clips-active .feed-view-selector {
+    display: none !important;
+}
+
+body.clips-active .feed-page-container {
+    max-width: 100% !important;
+    padding: 0 !important;
+}
+
+.clips-viewer-container {
+    width: 100%;
+    height: calc(100vh - 70px);
+    /* Navbar hariç tam ekran */
+    background-color: #000;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    position: relative;
+    border-radius: var(--border-radius-md);
+}
+
+.clips-viewer-container .clip-slide {
+    width: 100%;
+    height: 100%;
+    scroll-snap-align: start;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.clip-slide .clip-video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.clip-slide .volume-control {
+    display: none;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 1.5em;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 12;
+    transition: transform 0.2s ease;
+}
+
+.clip-slide .volume-control:hover {
+    transform: scale(1.1);
+}
+
+/* Responsive Kısımda Mobil Alt Bar ve Üst Sekmelerin Yönetimi */
+@media (min-width: 769px) {
+    .mobile-bottom-nav {
+        display: none !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .feed-view-selector {
+        display: none !important;
+    }
+
+    .main-content-wrapper {
+        padding-bottom: 70px;
+        /* Alt bar için boşluk bırak */
+    }
+
+    .left-sidebar,
+    .right-sidebar {
+        display: none !important;
+    }
+
+    .feed-page-container {
+        max-width: 100% !important;
+        padding: 0 !important;
+    }
+
+    .main-content-flex-wrapper {
+        padding: 0;
+    }
+}
+
+.echo-content-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.main-nav-link.active span {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+}
+
+.main-nav-link.active i {
+    color: var(--focus-glow-color);
+}
+
+/* Sidebar içeriği için geçiş */
+.sidebar-content {
+    transition: opacity 0.3s ease;
+}
+
+/* Echo içeriği linki için */
+.echo-content-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+/* style.css dosyasının sonuna ekleyin */
+
+/* --- YENİ: Navbar Dropdown Menüsü --- */
+.nav-item-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.nav-link-dropdown-toggle {
+    color: var(--text-color-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 15px;
+    padding: var(--spacing-xs) var(--spacing-xxs);
+    border-radius: var(--border-radius-xs);
+    transition: color var(--transition-duration) var(--transition-easing), background-color 0.2s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.nav-link-dropdown-toggle:hover {
+    color: var(--text-color-primary);
+    background-color: var(--tertiary-bg);
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color-light);
+    border-radius: var(--border-radius-sm);
+    box-shadow: 0 4px 15px var(--shadow-medium);
+    min-width: 200px;
+    z-index: 1001;
+    list-style: none;
+    padding: var(--spacing-xs) 0;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
+}
+
+.nav-item-dropdown:hover .dropdown-menu {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.dropdown-item {
+    display: block;
+    padding: var(--spacing-sm) var(--spacing-md);
+    color: var(--text-color-secondary);
+    text-decoration: none;
+    font-size: 14px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
+}
+
+.dropdown-item:hover {
+    background-color: var(--tertiary-bg);
+    color: var(--text-color-primary);
+    transform: none; /* Override default link hover */
+}

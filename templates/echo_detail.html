@@ -1,0 +1,358 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - Socento Echoes{% endblock %}
+
+{% block content %}
+<div class="post-page-layout">
+    {# Echo Kartının Kendisi #}
+    <div class="post-detail-card premium-shadow" data-post-id="{{ echo_post.id }}">
+        <div class="echo-header premium-header">
+            <div class="echo-author-info">
+                <img src="{{ url_for('static', filename='uploads/profile_pics/' + echo_post.author.profile_image) }}"
+                    alt="Profil Resmi" class="echo-author-img premium-avatar">
+
+                <div class="author-meta">
+                    <a href="{{ url_for('profile', username=echo_post.author.username) }}"
+                        class="echo-author-username gradient-text premium-username">
+                        @{{ echo_post.author.username }}
+                        {{ echo_post.author.get_blue_tick_html() | safe }}
+                    </a>
+                    <span class="echo-date premium-date">
+                        <i class="fa-regular fa-clock"></i>
+                        {{ echo_post.date_posted.strftime('%d %B %Y') }}
+                    </span>
+                </div>
+            </div>
+            {% if echo_post.echo_topic %}
+            <a href="{{ url_for('echoes_topic', topic=echo_post.echo_topic) }}" class="echo-topic-badge premium-topic">
+                <i class="fa-solid fa-hashtag"></i> {{ echo_post.echo_topic }}
+            </a>
+            {% endif %}
+        </div>
+
+        <div class="echo-content-area premium-content">
+            {% if echo_post.title %}
+                <h3 class="echo-title gradient-text premium-title">
+                    <i class="fa-solid fa-quote-left"></i> {{ echo_post.title }}
+                </h3>
+            {% endif %}
+            <p class="echo-content-text premium-text">{{ echo_post.content | process_tags | safe }}</p>
+        </div>
+
+        <div class="echo-actions premium-actions">
+            {% if current_user.is_authenticated %}
+                <button 
+                    class="action-button rise-button action-icon premium-rise {% if user_risen %}risen{% endif %}"
+                    data-action="rise"
+                    title="{% if user_risen %}Rise Geri Al{% else %}Rise Et{% endif %}">
+                    <i class="{% if user_risen %}fas{% else %}far{% endif %} fa-arrow-alt-circle-up"></i>
+                </button>
+                <span class="rise-count premium-count">{{ echo_post.rises }}</span>
+
+                <button 
+                    class="action-button fade-button action-icon premium-fade {% if user_faded %}faded{% endif %}"
+                    data-action="fade"
+                    title="{% if user_faded %}Fade Geri Al{% else %}Fade Et{% endif %}">
+                    <i class="{% if user_faded %}fas{% else %}far{% endif %} fa-arrow-alt-circle-down"></i>
+                </button>
+                <span class="fade-count premium-count">{{ echo_post.fades }}</span>
+            {% endif %}
+             <button 
+        id="show-comments-btn" 
+        class="action-icon echo-comment-button premium-comment" 
+        style="margin-left: 0;"
+        title="Yorum Yap"
+    >
+        Tartışma Başlat
+    </button>
+
+            
+        </div>
+         {# Yorum Listesi #}
+        <div class="comment-list">
+            {% if comments %}
+            {% for comment in comments %}
+            <div class="comment-card card-custom" style="margin: 0px !important;">
+                <div class="comment-meta">
+                    <a href="{{ url_for('profile', username=comment.author.username) }}"
+                        class="comment-author-username">
+                         <img src="{{ url_for('static', filename='uploads/profile_pics/' + comment.author.profile_image) }}"
+                             alt="Profil Resmi" class="comment-author-img" style="width:28px; height:28px; border-radius:50%; object-fit:cover; margin-right:6px;">
+                        
+                        {{ comment.author.username }}
+                        {{ comment.author.get_blue_tick_html() | safe }}
+                       <i class="fa-solid fa-feather"></i>
+                    </a>
+                    <span class="comment-date">{{ comment.date_posted.strftime('%d %b %Y %H:%M') }}</span>
+                </div>
+                <div class="comment-content-text">
+                    <p>{{ comment.content | process_tags | safe }}</p>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="no-content-message card-custom">
+                <p>Bu Echo'ya henüz yorum yapılmamış...</p>
+            </div>
+            {% endif %}
+        </div> {# /comment-list #}
+    </div>
+    
+    <style>
+    .post-detail-card {
+        max-width: 600px;
+        margin: 32px auto 24px auto;
+        background: #1f2937;
+        border-radius: 22px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18), 0 1.5px 8px 0 rgba(0,0,0,0.08);
+        padding: 32px 28px 24px 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+        border: 1.5px solid rgba(255,255,255,0.07);
+        position: relative;
+        transition: box-shadow 0.2s;
+    }
+    .premium-shadow {
+        /* Extra shadow for premium feel */
+        box-shadow: 0 8px 32px 0 #ffd04f0d, 0 1.5px 8px 0 rgba(0,0,0,0.08);
+    }
+    .echo-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 18px;
+    }
+    .echo-author-info {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+    .echo-author-img.premium-avatar {
+        width: 54px;
+        height: 54px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2.5px solid #FFD04F;
+        background: #232526;
+        box-shadow: 0 2px 8px 0 rgba(106,130,251,0.13);
+    }
+    .author-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    .premium-username {
+        font-weight: 700;
+        font-size: 1.13rem;
+        letter-spacing: 0.01em;
+        text-shadow: 0 1px 4px rgba(106,130,251,0.08);
+        transition: color 0.2s;
+    }
+    .premium-username:hover {
+        color: #FFD04F;
+    }
+    .premium-date {
+        font-size: 0.97rem;
+        color: #b0b8c1;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .echo-topic-badge.premium-topic {
+        background: linear-gradient(90deg, #FF6F61 0%, #FFD04F 100%);
+        color: #fff;
+        font-weight: 600;
+        font-size: 0.98rem;
+        border-radius: 16px;
+        padding: 6px 16px;
+        box-shadow: 0 1px 6px 0 rgba(106,130,251,0.13);
+        text-decoration: none;
+        transition: background 0.2s;
+        margin-top: 4px;
+    }
+    .echo-topic-badge.premium-topic:hover {
+        background: linear-gradient(90deg, #FF6F61 0%, #FFD04F 100%);
+    }
+    .echo-content-area.premium-content {
+        margin-top: 6px;
+        margin-bottom: 6px;
+    }
+    .premium-title {
+        font-size: 1.35rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+        letter-spacing: 0.01em;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(90deg, #FF6F61 0%, #FFD04F 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .premium-text {
+        font-size: 1.13rem;
+        color: #e6e6e6;
+        line-height: 1.7;
+        font-weight: 500;
+        word-break: break-word;
+        margin-bottom: 0;
+    }
+    .echo-actions.premium-actions {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-top: 8px;
+        border-top: 1px solid rgba(255,255,255,0.07);
+        padding-top: 12px;
+    }
+    .action-button {
+        background: none;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        font-size: 1.35rem;
+        transition: color 0.18s, transform 0.13s;
+        color: #b0b8c1;
+        padding: 0 4px;
+        border-radius: 50%;
+    }
+    .action-button:hover, .action-button.risen, .action-button.faded {
+        color: #FFD04F;
+        background: rgba(106,130,251,0.07);
+    }
+    .action-button.faded {
+        color: #fc5c7d;
+        background: rgba(252,92,125,0.07);
+    }
+    .premium-rise.risen {
+        color: #6a82fb;
+    }
+    .premium-fade.faded {
+        color: #fc5c7d;
+    }
+    .premium-count {
+        font-size: 1.08rem;
+        font-weight: 700;
+        color: #e6e6e6;
+        margin: 0 6px 0 2px;
+        min-width: 18px;
+        display: inline-block;
+        text-align: center;
+    }
+    .echo-comment-button.premium-comment {
+        color: #b0b8c1;
+        font-size: 1.18rem;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        text-decoration: none;
+        transition: color 0.18s;
+        margin-left: auto;
+        font-weight: 600;
+    }
+    .echo-comment-button.premium-comment:hover {
+        transform: none !important;
+    }
+    .comment-count {
+        font-size: 1.01rem;
+        font-weight: 700;
+        color: #e6e6e6;
+        margin-left: 2px;
+    }
+
+    /* Responsive */
+    @media (max-width: 700px) {
+        .post-detail-card {
+            max-width: 98vw;
+            padding: 18px 6vw 16px 6vw;
+        }
+        .echo-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .echo-author-img.premium-avatar {
+            width: 44px;
+            height: 44px;
+        }
+        .premium-title {
+            font-size: 1.08rem;
+        }
+        .premium-text {
+            font-size: 1rem;
+        }
+    }
+    </style>
+
+    {# Yorumlar Bölümü (Geliştirildi: Aç/Kapa) #}
+   
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const btn = document.getElementById('show-comments-btn');
+            const commentsSection = document.getElementById('comments-section-start');
+            // Kapatma butonu ekle
+            if (commentsSection) {
+                const closeBtn = document.createElement('button');
+                closeBtn.textContent = 'Kapat ✖';
+                closeBtn.type = 'button';
+                closeBtn.className = 'btn-primary-custom btn-small';
+                closeBtn.style = 'margin-bottom:12px; float:right;';
+                closeBtn.id = 'close-comments-btn';
+                commentsSection.insertBefore(closeBtn, commentsSection.firstChild);
+                closeBtn.style.display = 'none';
+            }
+            const closeBtn = document.getElementById('close-comments-btn');
+            if (btn && commentsSection && closeBtn) {
+                commentsSection.style.display = 'none';
+                btn.addEventListener('click', function() {
+                    commentsSection.style.display = 'block';
+                    btn.style.display = 'none';
+                    closeBtn.style.display = 'inline-block';
+                    commentsSection.scrollIntoView({ behavior: 'smooth' });
+                });
+                closeBtn.addEventListener('click', function() {
+                    commentsSection.style.display = 'none';
+                    btn.style.display = 'inline-block';
+                    closeBtn.style.display = 'none';
+                    btn.scrollIntoView({ behavior: 'smooth' });
+                });
+            }
+        });
+    </script>
+    <div id="comments-section-start" class="comments-section">
+   
+        {# Yorum Formu #}
+        {% if current_user.is_authenticated %}
+      
+            <h3 class="gradient-text comment-form-title">Düşünceni Ekle!</h3>
+            <form method="POST" action="{{ url_for('echo_detail', echo_id=echo_post.id) }}">
+                <div class="form-group">
+                    <label for="comment_content" class="form-label">
+                        <p style="font-size: medium; font-weight: bold;">
+                            Düşünceleriniz değerli. <br> <span style="font-size: smaller;">Lütfen topluluk kurallarına
+                                özen gösterin.</span>
+                        </p>
+                    </label>
+                    <textarea class="form-input" id="comment_content" name="comment_content" rows="4"
+                        required></textarea>
+                </div>
+                <div class="form-group submit-group">
+                    <button type="submit" class="btn-primary-custom btn-small">Paylaş <i
+                            class="fa-solid fa-share"></i></button>
+                </div>
+            </form>
+        
+        {% else %}
+        <div class="no-content-message card-custom">
+            <p>Yorum yapmak için lütfen <a href="{{ url_for('login') }}">giriş yapın</a> veya <a
+                    href="{{ url_for('register') }}">kaydolun</a>.</p>
+        </div>
+        {% endif %}
+
+       
+    </div> {# /comments-section #}
+</div> {# /post-page-layout #}
+{% endblock %}

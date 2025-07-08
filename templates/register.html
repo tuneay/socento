@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Kaydol{% endblock %}
+
+{% block content %}
+
+<div class="page-container"
+    style="display: flex; justify-content: center; align-items: flex-start; min-height: calc(100vh - 100px);">
+    <div class="card-custom">
+        <h2 class="gradient-text" style="text-align: center; margin-bottom: 25px;">Kaydol</h2>
+        <form method="POST">
+            <div class="form-group">
+                <label for="username" class="form-label">Kullanıcı Adı</label>
+                <input type="text" class="form-input" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="email" class="form-label">E-posta</label>
+                <input type="email" class="form-input" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password" class="form-label">Şifre</label>
+                <input type="password" class="form-input" id="password" name="password" required>
+            </div>
+            {# YENİ EKLENEN ALAN #}
+            <div class="form-group">
+                <label for="registration_key" class="form-label">Mavi Tik Anahtarı (Opsiyonel)</label>
+                <input type="text" class="form-input" id="registration_key" name="registration_key"
+                    placeholder="Varsa mavi tik anahtarınızı girin">
+                <small class="input-help-text">Bu bir kerelik bir anahtardır ve hesabınıza özel bir rozet
+                    kazandırır.</small>
+            </div>
+            {# YENİ EKLENEN ALAN SONU #}
+            <div class="form-group" style="margin-top: 25px;">
+                <button type="submit" class="btn-primary-custom">Kaydol</button>
+            </div>
+        </form>
+        <p style="text-align: center; margin-top: 20px; font-size: 0.9em; color: var(--text-color-secondary);">Zaten bir
+            hesabın var mı? <a href="{{ url_for('login') }}">Şimdi Giriş Yap</a></p> {# Hata düzeltildi #}
+    </div>
+</div>
+
+{% endblock %}

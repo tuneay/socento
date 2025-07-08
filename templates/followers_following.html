@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - Socento Social{% endblock %}
+
+{% block content %}
+    <div class="page-container" style="margin-top: 30px;">
+        <h1 class="gradient-text" style="margin-bottom: 20px;">
+            {% if list_type == 'followers' %}{{ user.username }}'i Takip Edenler{% else %}{{ user.username }}'in Takip Ettikleri{% endif %}
+        </h1>
+
+        {% if users_list %}
+            <div class="users-list">
+                {% for listed_user in users_list %}
+                    <div class="user-card card-custom" data-username="{{ listed_user.username }}">
+                        <img src="{{ url_for('static', filename='uploads/profile_pics/' + listed_user.profile_image) }}" alt="Profil Resmi">
+                        <h3>
+                            <a href="{{ url_for('profile', username=listed_user.username) }}">
+                                {{ listed_user.username }}
+                                {{ listed_user.get_blue_tick_html() | safe }}
+                            </a>
+                        </h3>
+                        <p>{{ listed_user.bio[:50] }}{% if listed_user.bio|length > 50 %}...{% endif %}</p>
+                        
+                        {% if current_user.is_authenticated and current_user.id != listed_user.id %}
+                            <div class="action-buttons">
+                                {% if current_user.is_following(listed_user) %}
+                                    <button class="action-button unfollow-button btn-primary-custom btn-small profile-unfollow-btn" data-action="unfollow">Takibi Bırak</button>
+                                {% else %}
+                                    <button class="action-button follow-button btn-primary-custom btn-small" data-action="follow">Takip Et</button>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="no-posts-message">
+                <p>{% if list_type == 'followers' %}Bu kullanıcıyı henüz kimse takip etmiyor.{% else %}Bu kullanıcı henüz kimseyi takip etmiyor.{% endif %}</p>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

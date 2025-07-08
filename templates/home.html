@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Ana Sayfa - Socento Social{% endblock %}
+
+{% block content %}
+<div class="main-content-flex-wrapper" data-initial-feed="{{ initial_feed or 'posts' }}">
+    
+    {% if current_user.is_authenticated %}
+    <div class="left-sidebar">
+        <div class="sidebar-card theme-toggle-card">
+            <h3 class="sidebar-title gradient-text"><i class="fas fa-moon"></i> Temayı Değiştir</h3>
+            <button id="theme-toggle" class="btn-primary-custom btn-small full-width-btn" title="Temayı Değiştir">
+                <i class="fas fa-sun"></i> / <i class="fas fa-moon"></i>
+            </button>
+        </div>
+        <div class="sidebar-content" data-feed-context="posts">
+            <div class="sidebar-card">
+                <h3 class="sidebar-title gradient-text"><i class="fas fa-fire"></i> Trend Kullanıcılar</h3>
+                {% if top_users %}
+                <ul class="sidebar-list">
+                    {% for user_item in top_users %}
+                    <li>
+                        <a href="{{ url_for('profile', username=user_item.username) }}">
+                            <img src="{{ url_for('static', filename='uploads/profile_pics/' + user_item.profile_image) }}" alt="{{ user_item.username }}" class="sidebar-user-img">
+                            <span>@{{ user_item.username }} {{ user_item.get_blue_tick_html() | safe }}</span>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="sidebar-no-content">Henüz trend kullanıcı yok.</p>
+                {% endif %}
+            </div>
+            <div class="sidebar-card">
+                <h3 class="sidebar-title gradient-text"><i class="fas fa-hashtag"></i> Revaçtaki Hashtagler</h3>
+                {% if top_hashtags %}
+                <ul class="sidebar-list">
+                    {% for hashtag, count in top_hashtags %}
+                    <li>
+                        <a href="{{ url_for('search_hashtag', hashtag=hashtag) }}">#{{ hashtag }}</a>
+                        <span class="hashtag-count">({{ count }})</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="sidebar-no-content">Henüz revaçta hashtag yok.</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="sidebar-content" data-feed-context="echoes" style="display: none;">
+            <div class="sidebar-card">
+                <h3 class="sidebar-title gradient-text"><i class="fa-solid fa-fire"></i> Trend Echoes Konuları</h3>
+                {% if trending_topics %}<ul class="sidebar-list">{% for topic, score in trending_topics %}<li><a href="{{ url_for('echoes_topic', topic=topic) }}">-{{ topic }} <span class="hashtag-count">({{ score | int }} Puan)</span></a></li>{% endfor %}</ul>{% else %}<p class="sidebar-no-content">Henüz trend konu yok.</p>{% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="page-container feed-page-container">
+        <div class="feed-view-selector">
+            <button class="feed-selector-btn" data-feed="posts"><i class="fas fa-newspaper"></i> Gönderiler</button>
+            <button class="feed-selector-btn" data-feed="echoes"><i class="fas fa-microphone-lines"></i> Echoes</button>
+            <button class="feed-selector-btn" data-feed="clips"><i class="fas fa-film"></i> Clips</button>
+            {% if current_user.is_authenticated and current_user.role == 'premium' and current_user.planType %}
+                <button class="feed-selector-btn" data-feed="premium"><i class="fas fa-gem"></i> Premium</button>
+            {% endif %}
+            <div class="active-line"></div>
+        </div>
+        <div id="feed-container">
+            <div class="feed-loader"><i class="fas fa-spinner fa-spin"></i></div>
+        </div>
+    </div>
+
+    {% if current_user.is_authenticated %} 
+    <div class="right-sidebar">
+        {% if current_user.role == 'premium' and current_user.planType %}
+        <div class="sidebar-card premium-plan-sidebar-card">
+            <h3 class="sidebar-title gradient-text"><i class="fas fa-gem"></i> Premium Üyelik</h3>
+            <div class="premium-badge"><i class="fas fa-gem"></i> {{ PREMIUM_PLANS[current_user.planType]['name'] }} Planı</div>
+            <div class="plan-expiry">Bitiş: {{ current_user.planExpiry.strftime('%d.%m.%Y') if current_user.planExpiry else 'Süresiz' }}</div>
+        </div>
+        {% endif %}
+        <div class="sidebar-card envy-chat-card">
+            <h3 class="sidebar-title gradient-text"><i class="fas fa-robot"></i> Envy ile Konuş</h3>
+            <p class="sidebar-description">Envy, Socento'nun yapay zeka asistanıdır. Sorularını sor, sohbet et!</p>
+            <a href="https://envy.socento.com/" target="_blank" class="btn-primary-custom btn-small full-width-btn" style="margin-top:12px;">
+                <i class="fas fa-comments"></i> Envy ile Sohbet Et
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

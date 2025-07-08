@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Socento Social{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" href="data:image/png;base64,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">
+</head>
+<body data-username="{{ current_user.username if current_user.is_authenticated else '' }}">
+    <div id="preloader">
+        <i class="fa-solid fa-dna preloader-icon"></i>
+    </div>
+      {% if current_user.is_authenticated %}
+        <div class="mobile-bottom-nav">
+            <a href="#" class="nav-item" data-feed="posts"><i class="fas fa-home"></i><span>Ana Sayfa</span></a>
+            <a href="#" class="nav-item" data-feed="echoes"><i class="fas fa-microphone-lines"></i><span>Echoes</span></a>
+            <a href="{{ url_for('new_post') }}" class="nav-item new-post-button"><i class="fas fa-plus-circle"></i></a>
+            <a href="#" class="nav-item" data-feed="clips"><i class="fas fa-film"></i><span>Clips</span></a>
+            <a href="{{ url_for('upgrade_plan') }}" class="nav-item"><i class="fas fa-gem"></i><span>Premium</span></a>
+            <a href="{{ url_for('profile', username=current_user.username) }}" class="nav-item profile-nav-item"><img src="{{ url_for('static', filename='uploads/profile_pics/' + current_user.profile_image) }}" alt="Profil"></a>
+        </div>
+        {% endif %}
+    
+
+    <div id="main-content">
+        <nav>
+            <div class="nav-container">
+                <a href="{{ url_for('home') }}" class="nav-brand">Socento</a>
+                <form class="search-form" action="{{ url_for('search') }}" method="GET">
+                    <input type="text" name="query" placeholder="Kullanıcı veya gönderi ara..." class="search-input">
+                    <button type="submit" class="search-button"><i class="fas fa-search"></i></button>
+                </form>
+                <ul class="nav-links" id="nav-links-desktop">
+                    {% if current_user.is_authenticated %}
+                        <li><a href="#" class="main-nav-link" data-feed="posts"><i class="fas fa-home"></i><span></span></a></li>
+                        <li><a href="#" class="main-nav-link" data-feed="echoes"><i class="fas fa-microphone-lines"></i><span> Echoes</span></a></li>
+                        <li><a href="#" class="main-nav-link" data-feed="clips"><i class="fas fa-film"></i><span> Clips</span></a></li>
+                        
+                     {% if is_premium %}
+    <li><a href="{{ url_for('inner_network_home') }}"><i class="fas fa-gem"></i> InnerNetwork</a></li>
+    <li><a href="{{ url_for('premium_communities') }}"><i class="fas fa-people-group"></i> Topluluklar</a></li>
+    
+    {% if is_infinity and infinity_network %}
+        <li><a href="{{ url_for('my_network_slug', slug=infinity_network.slug) }}"><i class="fa-solid fa-user-astronaut"></i> Ağım</a></li>
+    {% elif is_infinity %}
+        <li><a href="{{ url_for('create_network') }}"><i class="fa-solid fa-user-astronaut"></i> Ağım</a></li>
+    {% endif %}
+
+    {% if membered_networks %}
+    <li class="nav-item-dropdown">
+        <a href="#" class="nav-link-dropdown-toggle"><i class="fas fa-network-wired"></i> Üye Ağlarım</a>
+        <div class="dropdown-menu">
+            {% for network in membered_networks %}
+                <a href="{{ url_for('my_network_slug', slug=network.slug) }}" class="dropdown-item">{{ network.name }}</a>
+            {% endfor %}
+        </div>
+    </li>
+    {% endif %}
+
+{% else %}
+    <li><a href="{{ url_for('upgrade_plan') }}"><i class="fas fa-gem"></i> Premium</a></li>
+{% endif %}
+                           <li><a href="{{ url_for('notifications') }}">
+                             <i class="fas fa-bell">
+                                {% if unread_notifications_count > 0 %}
+                                </i><span class="notification-badge">{{ unread_notifications_count }}</span>
+                                {% endif %}
+                            </i>
+                           </a></li>
+                        <li><a href="{{ url_for('new_post') }}" class="navbar-btn navbar-new-post-btn"><i class="fas fa-plus"></i></a></li>
+                        <li><a href="{{ url_for('profile', username=current_user.username) }}"><i class="fa-regular fa-user"></i></a></li>
+                        <li><a href="{{ url_for('logout') }}"><i class="fa-solid fa-right-from-bracket"></i></a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('login') }}" class="navbar-btn">Giriş Yap</a></li>
+                        <li><a href="{{ url_for('register') }}" class="navbar-btn register-btn">Kaydol</a></li>
+                    {% endif %}
+                </ul>
+                <button class="menu-icon" id="mobile-menu-toggle" title="Menü"><i class="fas fa-bars"></i></button>
+            </div>
+        </nav>
+
+        <ul class="nav-links" id="nav-links-mobile" style="display: none;">
+            <li><a href="{{ url_for('communities') }}"><i class="fas fa-people-group"></i> Topluluklar</a></li>
+        </ul>
+            
+            
+        <div class="main-content-wrapper">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div id="sticky-flash-overlay">
+                        {% for category, message in messages %}
+                            <div class="sticky-flash-message alert-{{ category }}">
+                                <span class="sticky-flash-text">{{ message }}</span>
+                                <button class="sticky-flash-close" aria-label="Kapat">&times;</button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            {% block content %}{% endblock %}
+        </div>
+
+       </div>
+
+    <style>
+    #sticky-flash-overlay {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+    }
+    .sticky-flash-message {
+        min-width: 320px;
+        max-width: 90vw;
+        background: rgba(34, 40, 49, 0.98);
+        color: #fff;
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+        padding: 1.2rem 2.5rem 1.2rem 1.5rem;
+        font-size: 1.15rem;
+        font-weight: 500;
+        text-align: center;
+        position: relative;
+        margin: 0 1rem;
+        opacity: 0;
+        transform: translateY(-30px) scale(0.98);
+        transition: opacity 0.4s, transform 0.4s;
+        pointer-events: auto;
+        display: flex;
+        align-items: center;
+        gap: 1.2rem;
+    }
+    .sticky-flash-message.show {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    .sticky-flash-message.alert-success { background: linear-gradient(90deg,#10B981 60%,#059669 100%); color: #fff; }
+    .sticky-flash-message.alert-info { background: linear-gradient(90deg,#2563eb 60%,#1e40af 100%); color: #fff; }
+    .sticky-flash-message.alert-warning { background: linear-gradient(90deg,#f59e42 60%,#fbbf24 100%); color: #23272f; }
+    .sticky-flash-message.alert-danger, .sticky-flash-message.alert-error { background: linear-gradient(90deg,#ef4444 60%,#b91c1c 100%); color: #fff; }
+    .sticky-flash-close {
+        background: none;
+        border: none;
+        color: inherit;
+        font-size: 1.5rem;
+        font-weight: bold;
+        position: absolute;
+        top: 0.7rem;
+        right: 1.2rem;
+        cursor: pointer;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+        pointer-events: auto;
+    }
+    .sticky-flash-close:hover { opacity: 1; }
+    @media (max-width: 600px) {
+        .sticky-flash-message { min-width: 0; font-size: 1rem; padding: 1rem 1.5rem 1rem 1rem; }
+    }
+    </style>
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const overlay = document.getElementById('sticky-flash-overlay');
+        if (!overlay) return;
+        const messages = overlay.querySelectorAll('.sticky-flash-message');
+        messages.forEach((msg, i) => {
+            setTimeout(() => {
+                msg.classList.add('show');
+                // Otomatik kaybolma
+                const timeout = setTimeout(() => {
+                    msg.classList.remove('show');
+                    setTimeout(() => { msg.remove(); if (!overlay.querySelector('.sticky-flash-message')) overlay.remove(); }, 400);
+                }, 3500 + i*500);
+                // Manuel kapama
+                const closeBtn = msg.querySelector('.sticky-flash-close');
+                if (closeBtn) {
+                    closeBtn.onclick = () => {
+                        clearTimeout(timeout);
+                        msg.classList.remove('show');
+                        setTimeout(() => { msg.remove(); if (!overlay.querySelector('.sticky-flash-message')) overlay.remove(); }, 400);
+                    };
+                }
+            }, 100 + i*200);
+        });
+    });
+    </script>
+</body>
+</html>

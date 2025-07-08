@@ -1,0 +1,276 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    /* --- 💎 TEMA DEĞİŞKENLERİ (Nihai Seviye v3 - Bug Fix) --- */
+    :root {
+        --bg-primary: #0D1117; --bg-secondary: #161B22; --bg-card: rgba(22, 27, 34, 0.75);
+        --border-color-soft: rgba(255, 255, 255, 0.1); --border-color-hard: #30363d;
+        --text-primary: #F0F6FC; --text-secondary: #8B949E;
+        --premium-purple: #9f5eff; --premium-gold: #FFD700;
+        --warning-yellow: #facc15; --error-red: #f87171;
+        --premium-gradient: linear-gradient(135deg, var(--premium-purple), var(--premium-gold));
+        --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+        
+        --mouse-x: 50%; --mouse-y: 50%;
+        --card-mouse-x: 50%; --card-mouse-y: 50%;
+    }
+
+    /* --- Animasyonlar --- */
+    @keyframes fadeIn-stagger { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes gradient-flow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    @keyframes shine { to { transform: translateX(100%); } }
+
+    /* --- Temel Sayfa Ayarları & Dinamik Arka Plan --- */
+    body {
+        background-color: var(--bg-primary);
+        background-image:
+            radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(159, 94, 255, 0.15), transparent 35%),
+            radial-gradient(circle at calc(100% - var(--mouse-x)) calc(100% - var(--mouse-y)), rgba(255, 215, 0, 0.1), transparent 40%);
+        color: var(--text-primary); font-family: var(--font-main); -webkit-font-smoothing: antialiased;
+        display: flex; align-items: center; justify-content: center; min-height: 100vh;
+    }
+    .container { width: 100%; max-width: 720px; margin: 2rem 0; padding: 0 1rem; }
+
+    /* --- Form Kartı (3D Tilt & Canlı Efektli) --- */
+    .create-card {
+        background: var(--bg-card); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+        border-radius: 24px; border: 1px solid var(--border-color-hard);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        position: relative; overflow: hidden;
+        transition: transform 0.4s var(--ease-out-quint);
+        transform-style: preserve-3d;
+    }
+    .create-card::before {
+        content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: radial-gradient(circle at var(--card-mouse-x) var(--card-mouse-y), rgba(255, 255, 255, 0.08), transparent 40%);
+        opacity: 0; transition: opacity 0.5s; pointer-events: none; border-radius: 24px;
+    }
+    .create-card:hover::before { opacity: 1; }
+
+    /* --- Form Başlığı --- */
+    .form-header { text-align: center; padding: 3rem; border-bottom: 1px solid var(--border-color-hard); }
+    .form-header h2 { font-size: 2.5rem; font-weight: 700; background: var(--premium-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
+    .form-header p { font-size: 1.1rem; color: var(--text-secondary); line-height: 1.6; }
+
+    /* --- Form Alanı & Stagger Animasyonları --- */
+    .form-body { padding: 2.5rem 3rem; }
+    .form-header, .form-group, .form-actions { opacity: 0; animation: fadeIn-stagger 0.8s var(--ease-out-quint) forwards; }
+    .form-group:nth-of-type(1) { animation-delay: 0.1s; } .form-group:nth-of-type(2) { animation-delay: 0.2s; }
+    .form-group:nth-of-type(3) { animation-delay: 0.3s; } .form-group:nth-of-type(4) { animation-delay: 0.4s; }
+    .form-actions { animation-delay: 0.5s; }
+
+    /* --- Form Elemanları & YÜZEN ETİKET --- */
+    .form-group { position: relative; padding-bottom: 20px; margin-bottom: 1.5rem; }
+    /* DÜZELTME: Odaklanıldığında form grubunu yukarı taşı */
+    .form-group.is-focused { z-index: 10; } 
+
+    .form-control {
+        width: 100%; background-color: transparent; border: 1px solid var(--border-color-hard);
+        color: var(--text-primary); padding: 16px; border-radius: 12px;
+        transition: all 0.3s var(--ease-out-quint); font-size: 1rem;
+        position: relative; z-index: 1;
+    }
+    .form-group label {
+        position: absolute; top: 17px; left: 17px; font-size: 1rem; color: var(--text-secondary);
+        pointer-events: none; transition: all 0.3s var(--ease-out-quint);
+        z-index: 2; background-color: var(--bg-secondary); padding: 0 5px;
+    }
+    .form-control:focus + label, .form-control:not(:placeholder-shown) + label {
+        top: -10px; font-size: 0.8rem; color: var(--premium-purple);
+    }
+    .form-control:focus { outline: none; border-color: var(--premium-purple); }
+    textarea.form-control { min-height: 120px; resize: vertical; }
+
+    /* --- Karakter Sayacı --- */
+    .char-counter { position: absolute; bottom: 0; right: 5px; font-size: 0.8rem; color: var(--text-secondary); transition: color 0.3s; }
+    .char-counter.warning { color: var(--warning-yellow); }
+    .char-counter.error { color: var(--error-red); font-weight: 500; }
+
+    /* --- KATEGORİ ÖNERİLERİ --- */
+    .suggestions-container {
+        position: absolute; top: 100%; left: 0; width: 100%;
+        background: var(--bg-card); backdrop-filter: blur(16px);
+        border: 1px solid var(--border-color-hard); border-radius: 12px;
+        z-index: 5; /* Kendi grubunda üstte kalsın yeterli */
+        max-height: 180px; overflow-y: auto;
+        opacity: 0; transform: translateY(10px); pointer-events: none;
+        transition: all 0.4s var(--ease-out-quint);
+    }
+    .suggestions-container.visible { opacity: 1; transform: translateY(5px); pointer-events: auto; }
+    .suggestion-item { padding: 12px 16px; color: var(--text-secondary); cursor: pointer; transition: background-color 0.2s, color 0.2s; }
+    .suggestion-item:hover { background-color: var(--premium-purple); color: #fff; }
+    .suggestion-item:not(:last-child) { border-bottom: 1px solid var(--border-color-hard); }
+
+    /* Diğer özet stiller */
+    .file-drop-area{position:relative;padding:1rem;border:2px dashed var(--border-color-hard);border-radius:12px;cursor:pointer;background-color:var(--bg-primary);transition:all .3s var(--ease-out-quint)}.file-drop-area:hover,.file-drop-area.is-dragover{border-color:var(--premium-purple);background-color:rgba(159,94,255,.05)}.file-drop-area input[type=file]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}.file-drop-content{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--text-secondary);pointer-events:none;min-height:150px}.file-drop-content i{font-size:2.5rem;margin-bottom:1rem;color:var(--premium-purple)}.image-preview{width:100%;height:100%;max-height:250px;object-fit:cover;border-radius:8px}.form-actions{display:flex;gap:1rem;margin-top:2rem}.btn{flex:1;padding:16px;font-size:1rem;font-weight:600;border-radius:12px;text-decoration:none;text-align:center;transition:all .3s var(--ease-out-quint);border:none;cursor:pointer;position:relative;overflow:hidden}.btn i{margin-right:8px}.btn-premium{background:var(--premium-gradient);color:var(--bg-primary);background-size:250% 250%}.btn-premium:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(159,94,255,.3);animation:gradient-flow 3s ease infinite}.btn-premium::after{content:'';position:absolute;top:0;left:0;width:150%;height:100%;background:linear-gradient(100deg,rgba(255,255,255,0) 20%,rgba(255,255,255,.3),rgba(255,255,255,0) 80%);transform:translateX(-125%) skewX(-20deg)}.btn-premium:hover::after{transform:translateX(125%) skewX(-20deg);transition:transform .8s var(--ease-out-quint)}.btn:active{transform:translateY(0) scale(.98)}.btn-secondary{background:#21262d;border:1px solid var(--border-color-hard);color:var(--text-secondary)}.btn-secondary:hover{background:var(--border-color-hard);color:var(--text-primary)}
+
+    /* Mobil Uyum */
+    @media (max-width: 768px) { .container{margin:1rem auto}.create-card{padding:0}.form-header{padding:2rem 1.5rem}.form-header h2{font-size:2rem}.form-body{padding:1.5rem}.form-actions{flex-direction:column-reverse} }
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<main class="container">
+    <div class="create-card" id="interactive-card">
+        <header class="form-header">
+            <h2>Premium Bir Topluluk Oluştur</h2>
+            <p>Fikirlerin sadece paylaşılmadığı, aynı zamanda inşa edildiği özel bir alan yarat. Dünyanı kur ve kaşiflerini bekle.</p>
+        </header>
+
+        <div class="form-body">
+            <form method="post" enctype="multipart/form-data">
+                
+                <div class="form-group">
+                    <div class="file-drop-area" id="file-drop-area">
+                        <div class="file-drop-content" id="file-drop-content">
+                            <i class="fas fa-image"></i>
+                            <span>Kapak Görseli</span>
+                        </div>
+                        <input class="form-control" type="file" id="cover_image" name="cover_image" accept="image/*">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" class="form-control" id="name" name="name" required maxlength="64" placeholder=" ">
+                    <label for="name">Topluluk Adı</label>
+                    <span class="char-counter" id="name-counter">0 / 64</span>
+                </div>
+
+                <div class="form-group">
+                    <textarea class="form-control" id="description" name="description" rows="4" maxlength="300" placeholder=" "></textarea>
+                    <label for="description">Açıklama</label>
+                    <span class="char-counter" id="description-counter">0 / 300</span>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" class="form-control" id="category" name="category" maxlength="32" placeholder=" " autocomplete="off">
+                    <label for="category">Kategori</label>
+                    <div class="suggestions-container" id="suggestions-container"></div>
+                    <span class="char-counter" id="category-counter">0 / 32</span>
+                </div>
+                
+                <div class="form-actions">
+                    <a href="{{ url_for('premium_communities') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Vazgeç</a>
+                    <button type="submit" class="btn btn-premium"><i class="fas fa-plus-circle"></i> Oluştur</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const card = document.getElementById('interactive-card');
+    if (!card) return;
+
+    // Fare Takip Script'i
+    const updateMousePosition = (e) => {
+        const xPos = (e.clientX / window.innerWidth * 100).toFixed(2);
+        const yPos = (e.clientY / window.innerHeight * 100).toFixed(2);
+        document.documentElement.style.setProperty('--mouse-x', `${xPos}%`);
+        document.documentElement.style.setProperty('--mouse-y', `${yPos}%`);
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--card-mouse-x', `${x}px`);
+        card.style.setProperty('--card-mouse-y', `${y}px`);
+        const rotateY = -((x - rect.width / 2) / (rect.width / 2)) * 4;
+        const rotateX = ((y - rect.height / 2) / (rect.height / 2)) * 4;
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    };
+    const resetCardTransform = () => { card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)'; };
+    window.addEventListener('mousemove', updateMousePosition);
+    card.addEventListener('mouseleave', resetCardTransform);
+
+    // Karakter Sayacı Script'i
+    function setupCounter(inputId, counterId, maxLength) {
+        const input = document.getElementById(inputId);
+        const counter = document.getElementById(counterId);
+        if (input && counter) {
+            input.addEventListener('input', () => {
+                const len = input.value.length;
+                counter.textContent = `${len} / ${maxLength}`;
+                counter.classList.remove('warning', 'error');
+                if (len > maxLength) counter.classList.add('error');
+                else if (len > maxLength * 0.9) counter.classList.add('warning');
+            });
+        }
+    }
+    setupCounter('name', 'name-counter', 64);
+    setupCounter('description', 'description-counter', 300);
+    setupCounter('category', 'category-counter', 32);
+
+    // Kategori Önerileri Script'i
+    const categoryInput = document.getElementById('category');
+    const suggestionsContainer = document.getElementById('suggestions-container');
+    const categoryFormGroup = categoryInput.parentElement;
+    const popularCategories = ['Teknoloji','Oyun','Sanat','Müzik','Yazılım','Tasarım','Film & Dizi','Kitap Kulübü','Spor','Yemek & Mutfak','Gezi & Macera','Moda','Finans & Yatırım','Bilim','Eğitim','Kişisel Gelişim','Sağlıklı Yaşam','Evcil Hayvanlar'];
+    
+    categoryInput.addEventListener('input', () => {
+        const query = categoryInput.value.toLowerCase();
+        suggestionsContainer.innerHTML = '';
+        if (query.length === 0) {
+            suggestionsContainer.classList.remove('visible'); return;
+        }
+        const filtered = popularCategories.filter(cat => cat.toLowerCase().includes(query));
+        if (filtered.length > 0) {
+            filtered.forEach(cat => {
+                const item = document.createElement('div');
+                item.classList.add('suggestion-item');
+                item.textContent = cat;
+                item.addEventListener('mousedown', (e) => { // DÜZELTME: blur olayından önce çalışması için mousedown
+                    e.preventDefault();
+                    categoryInput.value = cat;
+                    suggestionsContainer.classList.remove('visible');
+                    categoryInput.dispatchEvent(new Event('input'));
+                });
+                suggestionsContainer.appendChild(item);
+            });
+            suggestionsContainer.classList.add('visible');
+        } else {
+            suggestionsContainer.classList.remove('visible');
+        }
+    });
+
+    categoryInput.addEventListener('focus', () => {
+        categoryFormGroup.classList.add('is-focused');
+        if (categoryInput.value.length > 0) {
+             categoryInput.dispatchEvent(new Event('input'));
+        }
+    });
+    
+    categoryInput.addEventListener('blur', () => {
+        categoryFormGroup.classList.remove('is-focused');
+        // setTimeout, kullanıcının öneriye tıklamasına zaman tanır
+        setTimeout(() => {
+            suggestionsContainer.classList.remove('visible');
+        }, 150);
+    });
+
+    // Dosya Yükleme Script'i
+    const dropArea = document.getElementById('file-drop-area');
+    const fileInput = document.getElementById('cover_image');
+    const contentDiv = document.getElementById('file-drop-content');
+    if (dropArea && fileInput && contentDiv) {
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eName => dropArea.addEventListener(eName, (e) => { e.preventDefault(); e.stopPropagation(); }, false));
+        ['dragenter', 'dragover'].forEach(eName => dropArea.addEventListener(eName, () => dropArea.classList.add('is-dragover'), false));
+        ['dragleave', 'drop'].forEach(eName => dropArea.addEventListener(eName, () => dropArea.classList.remove('is-dragover'), false));
+        dropArea.addEventListener('drop', (e) => { fileInput.files = e.dataTransfer.files; handleFiles(fileInput.files); }, false);
+        fileInput.addEventListener('change', () => { handleFiles(fileInput.files); });
+        function handleFiles(files) {
+            if (files.length === 0) { contentDiv.innerHTML = '<i class="fas fa-image"></i><span>Kapak Görseli</span>'; return; }
+            const file = files[0];
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (e) => { contentDiv.innerHTML = `<img src="${e.target.result}" class="image-preview" alt="Önizleme">`; };
+                reader.readAsDataURL(file);
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

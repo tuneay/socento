@@ -1,0 +1,19 @@
+{% extends "admin/admin_base.html" %}
+
+{% block title %}Gönderiyi Düzenle{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <h1>Gönderiyi Düzenle (ID: {{ post.id }})</h1>
+</div>
+
+<div class="card">
+    <form method="POST">
+        <div class="form-group">
+            <label for="content">Gönderi İçeriği</label>
+            <textarea name="content" id="content" rows="10" class="form-control" style="width: 100%; background:var(--bg-dark); color: var(--text-light); border-radius: 6px; padding: 10px;">{{ post.content }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Değişiklikleri Kaydet</button>
+    </form>
+</div>
+{% endblock %}
