@@ -201,6 +201,27 @@
                     <i class="fas fa-comments"></i> Envy ile Sohbet Et
                 </a>
             </div>
+
+            {# Yeni Tüm Kullanıcılar Bölümü Başlangıcı #}
+            <div class="sidebar-card">
+                <h3 class="sidebar-title gradient-text"><i class="fas fa-users"></i> Tüm Kullanıcılar</h3>
+                {% if all_users %}
+                <ul class="sidebar-list">
+                    {% for user_item in all_users %}
+                    <li>
+                        <a href="{{ url_for('profile', username=user_item.username) }}">
+                            <img src="{{ url_for('static', filename='uploads/profile_pics/' + user_item.profile_image) }}" alt="{{ user_item.username }}" class="sidebar-user-img">
+                            <span>@{{ user_item.username }} {{ user_item.get_blue_tick_html() | safe }}</span>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="sidebar-no-content">Henüz kullanıcı bulunmuyor.</p>
+                {% endif %}
+            </div>
+            {# Yeni Tüm Kullanıcılar Bölümü Sonu #}
+
         </div>
         {% endif %}
 
@@ -221,6 +242,23 @@
                     <i class="fas fa-comments"></i> Envy ile Sohbet Et
                 </a>
             </div>
+             {# Mobil İçin Tüm Kullanıcılar Bölümü Başlangıcı #}
+            <div class="mobile-section-card">
+                <h3 class="mobile-section-title gradient-text"><i class="fas fa-users"></i> Tüm Kullanıcılar</h3>
+                <div class="mobile-trending-carousel" style="flex-wrap: wrap; justify-content: center;">
+                    {% if all_users %}
+                        {% for user_item in all_users %}
+                            <a href="{{ url_for('profile', username=user_item.username) }}" class="trending-item" style="flex-direction: column; text-align: center;">
+                                <img src="{{ url_for('static', filename='uploads/profile_pics/' + user_item.profile_image) }}" alt="{{ user_item.username }}" class="trending-avatar" style="margin-bottom: 5px;">
+                                <span class="trending-text" style="max-width: 80px;">@{{ user_item.username }}</span>
+                            </a>
+                        {% endfor %}
+                    {% else %}
+                        <p class="sidebar-no-content" style="width: 100%;">Henüz kullanıcı bulunmuyor.</p>
+                    {% endif %}
+                </div>
+            </div>
+            {# Mobil İçin Tüm Kullanıcılar Bölümü Sonu #}
         </div>
         {% endif %}
     </div>
