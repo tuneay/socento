@@ -1,11 +1,11 @@
 <div class="clips-viewer-container" id="clips-container">
     {% if video_posts %}
         {% for post in video_posts %}
-        <div class="clip-slide" 
+        <div class="clip-slide"
              data-post-id="{{ post.id }}"
              data-video-url="{{ url_for('static', filename='uploads/post_media/' + post.video_file) }}">
             <video class="clip-video" loop playsinline preload="none"></video>
-            
+
             <div class="clip-overlay">
                 <div class="clip-user-info">
                     <a href="{{ url_for('profile', username=post.author.username) }}">
