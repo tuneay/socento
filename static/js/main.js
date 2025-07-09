@@ -37,6 +37,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 300);
     }
 
+    // === MOBİL MENÜ YÖNETİMİ (YENİ EKLENEN) ===
+    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+    const mobileNavLinks = document.getElementById('nav-links-mobile');
+
+    if (mobileMenuToggle && mobileNavLinks) {
+        mobileMenuToggle.addEventListener('click', function() {
+            if (mobileNavLinks.style.display === 'flex') {
+                mobileNavLinks.style.display = 'none';
+            } else {
+                mobileNavLinks.style.display = 'flex';
+            }
+        });
+    }
+
     // === EVRENSEL AKSİYON YÖNETİCİSİ (YENİ) ===
     const handleActionClick = async (e) => {
         const button = e.target.closest('.action-button');

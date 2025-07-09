@@ -106,6 +106,14 @@
         </nav>
 
         <ul class="nav-links" id="nav-links-mobile" style="display: none;">
+            <br><br>
+            <li><a href="{{ url_for('home') }}"><i class="fas fa-home"></i> Ana Sayfa</a></li>
+            <li><a href="{{ url_for('communities') }}"><i class="fas fa-eye"></i> Blink Oluştur</a></li>
+            {% if is_premium %}
+            <li><a href="{{ url_for('inner_network_home') }}"><i class="fas fa-people-group"></i> Inner Network</a></li>
+            <li><a href="{{ url_for('create_network') }}"><i class="fa-solid fa-user-astronaut"></i> Ağım</a>
+            </li>
+            {% endif %}
             <li><a href="{{ url_for('communities') }}"><i class="fas fa-people-group"></i> Topluluklar</a></li>
         </ul>
 

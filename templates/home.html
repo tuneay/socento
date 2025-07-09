@@ -162,9 +162,7 @@
                 <button class="feed-selector-btn" data-feed="posts"><i class="fas fa-newspaper"></i> Gönderiler</button>
                 <button class="feed-selector-btn" data-feed="echoes"><i class="fas fa-microphone-lines"></i> Echoes</button>
                 <button class="feed-selector-btn" data-feed="clips"><i class="fas fa-film"></i> Clips</button>
-                {% if current_user.is_authenticated and current_user.role == 'premium' and current_user.planType %}
-                    <button class="feed-selector-btn" data-feed="premium"><i class="fas fa-gem"></i> Premium</button>
-                {% endif %}
+                
                 <div class="active-line"></div>
             </div>
             {# HIZLI GÖNDERİ OLUŞTURMA ALANI #}

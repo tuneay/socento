@@ -3576,6 +3576,12 @@ body.clips-active .feed-page-container {
     .feed-view-selector {
         display: none !important;
     }
+    .main-content-flex-wrapper{
+        margin-top: 40px;
+    }
+    .page-container .card-custom{
+        margin-top: 100px;
+    }
 
     .main-content-wrapper {
         padding-bottom: 70px;
@@ -4602,4 +4608,20 @@ body.blinks-active {
     padding: var(--spacing-xs) var(--spacing-md);
     font-size: 0.9em;
     width: auto;
+}
+
+/* style.css */
+
+/* Bilgisayar ve Geniş Ekranlar İçin Ayarlamalar (769px ve üzeri) */
+@media (min-width: 769px) {
+    .blinks-outer-container {
+        display: none;
+    }
+
+}
+
+@media (max-width: 768px){
+    .create-blink-card{
+        margin-top: 100px;
+    }
 }

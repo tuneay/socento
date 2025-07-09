@@ -164,7 +164,6 @@
     @media (max-width: 600px) {
         .create-blink-card {
             padding: var(--spacing-lg);
-            margin: var(--spacing-lg) var(--spacing-xs);
             border-radius: var(--border-radius-lg);
         }
 
@@ -186,7 +185,7 @@
 </style>
 
 <div class="create-blink-card">
-    <h2>Yeni Blink Oluştur</h2>
+    <h3 style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;"><i class="fa-solid fa-eye"></i> Blink Oluştur</h3><br>
     <form method="POST" action="{{ url_for('create_blink') }}" enctype="multipart/form-data">
         <div class="form-group">
             <label for="text_content">Blink Metni (İsteğe Bağlı)</label>
@@ -196,7 +195,7 @@
             <label for="media_file">Görsel veya Video (İsteğe Bağlı)</label>
             <input type="file" class="form-control-file" id="media_file" name="media_file" accept="image/*,video/*">
         </div>
-        <button type="submit" class="btn btn-primary">Blink Oluştur</button>
+        <button style="border: 1px solid white;" type="submit" class="btn btn-primary">Blink Oluştur</button>
     </form>
 </div>
 {% endblock %}
