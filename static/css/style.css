@@ -3580,7 +3580,7 @@ body.clips-active .feed-page-container {
         margin-top: 40px;
     }
     .page-container .card-custom{
-        margin-top: 100px;
+        margin-top: 10px;
     }
 
     .main-content-wrapper {
@@ -4625,3 +4625,1279 @@ body.blinks-active {
         margin-top: 100px;
     }
 }
+
+/* Mobil Versiyon İyileştirmeleri: Smooth Premium Apple Tarzı */
+@media (max-width: 768px) {
+    /* Genel Ayarlamalar */
+    body {
+        -webkit-font-smoothing: antialiased; /* Apple font rendering */
+        -moz-osx-font-smoothing: grayscale; /* Firefox for grayscale font rendering */
+        font-size: 16px; /* Daha iyi okunabilirlik */
+    }
+
+    /* Container ve Page Wrapper Ayarlamaları */
+    .container, .page-container {
+        padding: 0 var(--spacing-md); /* Yan boşlukları koru */
+    }
+
+    .main-content-wrapper {
+        padding-top: 80px; /* Navbar ve potansiyel üst çubuk için boşluk */
+        padding-bottom: 80px; /* Alt navigasyon için boşluk */
+        gap: var(--spacing-lg); /* Genel bileşenler arası boşluğu azalt */
+    }
+
+    /* Navbar ve Menü İyileştirmeleri */
+    nav {
+        height: 60px; /* Navbar yüksekliğini koru */
+        padding: var(--spacing-sm) 0;
+        backdrop-filter: blur(15px); /* Daha belirgin blur */
+        -webkit-backdrop-filter: blur(15px);
+    }
+
+    .nav-container {
+        padding: 0 var(--spacing-md);
+    }
+
+    .menu-icon {
+        font-size: 1.8em; /* İkon boyutunu büyüt */
+    }
+
+    .nav-links#nav-links-mobile {
+        top: 60px; /* Navbar'ın hemen altından başla */
+        background-color: var(--secondary-bg); /* Mobil menü arkaplanı */
+        border-bottom-left-radius: var(--border-radius-lg); /* Alt köşeleri yuvarlak */
+        border-bottom-right-radius: var(--border-radius-lg);
+        box-shadow: 0 10px 30px var(--shadow-strong); /* Daha belirgin gölge */
+        gap: 0; /* Menü öğeleri arasındaki boşluğu kaldır, padding ile yönetilecek */
+    }
+
+    .nav-links#nav-links-mobile li a {
+        padding: var(--spacing-md) var(--spacing-xl); /* Dokunma alanını genişlet */
+        font-size: 1.1em; /* Daha büyük font */
+        border-bottom: 1px solid var(--border-color-light); /* Aralarına çizgi */
+    }
+
+    /* Ana Akış Kartları (Gönderi, Echo) */
+    .instagram-post-card, .echo-card {
+        margin-left: var(--spacing-md);
+        margin-right: var(--spacing-md);
+        border-radius: var(--border-radius-lg); /* Daha büyük yuvarlak köşeler */
+        box-shadow: 0 8px 25px var(--shadow-medium); /* Hafif belirgin gölge */
+    }
+
+    .instagram-post-card:hover, .echo-card:hover {
+        transform: translateY(-3px); /* Hafif yukarı kayma */
+        box-shadow: 0 12px 30px var(--shadow-strong); /* Gölgeyi derinleştir */
+    }
+
+    .post-author-img, .echo-author-img {
+        border-width: 3px; /* Kenarlık kalınlığını artır */
+    }
+
+    .post-content-text, .echo-content-text {
+        font-size: 1em; /* İçerik metni boyutunu ayarla */
+        line-height: 1.6; /* Satır aralığını ayarla */
+    }
+
+    .post-actions, .echo-actions {
+        padding: var(--spacing-sm) var(--spacing-md) var(--spacing-md);
+    }
+
+    .action-icon {
+        padding: var(--spacing-sm); /* Dokunma alanını büyüt */
+        border-radius: var(--border-radius-circle); /* Yuvarlak butonlar */
+    }
+
+    .action-icon:active {
+        transform: scale(0.9); /* Dokunulduğunda hafif küçülme efekti */
+        transition: transform 0.1s ease;
+    }
+
+    /* Profil Sayfası Ayarlamaları */
+    .profile-header-container {
+        padding-bottom: 50px; /* Daha az boşluk */
+    }
+
+    .profile-main-content-area {
+        margin-top: -80px; /* Profil resmini daha yukarı çek */
+        padding: 0 var(--spacing-md);
+    }
+
+    .profile-main-image {
+        width: 140px; /* Profil resmi boyutunu ayarla */
+        height: 140px;
+        border-width: 5px; /* Kalın kenarlık */
+        box-shadow: 0 0 0 4px var(--gradient-primary), 0 10px 30px var(--shadow-strong);
+    }
+
+    .profile-info-block, .profile-stats-actions-block {
+        padding: var(--spacing-lg); /* İç boşlukları ayarla */
+        border-radius: var(--border-radius-lg); /* Yuvarlak köşeler */
+        box-shadow: 0 8px 25px var(--shadow-medium);
+    }
+
+    .profile-username {
+        font-size: 2.2rem; /* Kullanıcı adı font boyutunu ayarla */
+    }
+
+    .profile-tab-item {
+        font-size: 0.9em;
+        padding: var(--spacing-md) var(--spacing-sm);
+        border-left: none !important; /* Dikey çizgiyi kaldır */
+    }
+    .profile-tab-item:nth-child(odd) { /* Her tekli öğe için sağ kenarlığı kaldır */
+        border-right: none !important;
+    }
+    .profile-tab-item:nth-child(even) { /* Her çiftli öğe için sağ kenarlığı kaldır */
+        border-right: none !important;
+    }
+    .profile-tab-item:last-child, .profile-tab-item:nth-last-child(2) {
+        border-bottom: none !important; /* Son iki öğedeki alt kenarlığı kaldır */
+    }
+
+
+    /* Butonlar için Genel İyileştirmeler */
+    .btn-primary-custom, .btn-premium {
+        padding: var(--spacing-md) var(--spacing-lg);
+        font-size: 1em;
+        border-radius: var(--border-radius-lg); /* Daha büyük yuvarlak köşeler */
+        box-shadow: 0 5px 15px var(--shadow-medium);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-primary-custom:active, .btn-premium:active {
+        transform: translateY(-1px) scale(0.98); /* Dokunulduğunda hafif küçülme ve aşağı inme */
+        box-shadow: 0 2px 8px var(--shadow-light);
+    }
+
+    /* Mobil Alt Navigasyon */
+    .mobile-bottom-nav {
+        height: 70px; /* Yüksekliği artır */
+        box-shadow: 0 -5px 20px rgba(0,0,0,0.3); /* Daha belirgin gölge */
+    }
+    .mobile-bottom-nav .nav-item {
+        font-size: 0.75em;
+        gap: 6px;
+    }
+    .mobile-bottom-nav .nav-item i {
+        font-size: 1.8em; /* İkon boyutunu büyüt */
+    }
+    .mobile-bottom-nav .nav-item.new-post-button {
+        top: -20px; /* Daha yukarıda durmasını sağla */
+    }
+    .mobile-bottom-nav .nav-item.new-post-button i {
+        font-size: 3.5em; /* FAB boyutunu büyüt */
+        padding: 12px;
+        border-width: 4px;
+    }
+
+    /* Blink Görselleyici */
+    .blink-viewer-content {
+        max-width: 95vw; /* Daha geniş görünüm */
+        max-height: 90vh; /* Daha yüksek görünüm */
+        border-radius: var(--border-radius-xl); /* Çok yuvarlak köşeler */
+        box-shadow: 0 0 40px rgba(0,0,0,0.9);
+    }
+    .blink-nav-btn {
+        font-size: 3em; /* Navigasyon butonlarını büyüt */
+    }
+    .blink-text-content {
+        font-size: 1.1em;
+        padding: var(--spacing-md);
+        border-radius: var(--border-radius-md);
+    }
+
+    /* Mobil Trend ve Bilgi Bölümleri */
+    .mobile-section-card {
+        border-radius: var(--border-radius-lg);
+        box-shadow: 0 8px 25px var(--shadow-medium);
+    }
+    .mobile-trending-carousel {
+        padding-bottom: var(--spacing-sm);
+    }
+    .mobile-trending-group .group-title {
+        font-size: 0.95em;
+    }
+    .trending-item {
+        font-size: 1em;
+    }
+    .trending-avatar {
+        width: 36px;
+        height: 36px;
+    }
+}
+
+/* Küçük Telefonlar (480px ve altı) */
+@media (max-width: 480px) {
+    .main-content-wrapper {
+        padding: 0 var(--spacing-xs); /* Daha dar yan boşluklar */
+    }
+    .instagram-post-card, .echo-card {
+        margin-left: 0;
+        margin-right: 0;
+        border-radius: var(--border-radius-md); /* Küçük cihazlarda köşeleri biraz küçült */
+    }
+    .profile-main-image {
+        width: 120px;
+        height: 120px;
+    }
+    .profile-username {
+        font-size: 2rem;
+    }
+    .profile-info-block, .profile-stats-actions-block {
+        padding: var(--spacing-md);
+    }
+    .profile-tab-item {
+        width: 100%; /* Çok küçük ekranlarda sekmeler alt alta */
+        border-left: none !important;
+        border-right: none !important;
+    }
+    .profile-tab-item:last-child {
+        border-bottom: none;
+    }
+    .post-grid {
+        grid-template-columns: 1fr; /* Tek sütunlu düzen */
+    }
+    .mobile-bottom-nav {
+        height: 60px;
+    }
+    .mobile-bottom-nav .nav-item.new-post-button {
+        top: -15px;
+    }
+    .mobile-bottom-nav .nav-item.new-post-button i {
+        font-size: 3em;
+        padding: 10px;
+        border-width: 3px;
+    }
+    .blink-viewer-content {
+        border-radius: 0; /* Tam ekran olduğu için köşeleri kaldır */
+    }
+    .blink-nav-btn {
+        font-size: 2em;
+        padding: var(--spacing-sm);
+    }
+}
+
+/* inner_network_premium.css için Mobil İyileştirmeler */
+@media (max-width: 768px) {
+    .premium-container {
+        padding: 0 var(--spacing-md);
+    }
+
+    .premium-header h2 {
+        font-size: 1.8rem;
+        gap: 8px;
+    }
+    .premium-header p {
+        font-size: 0.95rem;
+    }
+
+    .premium-action-bar {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        padding: var(--spacing-md);
+        border-radius: var(--border-radius-lg);
+    }
+    .premium-btn {
+        width: 100%;
+        font-size: 1em;
+        padding: 12px 20px;
+    }
+
+    .creation-trigger {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+        bottom: 20px;
+        right: 20px;
+    }
+    .creation-trigger:hover {
+        transform: scale(1.05) rotate(90deg); /* Daha küçük cihazlarda daha az büyüt */
+    }
+
+    .post-card {
+        border-radius: var(--border-radius-md);
+        padding: 1rem;
+    }
+    .post-card-header {
+        padding: 0.8rem 1rem;
+    }
+    .post-content-area {
+        padding: 0 1rem 1rem;
+    }
+    .post-content-text {
+        font-size: 0.95rem;
+    }
+
+    .creation-panel {
+        padding: var(--spacing-md);
+        border-radius: var(--border-radius-lg);
+        max-width: 95vw;
+    }
+    .tab-headers {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+    }
+    .tab-header-item {
+        padding: var(--spacing-sm) 0;
+        border-radius: var(--border-radius-md); /* Mobil'de her bir sekme öğesini yuvarlak yap */
+        border-bottom: none; /* Dikey çizgi olmasın */
+    }
+    .tab-header-item.active::after {
+        height: 100%; /* Aktif çizgiyi tüm düğmeye yay */
+        width: 3px;
+        left: 0;
+        top: 0;
+        transform: scaleX(1);
+        transform-origin: left;
+    }
+    .tab-header-item.active {
+        background: rgba(159, 94, 255, 0.2); /* Aktif sekme için hafif vurgu */
+    }
+
+    .tab-content-container {
+        padding: 1rem;
+    }
+    .premium-form .form-control {
+        padding: 10px;
+    }
+    .premium-form .submit-btn {
+        padding: 10px;
+        font-size: 1em;
+    }
+    .file-input-label {
+        padding: 10px;
+    }
+
+    .community-body-layout {
+        padding: 4rem 1rem 1rem 1rem; /* Üst boşluğu ayarla */
+    }
+    .hero-avatar {
+        width: 90px;
+        height: 90px;
+        border-width: 3px;
+    }
+    .hero-text h1 {
+        font-size: 2.2rem;
+    }
+    .hero-text p {
+        font-size: 0.9rem;
+    }
+    .hero-actions .btn-premium {
+        padding: 10px 18px;
+        font-size: 0.9em;
+    }
+}
+
+/* --- 💎 CLIPS YENİ TASARIM (Apple Felsefesi) --- */
+
+/* Clips Ana Konteyner */
+.clips-viewer-container {
+    width: 100%;
+    height: calc(100vh - 70px); /* Navbar hariç tam ekran */
+    background-color: #000;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    position: relative;
+    border-radius: var(--border-radius-md);
+    margin-top: 70px; /* Navbar için boşluk */
+    -webkit-overflow-scrolling: touch; /* iOS için akıcı kaydırma */
+    scrollbar-width: none; /* Firefox'ta scrollbar'ı gizle */
+    -ms-overflow-style: none; /* IE/Edge'de scrollbar'ı gizle */
+}
+
+/* Chrome, Safari, Opera'da scrollbar'ı gizle */
+.clips-viewer-container::-webkit-scrollbar {
+    display: none;
+}
+
+/* Her Bir Klip Slaytı */
+.clip-slide {
+    width: 100%;
+    height: 100%;
+    scroll-snap-align: start;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000; /* Video yüklenmeden veya boşken siyah arkaplan */
+    transition: background-color 0.3s ease;
+    /* Video yüklenirken hoş bir geçiş */
+}
+
+/* Klip Video Elementi */
+.clip-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Videonun tamamını göstermek yerine alanı doldurarak kırp */
+    display: block;
+    user-select: none; /* Video üzerinde metin seçmeyi engelle */
+}
+
+/* Klip Üst Katmanı (Kullanıcı Bilgisi ve Açıklama) */
+.clip-overlay {
+    position: absolute;
+    inset: 0; /* Tamamen üstüne kapla */
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 40%),
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, transparent 10%); /* Hafif üst gölge */
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: var(--spacing-lg) var(--spacing-xl);
+    color: #fff;
+    pointer-events: none; /* Overlay'in kendisi tıklanabilir olmasın */
+}
+
+/* Klip Kullanıcı Bilgisi */
+.clip-user-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 200px; /* Alttaki aksiyonlara boşluk */
+    pointer-events: auto; /* Kullanıcı bilgisi tıklanabilir olsun */
+}
+
+.clip-user-info a {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    text-decoration: none;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1.05em;
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.5); /* Okunabilirliği artırır */
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.clip-user-info a:hover {
+    color: var(--focus-glow-color);
+    transform: translateX(3px);
+}
+
+.clip-user-info img {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.8); /* Daha premium bir kenarlık */
+    object-fit: cover;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2); /* Hafif dış halka */
+}
+
+/* Klip Açıklaması */
+.clip-caption {
+    font-size: 0.95em;
+    line-height: 1.5;
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.7);
+    margin-top: auto; /* En alta yasla */
+    pointer-events: auto; /* Metin seçilebilir olsun */
+    max-height: 30%; /* Açıklama kutusunun max yüksekliği */
+    overflow-y: auto; /* Taşan metinler için kaydırma */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+}
+.clip-caption::-webkit-scrollbar { /* Chrome, Safari, Opera */
+    display: none;
+}
+
+/* Klip Aksiyon Butonları (Sağ Taraf) */
+.clip-actions {
+    position: absolute;
+    bottom: var(--spacing-xl);
+    right: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    z-index: 11;
+    pointer-events: none; /* Kapsayıcının kendisi tıklanabilir olmasın */
+}
+
+.clip-action-button {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 2em; /* İkonlar daha büyük */
+    cursor: pointer;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    transition: transform 0.2s ease, filter 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px; /* İkon ve sayı arası boşluk */
+    text-decoration: none;
+    pointer-events: auto; /* Butonların kendileri tıklanabilir olsun */
+    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.4)); /* İkona gölge */
+}
+
+.clip-action-button:hover {
+    transform: scale(1.15);
+}
+
+.clip-action-button span {
+    font-size: 0.45em; /* İkonun yarısından daha az */
+    font-weight: 600;
+    text-shadow: none; /* Sayının kendi gölgesi olmasın */
+}
+
+/* Like Butonu */
+.clip-action-button.like-button i {
+    color: #fff; /* Varsayılan beyaz kalp */
+}
+
+.clip-action-button.like-button.liked i {
+    color: var(--like-color); /* Kırmızı */
+    animation: bounceIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Lift Butonu */
+.clip-action-button.lift-button.lifted {
+    color: var(--focus-glow-color); /* Lift edildiğinde farklı bir renk */
+    animation: bounceIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Yorum Sayısı */
+.clip-action-button.comment-button span {
+    font-size: 0.45em;
+    font-weight: 600;
+}
+
+
+/* Ses Kontrol Butonu */
+.volume-control {
+    position: absolute;
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    font-size: 1.5em;
+    color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 12;
+    transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    pointer-events: auto; /* Tıklanabilir olsun */
+}
+
+.volume-control:hover {
+    transform: scale(1.1);
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #fff;
+}
+
+/* Mobil Cihazlar İçin Ayarlamalar */
+@media (max-width: 768px) {
+    .clips-viewer-container {
+        height: calc(100vh - 65px); /* Mobil alt navigasyon barı için boşluk */
+        margin-top: 0; /* Mobil'de navbar boşluğu olmasın */
+    }
+
+    .clip-overlay {
+        padding: var(--spacing-md);
+    }
+
+    .clip-actions {
+        bottom: var(--spacing-md); /* Alt bara daha yakın */
+        right: var(--spacing-md);
+        gap: var(--spacing-sm);
+    }
+
+    .clip-action-button {
+        font-size: 1.8em;
+    }
+
+    .clip-user-info {
+        margin-bottom: 120px; /* Daha az yer kaplasın */
+    }
+}
+
+/* --- 💎 CLIPS YENİ TASARIM (Apple Felsefesi) --- */
+
+/* Yeni: Clips görünümündeyken belirli kartları gizle */
+body.clips-active .quick-post-card,
+body.clips-active .page-container .card-custom {
+    display: none !important;
+}
+
+/* Clips Ana Konteyner */
+.clips-viewer-container {
+    width: 100%;
+    height: calc(100vh - 70px); /* Navbar hariç tam ekran */
+    background-color: #000;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    position: relative;
+    border-radius: var(--border-radius-md);
+    margin-top: 70px; /* Navbar için boşluk */
+    -webkit-overflow-scrolling: touch; /* iOS için akıcı kaydırma */
+    scrollbar-width: none; /* Firefox'ta scrollbar'ı gizle */
+    -ms-overflow-style: none; /* IE/Edge'de scrollbar'ı gizle */
+}
+
+/* Chrome, Safari, Opera'da scrollbar'ı gizle */
+.clips-viewer-container::-webkit-scrollbar {
+    display: none;
+}
+
+/* Her Bir Klip Slaytı */
+.clip-slide {
+    width: 100%;
+    height: 100%;
+    scroll-snap-align: start;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000; /* Video yüklenmeden veya boşken siyah arkaplan */
+    transition: background-color 0.3s ease;
+    /* Video yüklenirken hoş bir geçiş */
+}
+
+/* Klip Video Elementi */
+.clip-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Videonun tamamını göstermek yerine alanı doldurarak kırp */
+    display: block;
+    user-select: none; /* Video üzerinde metin seçmeyi engelle */
+}
+
+/* Klip Üst Katmanı (Kullanıcı Bilgisi ve Açıklama) */
+.clip-overlay {
+    position: absolute;
+    inset: 0; /* Tamamen üstüne kapla */
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 40%),
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, transparent 10%); /* Hafif üst gölge */
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: var(--spacing-lg) var(--spacing-xl);
+    color: #fff;
+    pointer-events: none; /* Overlay'in kendisi tıklanabilir olmasın */
+}
+
+/* Klip Kullanıcı Bilgisi */
+.clip-user-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 200px; /* Alttaki aksiyonlara boşluk */
+    pointer-events: auto; /* Kullanıcı bilgisi tıklanabilir olsun */
+}
+
+.clip-user-info a {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    text-decoration: none;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1.05em;
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.5); /* Okunabilirliği artırır */
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.clip-user-info a:hover {
+    color: var(--focus-glow-color);
+    transform: translateX(3px);
+}
+
+.clip-user-info img {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.8); /* Daha premium bir kenarlık */
+    object-fit: cover;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2); /* Hafif dış halka */
+}
+
+/* Klip Açıklaması */
+.clip-caption {
+    font-size: 0.95em;
+    line-height: 1.5;
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.7);
+    margin-top: auto; /* En alta yasla */
+    pointer-events: auto; /* Metin seçilebilir olsun */
+    max-height: 30%; /* Açıklama kutusunun max yüksekliği */
+    overflow-y: auto; /* Taşan metinler için kaydırma */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+}
+.clip-caption::-webkit-scrollbar { /* Chrome, Safari, Opera */
+    display: none;
+}
+
+/* Klip Aksiyon Butonları (Sağ Taraf) */
+.clip-actions {
+    position: absolute;
+    bottom: var(--spacing-xl);
+    right: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    z-index: 11;
+    pointer-events: none; /* Kapsayıcının kendisi tıklanabilir olmasın */
+}
+
+.clip-action-button {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 2em; /* İkonlar daha büyük */
+    cursor: pointer;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    transition: transform 0.2s ease, filter 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px; /* İkon ve sayı arası boşluk */
+    text-decoration: none;
+    pointer-events: auto; /* Butonların kendileri tıklanabilir olsun */
+    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.4)); /* İkona gölge */
+}
+
+.clip-action-button:hover {
+    transform: scale(1.15);
+}
+
+.clip-action-button span {
+    font-size: 0.45em; /* İkonun yarısından daha az */
+    font-weight: 600;
+    text-shadow: none; /* Sayının kendi gölgesi olmasın */
+}
+
+/* Like Butonu */
+.clip-action-button.like-button i {
+    color: #fff; /* Varsayılan beyaz kalp */
+}
+
+.clip-action-button.like-button.liked i {
+    color: var(--like-color); /* Kırmızı */
+    animation: bounceIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Lift Butonu */
+.clip-action-button.lift-button.lifted {
+    color: var(--focus-glow-color); /* Lift edildiğinde farklı bir renk */
+    animation: bounceIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Yorum Sayısı */
+.clip-action-button.comment-button span {
+    font-size: 0.45em;
+    font-weight: 600;
+}
+
+
+/* Ses Kontrol Butonu */
+.volume-control {
+    position: absolute;
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    font-size: 1.5em;
+    color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 12;
+    transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    pointer-events: auto; /* Tıklanabilir olsun */
+}
+
+.volume-control:hover {
+    transform: scale(1.1);
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #fff;
+}
+
+/* Mobil Cihazlar İçin Ayarlamalar */
+@media (max-width: 768px) {
+    .clips-viewer-container {
+        height: calc(100vh - 65px); /* Mobil alt navigasyon barı için boşluk */
+        margin-top: 0; /* Mobil'de navbar boşluğu olmasın */
+    }
+
+    .clip-overlay {
+        padding: var(--spacing-md);
+    }
+
+    .clip-actions {
+        bottom: var(--spacing-md); /* Alt bara daha yakın */
+        right: var(--spacing-md);
+        gap: var(--spacing-sm);
+    }
+
+    .clip-action-button {
+        font-size: 1.8em;
+    }
+
+    .clip-user-info {
+        margin-bottom: 120px; /* Daha az yer kaplasın */
+    }
+}
+
+/* --- 💖 BLINK (HİKAYE) BÖLÜMÜ YENİDEN TASARIM HARİKASI --- */
+
+/* Blinks Dış Konteyner (Ana sayfadaki hikayeler kutusu) */
+.blinks-outer-container {
+    width: 100%;
+    max-width: 650px; /* Besleme akışıyla aynı genişlik */
+    margin: var(--spacing-xl) auto; /* Üstte ve altta daha fazla boşluk, ortala */
+    padding: var(--spacing-md);
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color-light);
+    border-radius: var(--border-radius-lg); /* Daha yuvarlak köşeler */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Daha belirgin gölge */
+    overflow: hidden; /* İçerik taşmasını engelle */
+    backdrop-filter: blur(8px); /* Hafif bulanıklık efekti */
+    -webkit-backdrop-filter: blur(8px); /* Safari için */
+    transition: all 0.3s var(--transition-easing);
+}
+
+.blinks-outer-container:hover {
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3); /* Hover'da daha da belirgin gölge */
+}
+
+/* Blinks İç Konteyner (Yatay kaydırma alanı) */
+.blinks-container {
+    display: flex;
+    overflow-x: auto; /* Yatay kaydırma */
+    padding: 10px 0;
+    gap: var(--spacing-lg); /* Blinkler arası boşluk artırıldı */
+    scrollbar-width: none; /* Firefox'ta gizle */
+    -ms-overflow-style: none; /* IE ve Edge'de gizle */
+    -webkit-overflow-scrolling: touch; /* iOS için akıcı kaydırma */
+}
+
+.blinks-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera'da gizle */
+}
+
+/* Her Bir Blink Öğesi */
+.blink-item {
+    flex-shrink: 0; /* Küçülmesini engelle */
+    text-align: center;
+    transition: transform 0.2s var(--transition-easing), box-shadow 0.2s var(--transition-easing);
+    padding: var(--spacing-xxs); /* Hafif iç boşluk */
+    border-radius: var(--border-radius-md); /* Hover efekti için yuvarlaklık */
+}
+
+.blink-item:hover {
+    transform: translateY(-5px); /* Yukarı doğru daha belirgin bir kalkış */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Hafif bir gölge ekle */
+}
+
+.blink-item .view-blinks-btn {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    font-size: 0.9em;
+}
+
+/* Blink Avatarı (Yuvarlak resim ve çerçevesi) */
+.blink-avatar {
+    width: 75px; /* Hikaye avatarları için boyut artırıldı */
+    height: 75px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--gradient-primary); /* Daha kalın ve gradient çerçeve */
+    padding: 4px; /* Çerçeve ve resim arasında boşluk artırıldı */
+    transition: border-color 0.3s var(--transition-easing), transform 0.3s var(--transition-easing), box-shadow 0.3s var(--transition-easing);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background: var(--primary-bg); /* Resim yüklenmeden önce arkaplan rengi */
+}
+
+.view-blinks-btn img {
+    background: var(--gradient-primary); /* Fallback için */
+}
+
+.blink-avatar:hover {
+    border-color: var(--focus-glow-color); /* Hover'da çerçeve rengini değiştir */
+    transform: scale(1.03); /* Hafif büyütme */
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3); /* Daha belirgin gölge */
+}
+
+/* Blink Kullanıcı Adı */
+.blink-username {
+    display: block;
+    margin-top: var(--spacing-xs); /* Boşluk artırıldı */
+    font-size: 0.85em; /* Daha rahat okunabilir font */
+    color: var(--text-color-primary); /* Daha belirgin metin rengi */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 80px; /* Genişliği sınırlayarak taşmayı engelle */
+    font-weight: 500;
+}
+
+.no-blinks-message {
+    text-align: center;
+    width: 100%;
+    color: var(--text-color-muted);
+    padding: var(--spacing-md);
+    font-size: 1.1em;
+}
+
+/* --- YENİ: ÖZEL BLINK GÖRÜNTÜLEYİCİ MODALI (Hikaye Görüntüleyici) --- */
+.blink-viewer-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95); /* Daha koyu, daha şeffaf arka plan */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s var(--transition-easing), visibility 0.3s var(--transition-easing);
+    backdrop-filter: blur(12px); /* Daha güçlü bulanıklık efekti */
+    -webkit-backdrop-filter: blur(12px); /* Safari için */
+}
+
+.blink-viewer-overlay.is-active {
+    opacity: 1;
+    visibility: visible;
+}
+
+body.blinks-active {
+    overflow: hidden; /* Hikaye açıldığında sayfa kaydırmasını engelle */
+}
+
+.blink-viewer-content {
+    position: relative;
+    width: 100%;
+    max-width: 420px; /* Telefon ekranı gibi bir genişlik */
+    height: 100%;
+    max-height: 750px; /* Telefon ekranı gibi bir yükseklik */
+    background-color: #000; /* Blink içeriğinin arkaplanı */
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.9); /* Daha güçlü gölge */
+    transform: scale(0.9);
+    transition: transform 0.3s var(--transition-easing);
+}
+
+.blink-viewer-overlay.is-active .blink-viewer-content {
+    transform: scale(1); /* Açıldığında pürüzsüz büyüme */
+}
+
+/* Hikaye Başlığı (Üstteki kullanıcı bilgisi ve ilerleme çubukları) */
+.blink-header {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent); /* Daha belirgin gradient */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+}
+
+.blink-progress-bars {
+    display: flex;
+    flex-grow: 1;
+    gap: 4px;
+    margin-right: var(--spacing-md);
+    height: 4px; /* İlerleme çubukları daha belirgin */
+}
+
+.progress-bar-wrapper {
+    flex-grow: 1;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.4); /* Daha şeffaf arka plan */
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #fff;
+    width: 0%; /* JS tarafından ayarlanacak */
+    border-radius: 2px;
+    transition: width 0.1s linear; /* Daha yumuşak ilerleme */
+}
+
+/* Progress bar animasyonu (JS tarafından kontrol edilecek) */
+@keyframes fillProgressBar {
+    from { width: 0%; }
+    to { width: 100%; }
+}
+
+.blink-user-info {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    pointer-events: auto; /* Kullanıcı bilgisi tıklanabilir olsun */
+}
+
+.blink-user-avatar {
+    width: 36px; /* Avatar boyutu artırıldı */
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.7); /* Daha belirgin çerçeve */
+}
+
+.blink-user-username {
+    color: #fff;
+    font-weight: 600;
+    font-size: 1em; /* Daha büyük font */
+    text-decoration: none;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.blink-close-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 2em; /* Kapatma ikonu büyütüldü */
+    cursor: pointer;
+    margin-left: var(--spacing-md);
+    opacity: 0.9;
+    transition: opacity 0.2s, transform 0.2s;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.blink-close-btn:hover {
+    opacity: 1;
+    transform: rotate(90deg); /* Kapatma ikonuna dönme efekti */
+}
+
+/* Hikaye Medya Alanı (Resim/Video) */
+.blink-media-area {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background-color: #000;
+}
+
+.blink-media-image,
+.blink-media-video {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* İçeriği kutuya sığdırırken oranını koru */
+    display: block;
+}
+
+/* Hikaye Metin İçeriği (Resim/Video üzerindeki yazı) */
+.blink-text-content {
+    position: absolute;
+    bottom: var(--spacing-xl); /* Biraz daha yukarı çekildi */
+    width: calc(100% - (var(--spacing-xl) * 2));
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.7); /* Daha koyu arka plan */
+    padding: var(--spacing-md); /* Daha fazla padding */
+    border-radius: var(--border-radius-md); /* Daha belirgin köşeler */
+    text-align: center;
+    font-size: 1.05em; /* Daha büyük font */
+    line-height: 1.5;
+    max-height: 50%; /* Yüksekliği ayarla */
+    overflow-y: auto;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5); /* Daha güçlü gölge */
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px); /* Hafif bulanıklık efekti */
+    -webkit-backdrop-filter: blur(5px); /* Safari için */
+}
+
+/* Navigasyon Butonları (Önceki/Sonraki hikaye) */
+.blink-navigation-controls {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 var(--spacing-xs);
+    pointer-events: none; /* Kapsayıcının kendisi tıklanamaz */
+}
+
+.blink-nav-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.8); /* Daha görünür renk */
+    font-size: 3em; /* Navigasyon ikonları büyütüldü */
+    cursor: pointer;
+    padding: var(--spacing-md);
+    pointer-events: auto; /* Kendi tıklamalarına izin ver */
+    transition: color 0.2s ease, transform 0.2s ease;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+.blink-nav-btn:hover {
+    color: #fff;
+    transform: scale(1.1);
+}
+
+/* Mobil Cihazlar İçin Duyarlı Ayarlamalar */
+@media (max-width: 480px) {
+    .blinks-outer-container {
+        padding: var(--spacing-sm);
+        margin: var(--spacing-lg) auto;
+    }
+
+    .blink-avatar {
+        width: 65px;
+        height: 65px;
+        border-width: 3px;
+        padding: 3px;
+    }
+
+    .blink-username {
+        font-size: 0.8em;
+        max-width: 70px;
+    }
+
+    .blink-viewer-content {
+        max-width: 100%;
+        max-height: 100vh;
+        border-radius: 0;
+    }
+
+    .blink-header {
+        padding: var(--spacing-xs);
+    }
+
+    .blink-close-btn {
+        font-size: 1.5em;
+    }
+
+    .blink-nav-btn {
+        font-size: 2.5em; /* Mobil için biraz daha küçük */
+        padding: var(--spacing-sm);
+    }
+
+    .blink-text-content {
+        font-size: 0.9em;
+        padding: var(--spacing-xs);
+        width: calc(100% - (var(--spacing-md) * 2));
+    }
+}
+
+/* Profil Sayfası Video Gönderi Düzenlemesi (Responsive Fix) */
+/* Videolu gönderilerin kare yapısını ve doğru oranını korumasını sağlar */
+@media (max-width: 768px) {
+    /* Genel olarak tüm post-grid elemanlarının kare olmasını zorlar */
+    .post-grid-item {
+        aspect-ratio: 1 / 1 !important;
+        width: 100% !important; /* Genişliği kapsayıcısına göre ayarla */
+        height: auto !important; /* Yüksekliği orana göre otomatik ayarla */
+        overflow: hidden !important; /* İçerik taşmasını engelle */
+    }
+
+    /* post-grid-item içindeki video elemanını hedefle */
+    .post-grid-item video {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important; /* Videoyu kutuyu dolduracak şekilde kırparak sığdırır */
+        display: block !important; /* Blok eleman olarak davranmasını sağlar */
+    }
+
+    /* Her ihtimale karşı resimler için de aynı kuralları uygulayalım */
+    .post-grid-item img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        display: block !important;
+    }
+}
+
+/* Daha küçük ekranlar için de aynı kuralları pekiştirelim */
+@media (max-width: 480px) {
+    .post-grid-item {
+        aspect-ratio: 1 / 1 !important;
+        width: 100% !important;
+        height: auto !important;
+    }
+    .post-grid-item video,
+    .post-grid-item img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+    }
+}
+
+/* Profil Sayfası Kaydırma Düzeltmesi */
+/* Belli bir yükseklikten sonra aşağı kaydırılamama sorununu çözer */
+
+/* HTML ve Body etiketlerinin dikey kaydırmaya her zaman izin verdiğinden emin olun */
+html, body {
+    overflow-y: auto !important; /* Dikey kaydırmanın her zaman otomatik olmasını sağlar */
+    height: auto !important; /* Yüksekliğin içeriğe göre dinamik olarak ayarlanmasına izin verir */
+    min-height: 100vh; /* Sayfanın her zaman en az görüntü alanı yüksekliğinde olmasını sağlar */
+}
+
+/* Profil sayfasının ana konteynerinin dikey kaydırmaya izin verdiğinden emin olun */
+.profile-page-container.full-width-profile {
+    overflow-y: auto !important; /* Profil konteynerinin de dikey kaydırmaya izin verdiğinden emin olun */
+    padding-bottom: var(--spacing-xxxl) !important; /* Alt kısımda yeterli boşluk bırak */
+}
+
+/* Mobil uyumlulukta alt navigasyon için yeterli boşluk bırakıldığından emin olun */
+@media (max-width: 768px) {
+    .main-content-wrapper {
+        padding-bottom: 70px !important; /* Mobil alt bar için yeterli boşluk bırakılmasını sağlar */
+    }
+}
+
+/* Profildeki Yazılı Gönderi Kutusu İyileştirmeleri (Echoes) */
+.post-grid-item .text-post-placeholder {
+    /* Zaten kare kapsayıcısı tarafından boyutlandırılıyor, yüksekliği doldurmasını sağla */
+    height: 100% !important; /* Kapsayıcısının yüksekliğini doldurmasını sağlar */
+    width: 100% !important; /* Kapsayıcısının genişliğini doldurmasını sağlar */
+    display: flex; /* İçeriği ortalamak ve esnek düzen için */
+    flex-direction: column;
+    justify-content: center; /* Dikeyde ortala */
+    align-items: center; /* Yatayda ortala */
+    text-align: center;
+    padding: var(--spacing-md); /* İç boşluğu ayarla */
+    box-sizing: border-box; /* Padding'in boyutlandırmayı etkilememesi için */
+    border-radius: var(--border-radius-md); /* Köşeleri yuvarlat */
+    background: linear-gradient(135deg, var(--focus-glow-color) 0%, var(--like-color) 100%); /* Daha canlı ve çekici bir gradient */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Hafif bir gölge */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Hover efekti için geçiş */
+}
+
+.post-grid-item .text-post-placeholder:hover {
+    transform: translateY(-3px); /* Hover'da hafif yukarı kalkma */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); /* Hover'da daha belirgin gölge */
+}
+
+.post-grid-item .text-post-placeholder p {
+    margin: 0;
+    font-size: 0.95em; /* Metin boyutunu ayarla */
+    line-height: 1.4; /* Satır yüksekliğini ayarla */
+    color: white; /* Gradient üzerinde daha iyi görünen beyaz metin */
+    font-weight: 600; /* Daha kalın font */
+
+    /* Metni belirli bir sayıda satırla sınırla ve taşıyorsa ... koy */
+    display: -webkit-box;
+    -webkit-line-clamp: 4; /* Maksimum 4 satır göster */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); /* Metne hafif gölge */
+}
+
+/* Küçük ekranlarda font boyutunu ve satır sayısını ayarlayalım */
+@media (max-width: 480px) {
+    .post-grid-item .text-post-placeholder {
+        padding: var(--spacing-sm);
+    }
+    .post-grid-item .text-post-placeholder p {
+        font-size: 0.85em;
+        -webkit-line-clamp: 3; /* Daha küçük ekranlarda daha az satır göster */
+    }
+}
+
+
